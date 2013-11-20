@@ -1,6 +1,7 @@
 package org.jr.be.model;
 
 import static javax.persistence.GenerationType.IDENTITY;
+import static javax.persistence.TemporalType.DATE;
 
 import java.util.Date;
 
@@ -8,6 +9,9 @@ import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Temporal;
+
+import org.hibernate.validator.constraints.NotEmpty;
 
 
 @Entity
@@ -17,16 +21,21 @@ public class Person {
 	@GeneratedValue(strategy = IDENTITY)
 	private Long id;
 	
+	@NotEmpty
 	private String name;
 	
+	@NotEmpty
 	private String lastName;
 	
+	@NotEmpty
 	private String dni;
 	
 	private String cuil;
 	
 	private String img;
 	
+	@NotEmpty
+	@Temporal(DATE)
 	private Date birth;
 	
 	@Embedded
@@ -38,6 +47,7 @@ public class Person {
 	@Embedded
     private Audit audit = new Audit();
 	
+	@NotEmpty
 	private Boolean deleted;
 
 	public Long getId() {
