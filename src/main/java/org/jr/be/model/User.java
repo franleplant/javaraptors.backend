@@ -24,7 +24,7 @@ public class User {
 	private String password;
 	
 	@NotEmpty
-	private String rol;
+	private Rol rol;
 		
 	@NotEmpty
 	@OneToOne(cascade = ALL)
@@ -61,12 +61,12 @@ public class User {
 	}
 
 
-	public String getRol() {
+	public Rol getRol() {
 		return rol;
 	}
 
 
-	public void setRol(String rol) {
+	public void setRol(Rol rol) {
 		this.rol = rol;
 	}
 
