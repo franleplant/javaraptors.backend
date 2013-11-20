@@ -1,20 +1,12 @@
 package org.jr.be.model;
 
-import static javax.persistence.GenerationType.IDENTITY;
-
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.Embeddable;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
 
-@Entity
+@Embeddable
 public class Contact {
-	
-	@Id
-	@GeneratedValue(strategy = IDENTITY)
-	private Long id;
 	
 	@NotEmpty
 	private String email;
@@ -25,13 +17,6 @@ public class Contact {
 	
 	private String web;
 
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
 
 	public String getEmail() {
 		return email;
@@ -71,7 +56,6 @@ public class Contact {
 		int result = 1;
 		result = prime * result + ((cel == null) ? 0 : cel.hashCode());
 		result = prime * result + ((email == null) ? 0 : email.hashCode());
-		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((tel == null) ? 0 : tel.hashCode());
 		result = prime * result + ((web == null) ? 0 : web.hashCode());
 		return result;
@@ -95,11 +79,6 @@ public class Contact {
 			if (other.email != null)
 				return false;
 		} else if (!email.equals(other.email))
-			return false;
-		if (id == null) {
-			if (other.id != null)
-				return false;
-		} else if (!id.equals(other.id))
 			return false;
 		if (tel == null) {
 			if (other.tel != null)
