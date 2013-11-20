@@ -4,25 +4,22 @@ import static javax.persistence.GenerationType.IDENTITY;
 
 import java.util.Date;
 
-import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
 
-public class Hollyday {
-	
-	// Synthetic id
+public class Suspension {
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
 	private Long id;
 	
-	@Column(unique = true)
 	@NotEmpty
-	private Date date;
+	private Date startDate;
 	
-	private String comments;
+	@NotEmpty
+	private Date endDate;
 
 	public Long getId() {
 		return id;
@@ -32,27 +29,27 @@ public class Hollyday {
 		this.id = id;
 	}
 
-	public Date getDate() {
-		return date;
+	public Date getStartDate() {
+		return startDate;
 	}
 
-	public void setDate(Date date) {
-		this.date = date;
+	public void setStartDate(Date startDate) {
+		this.startDate = startDate;
 	}
 
-	public String getComments() {
-		return comments;
+	public Date getEndDate() {
+		return endDate;
 	}
 
-	public void setComments(String comments) {
-		this.comments = comments;
+	public void setEndDate(Date endDate) {
+		this.endDate = endDate;
 	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((date == null) ? 0 : date.hashCode());
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		return result;
 	}
 
@@ -64,19 +61,17 @@ public class Hollyday {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Hollyday other = (Hollyday) obj;
-		if (date == null) {
-			if (other.date != null)
+		Suspension other = (Suspension) obj;
+		if (id == null) {
+			if (other.id != null)
 				return false;
-		} else if (!date.equals(other.date))
+		} else if (!id.equals(other.id))
 			return false;
 		return true;
 	}
 
 	@Override
 	public String toString() {
-		return "Hollyday [date=" + date + ", comments=" + comments + "]";
+		return "Suspension starting" + startDate + ", ending" + endDate;
 	}
-
-
 }
