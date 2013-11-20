@@ -3,12 +3,11 @@ package org.jr.be.model;
 import static javax.persistence.GenerationType.IDENTITY;
 
 import javax.persistence.Column;
+import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.OneToOne;
+import javax.persistence.ManyToOne;
 import javax.validation.constraints.Size;
-
-import javax.persistence.Entity;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
@@ -31,7 +30,7 @@ public class Genre{
 	
 	private String comments;
 	
-	@OneToOne
+	@ManyToOne
 	private EntityType type;
 	
 	private Boolean deleted;
