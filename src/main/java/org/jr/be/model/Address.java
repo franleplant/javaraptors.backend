@@ -1,21 +1,13 @@
 package org.jr.be.model;
 
-import static javax.persistence.GenerationType.IDENTITY;
-
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
+import javax.persistence.Embeddable;
 import javax.persistence.ManyToOne;
-import javax.persistence.Id;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
-@Entity
+@Embeddable
 public class Address {
 
-	@Id
-	@GeneratedValue(strategy = IDENTITY)
-	private Long id;
-	
 	@NotEmpty
 	private String street;
 	
@@ -30,14 +22,6 @@ public class Address {
 	@NotEmpty
 	@ManyToOne
 	private City city;
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
 
 	public String getStreet() {
 		return street;
@@ -79,6 +63,13 @@ public class Address {
 		this.city = city;
 	}
 
+
+	@Override
+	public String toString() {
+		return "Address [street=" + street + ", number=" + number + ", floor="
+				+ floor + ", department=" + department + ", city=" + city + "]";
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -87,7 +78,6 @@ public class Address {
 		result = prime * result
 				+ ((department == null) ? 0 : department.hashCode());
 		result = prime * result + ((floor == null) ? 0 : floor.hashCode());
-		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + number;
 		result = prime * result + ((street == null) ? 0 : street.hashCode());
 		return result;
@@ -117,11 +107,6 @@ public class Address {
 				return false;
 		} else if (!floor.equals(other.floor))
 			return false;
-		if (id == null) {
-			if (other.id != null)
-				return false;
-		} else if (!id.equals(other.id))
-			return false;
 		if (number != other.number)
 			return false;
 		if (street == null) {
@@ -130,12 +115,6 @@ public class Address {
 		} else if (!street.equals(other.street))
 			return false;
 		return true;
-	}
-
-	@Override
-	public String toString() {
-		return "Address [street=" + street + ", number=" + number + ", floor="
-				+ floor + ", department=" + department + ", city=" + city + "]";
 	}
 	
 	
