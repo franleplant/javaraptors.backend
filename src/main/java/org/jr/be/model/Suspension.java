@@ -27,6 +27,8 @@ public class Suspension{
 	@Temporal(DATE)
 	@NotEmpty
 	private Date endDate;
+	
+	private String comments;
 
 	public Long getId() {
 		return id;
@@ -80,5 +82,13 @@ public class Suspension{
 	@Override
 	public String toString() {
 		return "Suspension starting" + startDate + ", ending" + endDate;
+	}
+
+	public String getComments() {
+		return comments;
+	}
+
+	public void setComments(String comments) {
+		this.comments = comments;
 	}
 }
