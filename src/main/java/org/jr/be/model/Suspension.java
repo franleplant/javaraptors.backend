@@ -9,7 +9,9 @@ import javax.persistence.Id;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
+import javax.persistence.Entity;
 
+@Entity
 public class Suspension {
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
