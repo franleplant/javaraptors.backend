@@ -1,16 +1,18 @@
 package org.jr.be.model;
 
 import static javax.persistence.GenerationType.IDENTITY;
+import static javax.persistence.TemporalType.DATE;
+
 
 import java.util.Date;
 
 import javax.persistence.Column;
+import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Temporal;
 
 import org.hibernate.validator.constraints.NotEmpty;
-
-import javax.persistence.Entity;
 
 
 
@@ -24,6 +26,7 @@ public class Hollyday{
 	@GeneratedValue(strategy = IDENTITY)
 	private Long id;
 	
+	@Temporal(DATE)
 	@Column(unique = true)
 	@NotEmpty
 	private Date date;

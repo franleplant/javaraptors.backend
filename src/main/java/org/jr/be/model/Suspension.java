@@ -1,11 +1,16 @@
 package org.jr.be.model;
 
 import static javax.persistence.GenerationType.IDENTITY;
+import static javax.persistence.TemporalType.DATE;
+
 import java.util.Date;
+
+import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Temporal;
+
 import org.hibernate.validator.constraints.NotEmpty;
-import javax.persistence.Entity;
 
 @Entity
 public class Suspension{
@@ -15,9 +20,11 @@ public class Suspension{
 	@GeneratedValue(strategy = IDENTITY)
 	private Long id;
 	
+	@Temporal(DATE)
 	@NotEmpty
 	private Date startDate;
 	
+	@Temporal(DATE)
 	@NotEmpty
 	private Date endDate;
 
