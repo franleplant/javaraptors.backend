@@ -21,7 +21,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = { "name", "prov_id" }))
 public class City {
 
-	
+	//Synthetic
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
 	private Long id;
