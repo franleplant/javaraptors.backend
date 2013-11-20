@@ -3,11 +3,13 @@ package org.jr.be.model;
 import static javax.persistence.GenerationType.IDENTITY;
 
 import javax.persistence.Column;
+import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
+@Entity
 public class Rol {
 
 	@Id

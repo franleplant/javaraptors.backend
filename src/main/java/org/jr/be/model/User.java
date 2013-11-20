@@ -8,6 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
+import javax.persistence.ManyToOne;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
@@ -24,6 +25,7 @@ public class User {
 	private String password;
 	
 	@NotEmpty
+	@ManyToOne
 	private Rol rol;
 		
 	@NotEmpty
