@@ -12,9 +12,12 @@ import javax.persistence.Entity;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
+import java.io.Serializable;
 @Entity
-public class Genre {
+public class Genre implements Serializable {
 
+	private static final long serialVersionUID = 1L;
+	
 	// Synthetic id
 	@Id
 	@GeneratedValue(strategy = IDENTITY)

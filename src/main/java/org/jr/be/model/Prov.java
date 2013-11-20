@@ -12,11 +12,17 @@ import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
+import java.io.Serializable;
+
+
 // Prov = Provincia or State
 
 @Entity
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = { "name", "country_id" }))
-public class Prov {
+public class Prov implements Serializable  {
+	
+	private static final long serialVersionUID = 1L;
+	
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
 	private Long id;

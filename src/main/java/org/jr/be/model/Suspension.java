@@ -1,18 +1,18 @@
 package org.jr.be.model;
 
 import static javax.persistence.GenerationType.IDENTITY;
-
 import java.util.Date;
-
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-
 import org.hibernate.validator.constraints.NotEmpty;
-
 import javax.persistence.Entity;
+import java.io.Serializable;
 
 @Entity
-public class Suspension {
+public class Suspension implements Serializable  {
+	
+	private static final long serialVersionUID = 1L;
+	
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
 	private Long id;

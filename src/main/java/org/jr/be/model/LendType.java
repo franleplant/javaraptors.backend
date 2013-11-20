@@ -9,11 +9,15 @@ import javax.persistence.Id;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
+import java.io.Serializable;
+
 // This class will be instantiated in to two objects 
 // containing foreign | local and it is related to the LendTypes
 
 @Entity
-public class LendType {
+public class LendType implements Serializable {
+	
+	private static final long serialVersionUID = 1L;
 	
 	// Synthetic id
 	@Id
