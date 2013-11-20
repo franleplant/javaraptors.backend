@@ -8,16 +8,14 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
 import org.hibernate.validator.constraints.NotEmpty;
-import java.io.Serializable;
 /* This class will be used as a container of entity types
  *  that are needed in order for the front end to process the
  *  different types correctly
  * */
 
 @Entity
-public class EntityType implements Serializable {
+public class EntityType{
 
-	private static final long serialVersionUID = 1L;
 	
 	// Synthetic id
 	@Id

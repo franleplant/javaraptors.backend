@@ -6,12 +6,10 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import org.hibernate.validator.constraints.NotEmpty;
 import javax.persistence.Entity;
-import java.io.Serializable;
 
 @Entity
-public class Suspension implements Serializable  {
+public class Suspension{
 	
-	private static final long serialVersionUID = 1L;
 	
 	@Id
 	@GeneratedValue(strategy = IDENTITY)

@@ -11,13 +11,13 @@ import javax.persistence.Id;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.Entity;
-import java.io.Serializable;
+
 
 
 @Entity
-public class Hollyday implements Serializable {
+public class Hollyday{
 	
-	private static final long serialVersionUID = 1L;
+
 	
 	// Synthetic id
 	@Id

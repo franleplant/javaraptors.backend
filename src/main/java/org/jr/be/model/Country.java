@@ -10,13 +10,11 @@ import javax.validation.constraints.Size;
 import javax.persistence.Entity;
 
 import org.hibernate.validator.constraints.NotEmpty;
-import java.io.Serializable;
 
 
 @Entity
-public class Country implements Serializable {
+public class Country{
 
-	private static final long serialVersionUID = 1L;
 	
 	// Synthetic id
 	@Id
