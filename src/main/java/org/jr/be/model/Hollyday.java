@@ -10,7 +10,9 @@ import javax.persistence.Id;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
+import javax.persistence.Entity;
 
+@Entity
 public class Hollyday {
 	
 	// Synthetic id
