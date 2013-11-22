@@ -11,6 +11,7 @@ import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
@@ -27,13 +28,14 @@ public class Affiliate {
 	private double reputation;
 	
 	@NotEmpty
-	@OneToOne(cascade = ALL)
+	@OneToOne(cascade= ALL)
 	private Person person;
 	
 	@Embedded
     private Audit audit = new Audit();
 	
 	@NotEmpty
+	@ManyToOne
 	private EntityType type;
 	
 	@OneToMany(cascade = ALL, fetch = EAGER)

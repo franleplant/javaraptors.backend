@@ -5,8 +5,10 @@ import static javax.persistence.GenerationType.IDENTITY;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
+import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
@@ -14,6 +16,8 @@ import javax.persistence.OneToMany;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
+
+@Entity
 public class Editorial {
 	// Synthetic id
 	@Id
@@ -44,8 +48,11 @@ public class Editorial {
     private Audit audit = new Audit();
 	
 	//Bidrectional
+	//If the Editorial is deleted then all their books are deleted
+	
+	//Lazy loading to avoid infinite loops while Marshalling
 	@NotEmpty
-	@OneToMany(mappedBy="editorial")
+	@OneToMany(mappedBy="editorial", cascade= CascadeType.REMOVE)
 	private Set<Book> books = new HashSet<Book>();
 	
 	@NotEmpty

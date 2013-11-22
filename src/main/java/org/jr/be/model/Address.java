@@ -1,5 +1,6 @@
 package org.jr.be.model;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Embeddable;
 import javax.persistence.ManyToOne;
 
@@ -20,7 +21,7 @@ public class Address {
 	
 	
 	@NotEmpty
-	@ManyToOne
+	@ManyToOne(cascade = CascadeType.PERSIST)
 	private City city;
 
 	public String getStreet() {

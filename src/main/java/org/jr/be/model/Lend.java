@@ -4,22 +4,28 @@ import static javax.persistence.GenerationType.IDENTITY;
 
 import java.util.Date;
 
+import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 
+import org.hibernate.validator.constraints.NotEmpty;
+
+@Entity
 public class Lend {
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
 	private Long id;
 	
-	
+	@NotEmpty
 	@ManyToOne
 	private LendType lendType;
 	
+	@NotEmpty
 	private Date lendDate;
 	
+	@NotEmpty
 	private Date expectedReturnDate;
 	
 	private Date actualReturnDate;
@@ -27,14 +33,17 @@ public class Lend {
 	@ManyToOne
 	private User returningUser;
 	
+	@NotEmpty
 	@ManyToOne
 	private User lendingUser;
 	
 	private String comments;
 	
+	@NotEmpty
 	@OneToOne
 	private Affiliate affiliate;
 	
+	@NotEmpty
 	@OneToOne
 	private Copy copy;
 

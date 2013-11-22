@@ -8,6 +8,7 @@ import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
+import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -17,6 +18,8 @@ import javax.persistence.OneToMany;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
+
+@Entity
 public class Book {
 	
 	// Synthetic id
@@ -34,6 +37,7 @@ public class Book {
 	private String title;
 	
 	//Bidirectional
+	//Lazy loading to evade infinite loops while Marshalling
 	@NotEmpty
 	@ManyToMany(cascade = CascadeType.PERSIST, mappedBy="books")
 	private Set<Author> authors = new HashSet<Author>();
@@ -47,12 +51,16 @@ public class Book {
 	@ManyToOne(cascade = CascadeType.PERSIST)
 	private Country editionCountry;
 	
+	
+	//Lazy loading to avoid infinite loops while Marshalling
 	@NotEmpty
 	@ManyToOne(cascade = CascadeType.PERSIST)
 	@JoinColumn(name="book_fk")
 	private Editorial editorial;
 	
-	@OneToMany(cascade = CascadeType.PERSIST, mappedBy="book")
+	
+	//Lazy loading to avoid infinite loops while Marshalling
+	@OneToMany(cascade = CascadeType.ALL, mappedBy="book")
 	private Set<Copy> copys = new HashSet<Copy>();
 	
 	private String img;

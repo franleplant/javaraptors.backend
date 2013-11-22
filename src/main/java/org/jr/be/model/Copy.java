@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.Embedded;
+import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
@@ -13,11 +14,14 @@ import javax.persistence.OneToMany;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
+@Entity
 public class Copy {
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
 	private Long id;
 	
+	
+	//Lazy loading to avoid infinite loops while Marshalling
 	@ManyToOne
 	private Book book;
 	

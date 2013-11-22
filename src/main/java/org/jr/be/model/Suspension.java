@@ -8,6 +8,7 @@ import java.util.Date;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 
 import org.hibernate.validator.constraints.NotEmpty;
@@ -27,6 +28,9 @@ public class Suspension{
 	@Temporal(DATE)
 	@NotEmpty
 	private Date endDate;
+	
+	@OneToOne
+	private Lend lend;
 	
 	private String comments;
 

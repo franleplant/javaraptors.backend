@@ -10,14 +10,18 @@ import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
+import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Temporal;
 
+
+
 import org.hibernate.validator.constraints.NotEmpty;
 
+@Entity
 public class Author {
 	// Synthetic id
 	@Id
@@ -32,7 +36,10 @@ public class Author {
 	private Date birth;
 	
 	// Bidirectional
-	@ManyToMany
+	//If an Author is deleted then all his/her books are deleted
+	
+	//Lazy loading to avoid infinite loops while Marshalling
+	@ManyToMany(cascade = CascadeType.REMOVE)
 	private Set<Book> books = new HashSet<Book>();
 	
 	private String isni;

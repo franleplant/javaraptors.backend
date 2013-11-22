@@ -2,6 +2,7 @@ package org.jr.be.model;
 
 import static javax.persistence.GenerationType.IDENTITY;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -32,7 +33,7 @@ public class City {
 	private String name;
 	
 	@NotEmpty
-	@ManyToOne
+	@ManyToOne(cascade = CascadeType.PERSIST)
 	private Prov prov;
 	
 	@Column(unique = true)
