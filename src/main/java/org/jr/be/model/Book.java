@@ -10,6 +10,7 @@ import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
@@ -48,6 +49,7 @@ public class Book {
 	
 	@NotEmpty
 	@ManyToOne(cascade = CascadeType.PERSIST)
+	@JoinColumn(name="book_fk")
 	private Editorial editorial;
 	
 	@OneToMany(cascade = CascadeType.PERSIST, mappedBy="book")

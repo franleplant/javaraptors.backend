@@ -45,7 +45,7 @@ public class Editorial {
 	
 	//Bidrectional
 	@NotEmpty
-	@OneToMany
+	@OneToMany(mappedBy="editorial")
 	private Set<Book> books = new HashSet<Book>();
 	
 	@NotEmpty
