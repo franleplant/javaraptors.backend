@@ -9,8 +9,8 @@ import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.NotEmpty;
@@ -35,6 +35,7 @@ public class Copy {
 	private String comments;
 	
 	@NotNull
+	@ManyToOne
 	private Location location;
 		
 	@Embedded
@@ -44,7 +45,7 @@ public class Copy {
 	@ManyToOne
 	private EntityType type;
 	
-	@OneToMany
+	@ManyToMany
 	private Set<LendType> lendTypes = new HashSet<LendType>();
 	
 	@NotNull

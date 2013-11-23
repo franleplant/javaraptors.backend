@@ -37,6 +37,7 @@ public class User {
     private Audit audit = new Audit();
 	
 	@NotNull
+	@ManyToOne
 	private EntityType type;
 	
 	
