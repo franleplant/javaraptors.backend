@@ -15,6 +15,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
@@ -38,11 +39,11 @@ public class Book {
 	
 	//Bidirectional
 	//Lazy loading to evade infinite loops while Marshalling
-	@NotEmpty
+	@NotNull
 	@ManyToMany(cascade = CascadeType.PERSIST, mappedBy="books")
 	private Set<Author> authors = new HashSet<Author>();
 	
-	@NotEmpty
+	@NotNull
 	@ManyToMany(cascade = CascadeType.PERSIST)
 	private Set<Genre> genres = new HashSet<Genre>();
 	
@@ -53,7 +54,7 @@ public class Book {
 	
 	
 	//Lazy loading to avoid infinite loops while Marshalling
-	@NotEmpty
+	@NotNull
 	@ManyToOne(cascade = CascadeType.PERSIST)
 	@JoinColumn(name="book_fk")
 	private Editorial editorial;
@@ -69,7 +70,7 @@ public class Book {
 	
 	private String lang;
 	
-	@NotEmpty
+	@NotNull
 	private double val;
 	
 	@NotEmpty
@@ -80,11 +81,11 @@ public class Book {
 	@Embedded
     private Audit audit = new Audit();
 	
-	@NotEmpty
+	@NotNull
 	@ManyToOne
 	private EntityType type;
 	
-	@NotEmpty
+	@NotNull
 	private boolean deleted;
 
 	public Long getId() {

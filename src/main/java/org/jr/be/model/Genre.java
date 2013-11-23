@@ -7,6 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.NotEmpty;
@@ -33,6 +34,7 @@ public class Genre{
 	@ManyToOne
 	private EntityType type;
 	
+	@NotNull
 	private Boolean deleted;
 	
 	

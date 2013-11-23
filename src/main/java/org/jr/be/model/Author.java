@@ -16,8 +16,7 @@ import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Temporal;
-
-
+import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
@@ -53,11 +52,11 @@ public class Author {
 	private Country country;
 	
 	
-	@NotEmpty
+	@NotNull
 	@ManyToOne
 	private EntityType type;
 	
-	@NotEmpty
+	@NotNull
 	private boolean deleted;
 
 	public Long getId() {

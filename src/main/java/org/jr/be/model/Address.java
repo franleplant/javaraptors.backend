@@ -3,6 +3,7 @@ package org.jr.be.model;
 import javax.persistence.CascadeType;
 import javax.persistence.Embeddable;
 import javax.persistence.ManyToOne;
+import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
@@ -12,7 +13,7 @@ public class Address {
 	@NotEmpty
 	private String street;
 	
-	@NotEmpty
+	@NotNull
 	private int number;
 	
 	private String floor;
@@ -20,7 +21,7 @@ public class Address {
 	private String department;
 	
 	
-	@NotEmpty
+	@NotNull
 	@ManyToOne(cascade = CascadeType.PERSIST)
 	private City city;
 

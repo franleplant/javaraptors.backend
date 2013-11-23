@@ -11,6 +11,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
@@ -33,20 +34,20 @@ public class Copy {
 	
 	private String comments;
 	
-	@NotEmpty
+	@NotNull
 	private Location location;
 		
 	@Embedded
     private Audit audit = new Audit();
 	
-	@NotEmpty
+	@NotNull
 	@ManyToOne
 	private EntityType type;
 	
 	@OneToMany
 	private Set<LendType> lendTypes = new HashSet<LendType>();
 	
-	@NotEmpty
+	@NotNull
 	private boolean deleted;
 
 	public Long getId() {

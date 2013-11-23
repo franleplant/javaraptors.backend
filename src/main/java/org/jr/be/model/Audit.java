@@ -7,17 +7,16 @@ import java.util.Date;
 import javax.persistence.Embeddable;
 import javax.persistence.ManyToOne;
 import javax.persistence.Temporal;
-
-import org.hibernate.validator.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 @Embeddable
 public class Audit {
 
-	@NotEmpty
+	@NotNull
 	@ManyToOne
 	private User createUser;
 
-	@NotEmpty
+	@NotNull
 	@Temporal(DATE)
 	private Date createDate;
 

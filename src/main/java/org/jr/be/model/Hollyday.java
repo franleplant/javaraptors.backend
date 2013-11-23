@@ -3,7 +3,6 @@ package org.jr.be.model;
 import static javax.persistence.GenerationType.IDENTITY;
 import static javax.persistence.TemporalType.DATE;
 
-
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -11,8 +10,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Temporal;
-
-import org.hibernate.validator.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 
 
@@ -28,7 +26,7 @@ public class Hollyday{
 	
 	@Temporal(DATE)
 	@Column(unique = true)
-	@NotEmpty
+	@NotNull
 	private Date date;
 	
 	private String comments;

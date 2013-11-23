@@ -10,6 +10,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Temporal;
+import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
@@ -34,7 +35,7 @@ public class Person {
 	
 	private String img;
 	
-	@NotEmpty
+	@NotNull
 	@Temporal(DATE)
 	private Date birth;
 	
@@ -47,7 +48,7 @@ public class Person {
 	@Embedded
     private Audit audit = new Audit();
 	
-	@NotEmpty
+	@NotNull
 	private Boolean deleted;
 
 	public Long getId() {

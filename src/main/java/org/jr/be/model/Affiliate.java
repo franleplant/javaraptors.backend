@@ -14,8 +14,7 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
-
-import org.hibernate.validator.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 
 @Entity
@@ -27,21 +26,21 @@ public class Affiliate {
 	
 	private double reputation;
 	
-	@NotEmpty
+	@NotNull
 	@OneToOne(cascade= ALL)
 	private Person person;
 	
 	@Embedded
     private Audit audit = new Audit();
 	
-	@NotEmpty
+	@NotNull
 	@ManyToOne
 	private EntityType type;
 	
 	@OneToMany(cascade = ALL, fetch = EAGER)
     private Set<Suspension> suspensions = new HashSet<Suspension>();
 	
-	@NotEmpty
+	@NotNull
 	private Boolean deleted;
 
 	public Long getId() {

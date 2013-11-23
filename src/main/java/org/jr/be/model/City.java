@@ -10,6 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.NotEmpty;
@@ -32,7 +33,7 @@ public class City {
     @Size(min = 2, message = "Too short")
 	private String name;
 	
-	@NotEmpty
+	@NotNull
 	@ManyToOne(cascade = CascadeType.PERSIST)
 	private Prov prov;
 	

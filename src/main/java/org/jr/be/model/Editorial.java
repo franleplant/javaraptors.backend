@@ -13,6 +13,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
@@ -40,7 +41,7 @@ public class Editorial {
 	
 	private String comments;
 	
-	@NotEmpty
+	@NotNull
 	@ManyToOne
 	private EntityType type;
 	
@@ -51,11 +52,11 @@ public class Editorial {
 	//If the Editorial is deleted then all their books are deleted
 	
 	//Lazy loading to avoid infinite loops while Marshalling
-	@NotEmpty
+	@NotNull
 	@OneToMany(mappedBy="editorial", cascade= CascadeType.REMOVE)
 	private Set<Book> books = new HashSet<Book>();
 	
-	@NotEmpty
+	@NotNull
 	private boolean deleted;
 
 	public Long getId() {

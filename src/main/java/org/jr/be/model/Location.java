@@ -6,6 +6,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
@@ -22,11 +23,11 @@ public class Location {
 	@NotEmpty
 	private String shelf;
 	
-	@NotEmpty
+	@NotNull
 	@ManyToOne
 	private EntityType type;
 	
-	@NotEmpty
+	@NotNull
 	private Boolean deleted;
 
 	public Long getId() {

@@ -10,8 +10,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
-
-import org.hibernate.validator.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 @Entity
 public class Suspension{
@@ -22,11 +21,11 @@ public class Suspension{
 	private Long id;
 	
 	@Temporal(DATE)
-	@NotEmpty
+	@NotNull
 	private Date startDate;
 	
 	@Temporal(DATE)
-	@NotEmpty
+	@NotNull
 	private Date endDate;
 	
 	@OneToOne

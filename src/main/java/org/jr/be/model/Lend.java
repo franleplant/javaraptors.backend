@@ -9,8 +9,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
-
-import org.hibernate.validator.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 @Entity
 public class Lend {
@@ -18,14 +17,14 @@ public class Lend {
 	@GeneratedValue(strategy = IDENTITY)
 	private Long id;
 	
-	@NotEmpty
+	@NotNull
 	@ManyToOne
 	private LendType lendType;
 	
-	@NotEmpty
+	@NotNull
 	private Date lendDate;
 	
-	@NotEmpty
+	@NotNull
 	private Date expectedReturnDate;
 	
 	private Date actualReturnDate;
@@ -33,17 +32,17 @@ public class Lend {
 	@ManyToOne
 	private User returningUser;
 	
-	@NotEmpty
+	@NotNull
 	@ManyToOne
 	private User lendingUser;
 	
 	private String comments;
 	
-	@NotEmpty
+	@NotNull
 	@OneToOne
 	private Affiliate affiliate;
 	
-	@NotEmpty
+	@NotNull
 	@OneToOne
 	private Copy copy;
 

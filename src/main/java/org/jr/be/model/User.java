@@ -7,8 +7,9 @@ import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.OneToOne;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
+import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
@@ -24,22 +25,22 @@ public class User {
 	@NotEmpty
 	private String password;
 	
-	@NotEmpty
+	@NotNull
 	@ManyToOne
 	private Rol rol;
 		
-	@NotEmpty
+	@NotNull
 	@OneToOne(cascade = ALL)
 	private Person person;
 	
 	@Embedded
     private Audit audit = new Audit();
 	
-	@NotEmpty
+	@NotNull
 	private EntityType type;
 	
 	
-	@NotEmpty
+	@NotNull
 	private Boolean deleted;
 
 
