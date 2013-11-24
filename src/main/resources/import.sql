@@ -42,3 +42,14 @@ insert into book_author (book_id, authors_id) values (1,1);
 insert into author_book  (author_id, books_id) values (1,1);
 
 insert into hollyday (id, date, comments ) values (1, '2013-12-10', 'Dia de los hombres con acento judio que no son judios');
+
+
+insert into COPY (id, createdate, createuser_id, deleted, editionYear, state, book_id, location_id, type_id ) values (1, '2013-10-10', 1, false, 2010, 'nuevo', 1, 1, 2);
+
+insert into COPY (id, createdate, createuser_id, deleted, editionYear, state, book_id, location_id, type_id ) values (2, '2013-10-10', 1, false, 2010, 'bueno, un poco desgastado', 1, 1, 2);
+
+insert into copy_lendtype (copy_id, lendtypes_id ) values (1, 1);
+insert into copy_lendtype (copy_id, lendtypes_id ) values (1, 2);
+insert into copy_lendtype (copy_id, lendtypes_id ) values (2, 1);
+
+insert into LEND (id, actualreturndate, expectedreturndate, lenddate, affiliate_id, copy_id, lendtype_id, lendinguser_id, returninguser_id ) values (1, '2013-10-15', '2013-10-15', '2013-10-10', 1, 1, 2, 1, 1);
