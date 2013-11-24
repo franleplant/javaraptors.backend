@@ -40,7 +40,7 @@ public class Book {
 	//Bidirectional
 	//Lazy loading to evade infinite loops while Marshalling
 	@NotNull
-	@ManyToMany(cascade = CascadeType.PERSIST, mappedBy="books")
+	@ManyToMany(cascade = CascadeType.PERSIST)
 	private Set<Author> authors = new HashSet<Author>();
 	
 	@NotNull
@@ -56,7 +56,6 @@ public class Book {
 	//Lazy loading to avoid infinite loops while Marshalling
 	@NotNull
 	@ManyToOne(cascade = CascadeType.PERSIST)
-	@JoinColumn(name="book_fk")
 	private Editorial editorial;
 	
 	

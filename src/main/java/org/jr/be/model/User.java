@@ -3,7 +3,6 @@ package org.jr.be.model;
 import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.GenerationType.IDENTITY;
 
-import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -33,9 +32,7 @@ public class User {
 	@OneToOne(cascade = ALL)
 	private Person person;
 	
-	@Embedded
-    private Audit audit = new Audit();
-	
+
 	@NotNull
 	@ManyToOne
 	private EntityType type;
@@ -85,14 +82,6 @@ public class User {
 	}
 
 
-	public Audit getAudit() {
-		return audit;
-	}
-
-
-	public void setAudit(Audit audit) {
-		this.audit = audit;
-	}
 
 
 	public EntityType getType() {
@@ -119,7 +108,6 @@ public class User {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((audit == null) ? 0 : audit.hashCode());
 		result = prime * result + ((deleted == null) ? 0 : deleted.hashCode());
 		result = prime * result
 				+ ((password == null) ? 0 : password.hashCode());
@@ -139,11 +127,6 @@ public class User {
 		if (getClass() != obj.getClass())
 			return false;
 		User other = (User) obj;
-		if (audit == null) {
-			if (other.audit != null)
-				return false;
-		} else if (!audit.equals(other.audit))
-			return false;
 		if (deleted == null) {
 			if (other.deleted != null)
 				return false;
