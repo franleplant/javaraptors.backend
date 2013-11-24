@@ -9,6 +9,7 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
@@ -42,7 +43,7 @@ public class Editorial {
 	private String comments;
 	
 	@NotNull
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.EAGER)
 	private EntityType type;
 	
 	@Embedded
@@ -50,10 +51,9 @@ public class Editorial {
 	
 	//Bidrectional
 	//If the Editorial is deleted then all their books are deleted
-	
 	//Lazy loading to avoid infinite loops while Marshalling
 	@NotNull
-	@OneToMany(mappedBy="editorial", cascade= CascadeType.REMOVE)
+	@OneToMany(fetch = FetchType.LAZY, mappedBy="editorial", cascade= CascadeType.REMOVE)
 	private Set<Book> books = new HashSet<Book>();
 	
 	@NotNull

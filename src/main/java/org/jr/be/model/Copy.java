@@ -7,6 +7,7 @@ import java.util.Set;
 
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
@@ -23,7 +24,7 @@ public class Copy {
 	
 	
 	//Lazy loading to avoid infinite loops while Marshalling
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	private Book book;
 	
 	//Physical state
@@ -35,17 +36,17 @@ public class Copy {
 	private String comments;
 	
 	@NotNull
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.EAGER)
 	private Location location;
 		
 	@Embedded
     private Audit audit = new Audit();
 	
 	@NotNull
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.EAGER)
 	private EntityType type;
 	
-	@ManyToMany
+	@ManyToMany(fetch = FetchType.EAGER)
 	private Set<LendType> lendTypes = new HashSet<LendType>();
 	
 	@NotNull

@@ -5,6 +5,7 @@ import static javax.persistence.GenerationType.IDENTITY;
 import java.util.Date;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
@@ -18,7 +19,7 @@ public class Lend {
 	private Long id;
 	
 	@NotNull
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.EAGER)
 	private LendType lendType;
 	
 	@NotNull
@@ -29,21 +30,21 @@ public class Lend {
 	
 	private Date actualReturnDate;
 	
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.EAGER)
 	private User returningUser;
 	
 	@NotNull
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.EAGER)
 	private User lendingUser;
 	
 	private String comments;
 	
 	@NotNull
-	@OneToOne
+	@OneToOne(fetch = FetchType.EAGER)
 	private Affiliate affiliate;
 	
 	@NotNull
-	@OneToOne
+	@OneToOne(fetch = FetchType.EAGER)
 	private Copy copy;
 
 	public Long getId() {

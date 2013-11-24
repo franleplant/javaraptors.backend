@@ -4,6 +4,7 @@ import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.GenerationType.IDENTITY;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
@@ -25,16 +26,16 @@ public class User {
 	private String password;
 	
 	@NotNull
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.EAGER)
 	private Rol rol;
 		
 	@NotNull
-	@OneToOne(cascade = ALL)
+	@OneToOne(cascade = ALL, fetch = FetchType.EAGER)
 	private Person person;
 	
 
 	@NotNull
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.EAGER)
 	private EntityType type;
 	
 	

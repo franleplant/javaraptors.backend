@@ -9,9 +9,9 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
@@ -40,27 +40,27 @@ public class Book {
 	//Bidirectional
 	//Lazy loading to evade infinite loops while Marshalling
 	@NotNull
-	@ManyToMany(cascade = CascadeType.PERSIST)
+	@ManyToMany(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
 	private Set<Author> authors = new HashSet<Author>();
 	
 	@NotNull
-	@ManyToMany(cascade = CascadeType.PERSIST)
+	@ManyToMany(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
 	private Set<Genre> genres = new HashSet<Genre>();
 	
 	private String editionNumber;
 	
-	@ManyToOne(cascade = CascadeType.PERSIST)
+	@ManyToOne(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
 	private Country editionCountry;
 	
 	
 	//Lazy loading to avoid infinite loops while Marshalling
 	@NotNull
-	@ManyToOne(cascade = CascadeType.PERSIST)
+	@ManyToOne(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
 	private Editorial editorial;
 	
 	
 	//Lazy loading to avoid infinite loops while Marshalling
-	@OneToMany(cascade = CascadeType.ALL, mappedBy="book")
+	@OneToMany(cascade = CascadeType.ALL, mappedBy="book", fetch = FetchType.LAZY)
 	private Set<Copy> copys = new HashSet<Copy>();
 	
 	private String img;
@@ -81,7 +81,7 @@ public class Book {
     private Audit audit = new Audit();
 	
 	@NotNull
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.EAGER)
 	private EntityType type;
 	
 	@NotNull

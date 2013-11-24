@@ -11,6 +11,7 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
@@ -38,7 +39,7 @@ public class Author {
 	//If an Author is deleted then all his/her books are deleted
 	
 	//Lazy loading to avoid infinite loops while Marshalling
-	@ManyToMany(cascade = CascadeType.REMOVE)
+	@ManyToMany(cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
 	private Set<Book> books = new HashSet<Book>();
 	
 	private String isni;
@@ -48,12 +49,12 @@ public class Author {
 	
 	private String comments;
 	
-	@ManyToOne(cascade = CascadeType.PERSIST)
+	@ManyToOne(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
 	private Country country;
 	
 	
 	@NotNull
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.EAGER)
 	private EntityType type;
 	
 	@NotNull

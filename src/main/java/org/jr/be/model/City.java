@@ -5,6 +5,7 @@ import static javax.persistence.GenerationType.IDENTITY;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
@@ -34,7 +35,7 @@ public class City {
 	private String name;
 	
 	@NotNull
-	@ManyToOne(cascade = CascadeType.PERSIST)
+	@ManyToOne(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
 	private Prov prov;
 	
 	@Column(unique = true)

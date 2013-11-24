@@ -5,6 +5,7 @@ import static javax.persistence.TemporalType.DATE;
 import java.util.Date;
 
 import javax.persistence.Embeddable;
+import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
 import javax.persistence.Temporal;
 import javax.validation.constraints.NotNull;
@@ -12,20 +13,20 @@ import javax.validation.constraints.NotNull;
 @Embeddable
 public class Audit {
 
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.EAGER)
 	private User createUser;
 
 	@NotNull
 	@Temporal(DATE)
 	private Date createDate;
 
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.EAGER)
 	private User editUser;
 
 	@Temporal(DATE)
 	private Date editDate;
 
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.EAGER)
 	private User deleteUser;
 
 	@Temporal(DATE)

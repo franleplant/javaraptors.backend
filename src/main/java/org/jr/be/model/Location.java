@@ -3,6 +3,7 @@ package org.jr.be.model;
 import static javax.persistence.GenerationType.IDENTITY;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
@@ -24,7 +25,7 @@ public class Location {
 	private String shelf;
 	
 	@NotNull
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.EAGER)
 	private EntityType type;
 	
 	@NotNull

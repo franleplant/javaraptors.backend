@@ -4,6 +4,7 @@ import static javax.persistence.GenerationType.IDENTITY;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
@@ -31,7 +32,7 @@ public class Prov{
 	private String name;
 	
 	@NotNull
-	@ManyToOne(cascade = CascadeType.PERSIST)
+	@ManyToOne(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
 	private Country country;
 
 	public Long getId() {

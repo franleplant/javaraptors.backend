@@ -1,13 +1,13 @@
 package org.jr.be.model;
 
 import static javax.persistence.CascadeType.ALL;
-import static javax.persistence.FetchType.EAGER;
 import static javax.persistence.GenerationType.IDENTITY;
 
 import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
@@ -30,10 +30,10 @@ public class Affiliate {
 	private Person person;
 	
 	@NotNull
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.EAGER)
 	private EntityType type;
 	
-	@OneToMany(cascade = ALL, fetch = EAGER)
+	@OneToMany(cascade = ALL, fetch = FetchType.EAGER)
     private Set<Suspension> suspensions = new HashSet<Suspension>();
 	
 	@NotNull
