@@ -36,6 +36,11 @@ public class Affiliate {
 	@OneToMany(cascade = ALL, fetch = FetchType.EAGER)
     private Set<Suspension> suspensions = new HashSet<Suspension>();
 	
+	
+	@OneToMany(cascade = ALL, fetch = FetchType.LAZY)
+	private Set<Lend> lends = new HashSet<Lend>();
+	
+	
 	@NotNull
 	private Boolean deleted;
 

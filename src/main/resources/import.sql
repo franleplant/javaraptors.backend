@@ -53,3 +53,12 @@ insert into copy_lendtype (copy_id, lendtypes_id ) values (1, 2);
 insert into copy_lendtype (copy_id, lendtypes_id ) values (2, 1);
 
 insert into LEND (id, actualreturndate, expectedreturndate, lenddate, affiliate_id, copy_id, lendtype_id, lendinguser_id, returninguser_id ) values (1, '2013-10-15', '2013-10-15', '2013-10-10', 1, 1, 2, 1, 1);
+
+insert into affiliate_lend ( affiliate_id, lends_id ) values (1, 1);
+
+
+
+
+
+
+
