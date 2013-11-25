@@ -12,6 +12,9 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.validation.constraints.NotNull;
 
+import org.codehaus.jackson.annotate.JsonBackReference;
+import org.codehaus.jackson.annotate.JsonManagedReference;
+
 @Entity
 public class Lend {
 	@Id
@@ -40,6 +43,8 @@ public class Lend {
 	private String comments;
 	
 	@NotNull
+	@JsonBackReference("Affiliate")
+	@JsonManagedReference("Lend")
 	@OneToOne(fetch = FetchType.EAGER)
 	private Affiliate affiliate;
 	

@@ -15,6 +15,10 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.validation.constraints.NotNull;
 
+import org.codehaus.jackson.annotate.JsonBackReference;
+import org.codehaus.jackson.annotate.JsonIgnore;
+import org.codehaus.jackson.annotate.JsonManagedReference;
+
 
 @Entity
 public class Affiliate {
@@ -33,12 +37,16 @@ public class Affiliate {
 	@ManyToOne(fetch = FetchType.EAGER)
 	private EntityType type;
 	
-	@OneToMany(cascade = ALL, fetch = FetchType.EAGER)
-    private Set<Suspension> suspensions = new HashSet<Suspension>();
+	//@JsonIgnore
+	//@OneToMany(cascade = ALL, fetch = FetchType.EAGER)
+    //private Set<Suspension> suspensions = new HashSet<Suspension>();
 	
 	
-	@OneToMany(cascade = ALL, fetch = FetchType.LAZY)
-	private Set<Lend> lends = new HashSet<Lend>();
+	//@JsonIgnore
+	//@JsonManagedReference("Affiliate")
+	//@JsonBackReference("Lend")
+	//@OneToMany(cascade = ALL, fetch = FetchType.EAGER)
+	//private Set<Lend> lends = new HashSet<Lend>();
 	
 	
 	@NotNull
@@ -77,6 +85,7 @@ public class Affiliate {
 		this.type = type;
 	}
 
+	/*
 	public Set<Suspension> getSuspensions() {
 		return suspensions;
 	}
@@ -84,7 +93,17 @@ public class Affiliate {
 	public void setSuspensions(Set<Suspension> suspensions) {
 		this.suspensions = suspensions;
 	}
+	
+	
+	public Set<Lend> getLends() {
+		return lends;
+	}
 
+	public void setLends(Set<Lend> lends) {
+		this.lends = lends;
+	}
+	
+*/
 	public Boolean getDeleted() {
 		return deleted;
 	}

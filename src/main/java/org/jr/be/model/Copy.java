@@ -22,9 +22,8 @@ public class Copy {
 	@GeneratedValue(strategy = IDENTITY)
 	private Long id;
 	
-	
-	//Lazy loading to avoid infinite loops while Marshalling
-	@ManyToOne(fetch = FetchType.LAZY)
+
+	@ManyToOne(fetch = FetchType.EAGER)
 	private Book book;
 	
 	//Physical state
