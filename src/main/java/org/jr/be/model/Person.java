@@ -42,9 +42,6 @@ public class Person {
 	@Embedded
     private Audit audit = new Audit();
 	
-	@NotNull
-	private Boolean deleted;
-
 	public String getName() {
 		return name;
 	}
@@ -117,14 +114,6 @@ public class Person {
 		this.audit = audit;
 	}
 
-	public Boolean getDeleted() {
-		return deleted;
-	}
-
-	public void setDeleted(Boolean deleted) {
-		this.deleted = deleted;
-	}
-
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -134,7 +123,6 @@ public class Person {
 		result = prime * result + ((birth == null) ? 0 : birth.hashCode());
 		result = prime * result + ((contact == null) ? 0 : contact.hashCode());
 		result = prime * result + ((cuil == null) ? 0 : cuil.hashCode());
-		result = prime * result + ((deleted == null) ? 0 : deleted.hashCode());
 		result = prime * result + ((dni == null) ? 0 : dni.hashCode());
 		result = prime * result + ((img == null) ? 0 : img.hashCode());
 		result = prime * result
@@ -176,11 +164,6 @@ public class Person {
 			if (other.cuil != null)
 				return false;
 		} else if (!cuil.equals(other.cuil))
-			return false;
-		if (deleted == null) {
-			if (other.deleted != null)
-				return false;
-		} else if (!deleted.equals(other.deleted))
 			return false;
 		if (dni == null) {
 			if (other.dni != null)

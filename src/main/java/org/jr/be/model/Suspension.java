@@ -6,10 +6,8 @@ import static javax.persistence.TemporalType.DATE;
 import java.util.Date;
 
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.validation.constraints.NotNull;
 
@@ -29,9 +27,7 @@ public class Suspension{
 	@NotNull
 	private Date endDate;
 	
-	@OneToOne(fetch = FetchType.EAGER)
-	private Lend lend;
-	
+
 	private String comments;
 
 	public Long getId() {
