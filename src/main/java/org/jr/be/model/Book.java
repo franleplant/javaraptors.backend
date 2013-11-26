@@ -37,10 +37,9 @@ public class Book {
 	@NotEmpty
 	private String title;
 	
-	//Bidirectional
-	//Lazy loading to evade infinite loops while Marshalling
+
 	@NotNull
-	@ManyToMany(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
+	@ManyToMany(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
 	private Set<Author> authors = new HashSet<Author>();
 	
 	@NotNull
@@ -53,14 +52,11 @@ public class Book {
 	private Country editionCountry;
 	
 	
-	//Lazy loading to avoid infinite loops while Marshalling
 	@NotNull
-	@ManyToOne(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
+	@ManyToOne(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
 	private Editorial editorial;
 	
-	
-	//Lazy loading to avoid infinite loops while Marshalling
-	@OneToMany(cascade = CascadeType.ALL, mappedBy="book", fetch = FetchType.LAZY)
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private Set<Copy> copys = new HashSet<Copy>();
 	
 	private String img;

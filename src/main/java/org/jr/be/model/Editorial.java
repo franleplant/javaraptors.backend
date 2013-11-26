@@ -2,10 +2,6 @@ package org.jr.be.model;
 
 import static javax.persistence.GenerationType.IDENTITY;
 
-import java.util.HashSet;
-import java.util.Set;
-
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
@@ -13,7 +9,6 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.NotEmpty;
@@ -48,13 +43,6 @@ public class Editorial {
 	
 	@Embedded
     private Audit audit = new Audit();
-	
-	//Bidrectional
-	//If the Editorial is deleted then all their books are deleted
-	//Lazy loading to avoid infinite loops while Marshalling
-	@NotNull
-	@OneToMany(fetch = FetchType.LAZY, mappedBy="editorial", cascade= CascadeType.REMOVE)
-	private Set<Book> books = new HashSet<Book>();
 	
 	@NotNull
 	private boolean deleted;
@@ -123,14 +111,6 @@ public class Editorial {
 		this.audit = audit;
 	}
 
-	public Set<Book> getBooks() {
-		return books;
-	}
-
-	public void setBooks(Set<Book> books) {
-		this.books = books;
-	}
-
 	public boolean isDeleted() {
 		return deleted;
 	}
@@ -151,7 +131,6 @@ public class Editorial {
 		int result = 1;
 		result = prime * result + ((address == null) ? 0 : address.hashCode());
 		result = prime * result + ((audit == null) ? 0 : audit.hashCode());
-		result = prime * result + ((books == null) ? 0 : books.hashCode());
 		result = prime * result
 				+ ((comments == null) ? 0 : comments.hashCode());
 		result = prime * result + ((contact == null) ? 0 : contact.hashCode());
@@ -182,11 +161,6 @@ public class Editorial {
 			if (other.audit != null)
 				return false;
 		} else if (!audit.equals(other.audit))
-			return false;
-		if (books == null) {
-			if (other.books != null)
-				return false;
-		} else if (!books.equals(other.books))
 			return false;
 		if (comments == null) {
 			if (other.comments != null)

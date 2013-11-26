@@ -25,7 +25,7 @@ public class EntityType{
 	
 	@Column(unique = true)
 	@NotEmpty
-	private String type;
+	private String name;
 
 
 	public Long getId() {
@@ -38,19 +38,13 @@ public class EntityType{
 	}
 
 
-	public String getType() {
-		return type;
+	public String getName() {
+		return name;
 	}
 
 
-	public void setType(String type) {
-		this.type = type;
-	}
-
-
-	@Override
-	public String toString() {
-		return type;
+	public void setName(String name) {
+		this.name = name;
 	}
 
 
@@ -58,7 +52,7 @@ public class EntityType{
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((type == null) ? 0 : type.hashCode());
+		result = prime * result + ((name == null) ? 0 : name.hashCode());
 		return result;
 	}
 
@@ -72,13 +66,23 @@ public class EntityType{
 		if (getClass() != obj.getClass())
 			return false;
 		EntityType other = (EntityType) obj;
-		if (type == null) {
-			if (other.type != null)
+		if (name == null) {
+			if (other.name != null)
 				return false;
-		} else if (!type.equals(other.type))
+		} else if (!name.equals(other.name))
 			return false;
 		return true;
 	}
+
+
+	@Override
+	public String toString() {
+		return "EntityType [name=" + name + "]";
+	}
+
+
+
+
 	
 	
 }
