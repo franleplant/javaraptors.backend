@@ -6,18 +6,14 @@ import static javax.persistence.GenerationType.IDENTITY;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.validation.constraints.NotNull;
-
-import org.codehaus.jackson.annotate.JsonBackReference;
-import org.codehaus.jackson.annotate.JsonIgnore;
-import org.codehaus.jackson.annotate.JsonManagedReference;
 
 
 @Entity
@@ -29,24 +25,20 @@ public class Affiliate {
 	
 	private double reputation;
 	
-	@NotNull
-	@OneToOne(cascade= ALL)
-	private Person person;
+	@Embedded
+	private Person person = new Person();
 	
 	@NotNull
 	@ManyToOne(fetch = FetchType.EAGER)
 	private EntityType type;
 	
-	//@JsonIgnore
-	//@OneToMany(cascade = ALL, fetch = FetchType.EAGER)
-    //private Set<Suspension> suspensions = new HashSet<Suspension>();
 	
+	@OneToMany(cascade = ALL, fetch = FetchType.EAGER)
+    private Set<Suspension> suspensions = new HashSet<Suspension>();
 	
-	//@JsonIgnore
-	//@JsonManagedReference("Affiliate")
-	//@JsonBackReference("Lend")
-	//@OneToMany(cascade = ALL, fetch = FetchType.EAGER)
-	//private Set<Lend> lends = new HashSet<Lend>();
+
+	@OneToMany(cascade = ALL, fetch = FetchType.EAGER)
+	private Set<Lend> lends = new HashSet<Lend>();
 	
 	
 	@NotNull
@@ -85,7 +77,6 @@ public class Affiliate {
 		this.type = type;
 	}
 
-	/*
 	public Set<Suspension> getSuspensions() {
 		return suspensions;
 	}
@@ -93,7 +84,6 @@ public class Affiliate {
 	public void setSuspensions(Set<Suspension> suspensions) {
 		this.suspensions = suspensions;
 	}
-	
 	
 	public Set<Lend> getLends() {
 		return lends;
@@ -103,7 +93,7 @@ public class Affiliate {
 		this.lends = lends;
 	}
 	
-*/
+
 	public Boolean getDeleted() {
 		return deleted;
 	}

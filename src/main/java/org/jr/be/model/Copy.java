@@ -16,13 +16,17 @@ import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 @Entity
+@JsonIdentityInfo(generator=ObjectIdGenerators.IntSequenceGenerator.class, property="@id")
 public class Copy {
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
 	private Long id;
 	
-
+	
 	@ManyToOne(fetch = FetchType.EAGER)
 	private Book book;
 	
@@ -142,7 +146,6 @@ public class Copy {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((audit == null) ? 0 : audit.hashCode());
-		result = prime * result + ((book == null) ? 0 : book.hashCode());
 		result = prime * result + (deleted ? 1231 : 1237);
 		result = prime * result + editionYear;
 		result = prime * result + ((id == null) ? 0 : id.hashCode());

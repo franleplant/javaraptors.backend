@@ -1,27 +1,20 @@
 package org.jr.be.model;
 
-import static javax.persistence.GenerationType.IDENTITY;
 import static javax.persistence.TemporalType.DATE;
 
 import java.util.Date;
 
+import javax.persistence.Embeddable;
 import javax.persistence.Embedded;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
 import javax.persistence.Temporal;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
 
-@Entity
+@Embeddable
 public class Person {
 
-	@Id
-	@GeneratedValue(strategy = IDENTITY)
-	private Long id;
-	
 	@NotEmpty
 	private String name;
 	
@@ -51,13 +44,6 @@ public class Person {
 	@NotNull
 	private Boolean deleted;
 
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
 
 	public String getName() {
 		return name;

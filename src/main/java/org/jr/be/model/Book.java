@@ -19,8 +19,12 @@ import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 
 @Entity
+@JsonIdentityInfo(generator=ObjectIdGenerators.IntSequenceGenerator.class, property="@id")
 public class Book {
 	
 	// Synthetic id
@@ -37,8 +41,7 @@ public class Book {
 	@NotEmpty
 	private String title;
 	
-	//Bidirectional
-	//Lazy loading to evade infinite loops while Marshalling
+
 	@NotNull
 	@ManyToMany(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
 	private Set<Author> authors = new HashSet<Author>();
@@ -57,7 +60,7 @@ public class Book {
 	@ManyToOne(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
 	private Editorial editorial;
 	
-	
+
 	@OneToMany(cascade = CascadeType.ALL, mappedBy="book", fetch = FetchType.EAGER)
 	private Set<Copy> copys = new HashSet<Copy>();
 	
@@ -243,14 +246,10 @@ public class Book {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((audit == null) ? 0 : audit.hashCode());
-		result = prime * result + ((authors == null) ? 0 : authors.hashCode());
-		result = prime * result + ((copys == null) ? 0 : copys.hashCode());
 		result = prime * result
 				+ ((editionCountry == null) ? 0 : editionCountry.hashCode());
 		result = prime * result
 				+ ((editionNumber == null) ? 0 : editionNumber.hashCode());
-		result = prime * result
-				+ ((editorial == null) ? 0 : editorial.hashCode());
 		result = prime * result + ((genres == null) ? 0 : genres.hashCode());
 		result = prime * result + ((isbn == null) ? 0 : isbn.hashCode());
 		result = prime * result + ((title == null) ? 0 : title.hashCode());

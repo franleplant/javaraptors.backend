@@ -21,7 +21,11 @@ import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 @Entity
+@JsonIdentityInfo(generator=ObjectIdGenerators.IntSequenceGenerator.class, property="@id")
 public class Author {
 	// Synthetic id
 	@Id
@@ -35,10 +39,7 @@ public class Author {
 	@Temporal(DATE)
 	private Date birth;
 	
-	// Bidirectional
-	//If an Author is deleted then all his/her books are deleted
-	
-	//Lazy loading to avoid infinite loops while Marshalling
+
 	@ManyToMany(cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
 	private Set<Book> books = new HashSet<Book>();
 	
@@ -154,7 +155,6 @@ public class Author {
 		int result = 1;
 		result = prime * result + ((audit == null) ? 0 : audit.hashCode());
 		result = prime * result + ((birth == null) ? 0 : birth.hashCode());
-		result = prime * result + ((books == null) ? 0 : books.hashCode());
 		result = prime * result
 				+ ((comments == null) ? 0 : comments.hashCode());
 		result = prime * result + ((country == null) ? 0 : country.hashCode());

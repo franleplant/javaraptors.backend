@@ -12,10 +12,12 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.validation.constraints.NotNull;
 
-import org.codehaus.jackson.annotate.JsonBackReference;
-import org.codehaus.jackson.annotate.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 
 @Entity
+@JsonIdentityInfo(generator=ObjectIdGenerators.IntSequenceGenerator.class, property="@id")
 public class Lend {
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
@@ -33,23 +35,21 @@ public class Lend {
 	
 	private Date actualReturnDate;
 	
-	@ManyToOne(fetch = FetchType.EAGER)
+	@ManyToOne(fetch = FetchType.LAZY)
 	private User returningUser;
 	
 	@NotNull
-	@ManyToOne(fetch = FetchType.EAGER)
+	@ManyToOne(fetch = FetchType.LAZY)
 	private User lendingUser;
 	
 	private String comments;
 	
 	@NotNull
-	@JsonBackReference("Affiliate")
-	@JsonManagedReference("Lend")
-	@OneToOne(fetch = FetchType.EAGER)
+	@OneToOne(fetch = FetchType.LAZY)
 	private Affiliate affiliate;
 	
 	@NotNull
-	@OneToOne(fetch = FetchType.EAGER)
+	@OneToOne(fetch = FetchType.LAZY)
 	private Copy copy;
 
 	public Long getId() {
@@ -141,7 +141,6 @@ public class Lend {
 				+ ((actualReturnDate == null) ? 0 : actualReturnDate.hashCode());
 		result = prime * result
 				+ ((affiliate == null) ? 0 : affiliate.hashCode());
-		result = prime * result + ((copy == null) ? 0 : copy.hashCode());
 		result = prime
 				* result
 				+ ((expectedReturnDate == null) ? 0 : expectedReturnDate

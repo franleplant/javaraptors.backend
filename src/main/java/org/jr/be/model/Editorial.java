@@ -18,8 +18,12 @@ import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 
 @Entity
+@JsonIdentityInfo(generator=ObjectIdGenerators.IntSequenceGenerator.class, property="@id")
 public class Editorial {
 	// Synthetic id
 	@Id
@@ -49,9 +53,6 @@ public class Editorial {
 	@Embedded
     private Audit audit = new Audit();
 	
-	//Bidrectional
-	//If the Editorial is deleted then all their books are deleted
-	//Lazy loading to avoid infinite loops while Marshalling
 	@NotNull
 	@OneToMany(fetch = FetchType.LAZY, mappedBy="editorial", cascade= CascadeType.REMOVE)
 	private Set<Book> books = new HashSet<Book>();
@@ -151,7 +152,6 @@ public class Editorial {
 		int result = 1;
 		result = prime * result + ((address == null) ? 0 : address.hashCode());
 		result = prime * result + ((audit == null) ? 0 : audit.hashCode());
-		result = prime * result + ((books == null) ? 0 : books.hashCode());
 		result = prime * result
 				+ ((comments == null) ? 0 : comments.hashCode());
 		result = prime * result + ((contact == null) ? 0 : contact.hashCode());
