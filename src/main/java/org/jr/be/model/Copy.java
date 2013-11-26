@@ -22,11 +22,6 @@ public class Copy {
 	@GeneratedValue(strategy = IDENTITY)
 	private Long id;
 	
-	
-	//Lazy loading to avoid infinite loops while Marshalling
-	@ManyToOne(fetch = FetchType.LAZY)
-	private Book book;
-	
 	//Physical state
 	@NotEmpty
 	private String state;
@@ -58,14 +53,6 @@ public class Copy {
 
 	public void setId(Long id) {
 		this.id = id;
-	}
-
-	public Book getBook() {
-		return book;
-	}
-
-	public void setBook(Book book) {
-		this.book = book;
 	}
 
 	public String getState() {
@@ -134,7 +121,7 @@ public class Copy {
 
 	@Override
 	public String toString() {
-		return "Copy [book=" + book + ", editionYear=" + editionYear
+		return "Copy [editionYear=" + editionYear
 				+ ", location=" + location + ", lendTypes=" + lendTypes + "]";
 	}
 
@@ -143,7 +130,6 @@ public class Copy {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((audit == null) ? 0 : audit.hashCode());
-		result = prime * result + ((book == null) ? 0 : book.hashCode());
 		result = prime * result + (deleted ? 1231 : 1237);
 		result = prime * result + editionYear;
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
@@ -167,11 +153,6 @@ public class Copy {
 			if (other.audit != null)
 				return false;
 		} else if (!audit.equals(other.audit))
-			return false;
-		if (book == null) {
-			if (other.book != null)
-				return false;
-		} else if (!book.equals(other.book))
 			return false;
 		if (deleted != other.deleted)
 			return false;
