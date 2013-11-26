@@ -4,8 +4,6 @@ import static javax.persistence.GenerationType.IDENTITY;
 import static javax.persistence.TemporalType.DATE;
 
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -14,7 +12,6 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Temporal;
 import javax.validation.constraints.NotNull;
@@ -35,12 +32,6 @@ public class Author {
 	@Temporal(DATE)
 	private Date birth;
 	
-	// Bidirectional
-	//If an Author is deleted then all his/her books are deleted
-	
-	//Lazy loading to avoid infinite loops while Marshalling
-	@ManyToMany(cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
-	private Set<Book> books = new HashSet<Book>();
 	
 	private String isni;
 	
@@ -84,13 +75,6 @@ public class Author {
 		this.birth = birth;
 	}
 
-	public Set<Book> getBooks() {
-		return books;
-	}
-
-	public void setBooks(Set<Book> books) {
-		this.books = books;
-	}
 
 	public String getIsni() {
 		return isni;
@@ -143,7 +127,7 @@ public class Author {
 	@Override
 	public String toString() {
 		return "Author [id=" + id + ", nick=" + nick + ", birth=" + birth
-				+ ", books=" + books + ", isni=" + isni + ", audit=" + audit
+				+  ", isni=" + isni + ", audit=" + audit
 				+ ", comments=" + comments + ", country=" + country + ", type="
 				+ type + ", deleted=" + deleted + "]";
 	}
@@ -154,7 +138,6 @@ public class Author {
 		int result = 1;
 		result = prime * result + ((audit == null) ? 0 : audit.hashCode());
 		result = prime * result + ((birth == null) ? 0 : birth.hashCode());
-		result = prime * result + ((books == null) ? 0 : books.hashCode());
 		result = prime * result
 				+ ((comments == null) ? 0 : comments.hashCode());
 		result = prime * result + ((country == null) ? 0 : country.hashCode());
@@ -184,11 +167,6 @@ public class Author {
 			if (other.birth != null)
 				return false;
 		} else if (!birth.equals(other.birth))
-			return false;
-		if (books == null) {
-			if (other.books != null)
-				return false;
-		} else if (!books.equals(other.books))
 			return false;
 		if (comments == null) {
 			if (other.comments != null)
