@@ -41,16 +41,26 @@ public class AffiliateService {
         	Affiliate affiliate = null;
                 
 	        EntityManager entityManager = entityManagerFactory.createEntityManager();             
+	
+	        try {
+	        	affiliate = entityManager.find(Affiliate.class, id);
+	        	
+	        	//Has it found any entity?
+	        	affiliate.getId();
+	        	
+	        	
+	        } catch(NullPointerException ex) {
+	        	throw new WebApplicationException(Response.Status.NOT_FOUND);
+	        } finally {
+	        	entityManager.close();
+	        }      
 	        
-	        affiliate = entityManager.find(Affiliate.class, id);
-	        
-	        
-	        entityManager.close();
-	        
-	        
+	       
 	        if (  affiliate.getDeleted()  ) {
 	        	throw new WebApplicationException(Response.Status.NOT_FOUND);
 	        }
+	        
+	        
 	        
 	        return affiliate;      
         }
