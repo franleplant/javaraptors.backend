@@ -17,6 +17,7 @@ insert into user (id, deleted , password , number, street, createdate, birth, ce
 
 insert into affiliate (id, deleted, street, number, createdate, createuser_id, birth, cel, tel, email, cuil, dni, name, lastname, reputation, city_id, type_id ) values (1, false, 'Avenida Del Juego de la Oca', 123, '2013-10-10', 1, '1990-10-10', 1234567,1234567, 'jesus@cielo.com', 1234566,1234567, 'Jesus', 'DeLaFerrere', 10, 1, 3);
 insert into affiliate (id, deleted, street, number, createdate, createuser_id, birth, cel, tel, email, cuil, dni, name, lastname, reputation, city_id, type_id ) values (2, false, 'El Pato', 123, '2013-10-10', 1, '1990-10-10', 1234567,1234567, 'dexter@blood.com', 1234566,1234567, 'Dexter', 'Morgan', 10, 1, 3);
+insert into affiliate (id, deleted, street, number, createdate, createuser_id, birth, cel, tel, email, cuil, dni, name, lastname, reputation, city_id, type_id ) values (3, true, 'Borrado', 123, '2013-10-10', 1, '1990-10-10', 1234567,1234567, 'deleted@borrado.com', 1234566,1234567, 'Deleted', 'Borrado', 10, 1, 3);
 
 
 insert into location (id, deleted, shelf, shelves, type_id ) values (1, false, '2', 'A', 6);

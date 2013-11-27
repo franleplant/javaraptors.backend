@@ -14,7 +14,9 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 import org.jr.be.model.Affiliate;
 import org.jr.be.model.Audit;
@@ -45,8 +47,10 @@ public class AffiliateService {
 	        
 	        entityManager.close();
 	        
-	        // The client will need to deal with an affiliate that is deleted. Dont show them!
 	        
+	        if (  affiliate.getDeleted()  ) {
+	        	throw new WebApplicationException(Response.Status.NOT_FOUND);
+	        }
 	        
 	        return affiliate;      
         }
