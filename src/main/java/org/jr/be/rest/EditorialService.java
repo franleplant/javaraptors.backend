@@ -4,10 +4,13 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.PersistenceUnit;
 import javax.ws.rs.GET;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 
 import org.jr.be.model.Editorial;
 
@@ -19,7 +22,7 @@ public class EditorialService {
     
     @PersistenceUnit(unitName = "primary")
     private EntityManagerFactory entityManagerFactory;
-        
+     
     @GET
     @Path("/{id:[0-9][0-9]*}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -31,6 +34,10 @@ public class EditorialService {
                 entityManager.close();
                 return editorial;        
      }
+    
+  
+    
+   
     
     
     
