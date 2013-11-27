@@ -8,6 +8,7 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.PersistenceUnit;
 import javax.transaction.UserTransaction;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -106,6 +107,35 @@ public class AffiliateService {
         	
         	u.begin();
         	EntityManager entityManager = entityManagerFactory.createEntityManager(); 
+        	
+        	entityManager.merge(affiliate);
+        	entityManager.flush();
+        	u.commit();
+            entityManager.close();
+            
+        	return "{status: ok}";
+        };
+        
+        
+        @DELETE
+        @Path("/{id:[0-9][0-9]*}")
+        @Produces(MediaType.APPLICATION_JSON)
+        public String delete(@PathParam("id") Long id) throws Exception {
+        	
+        	
+        	Affiliate affiliate = null;     
+	        
+        	u.begin();
+	        EntityManager entityManager = entityManagerFactory.createEntityManager();             
+	        
+	        affiliate = entityManager.find(Affiliate.class, id);
+	        
+	        affiliate.setDeleted(true);
+	        
+	        affiliate.getPerson().getAudit().setDeleteDate(new Date());
+	        
+	        //Finish this when loggin is working
+	        //affiliate.getPerson().getAudit().setDeleteUser(deleteDate);
         	
         	entityManager.merge(affiliate);
         	entityManager.flush();
