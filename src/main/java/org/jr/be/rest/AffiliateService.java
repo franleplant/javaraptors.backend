@@ -68,6 +68,42 @@ public class AffiliateService {
         	
         	affiliate.getPerson().setAudit(audit);
         	
+        	System.err.println(affiliate.getPerson().getAddress().getCity().getName());
+        	
+        	u.begin();
+        	EntityManager entityManager = entityManagerFactory.createEntityManager(); 
+        	
+        	entityManager.merge(affiliate);
+        	entityManager.flush();
+        	u.commit();
+            entityManager.close();
+            
+        	return "{status: ok}";
+        };
+        
+        
+        @POST
+        @Path("/{id:[0-9][0-9]*}")
+        @Consumes(MediaType.APPLICATION_JSON)
+        @Produces(MediaType.APPLICATION_JSON)
+        public String edit(Affiliate affiliate, @PathParam("id") Long id) throws Exception {
+        	
+        	
+        	affiliate.setDeleted(false);
+      
+        	//http://docs.oracle.com/javase/6/docs/api/java/util/Date.html
+        	//This references to right now
+        	Date date = new Date();
+        	
+        	affiliate.getPerson().getAudit().setEditDate(date);
+        	
+        	// When login is done do this:
+        	//affiliate.getPerson().getAudit().setEditUser();
+        	
+    	
+        	
+        	System.err.println(affiliate.getPerson().getAddress().getCity().getName());
+        	
         	u.begin();
         	EntityManager entityManager = entityManagerFactory.createEntityManager(); 
         	
