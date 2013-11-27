@@ -45,8 +45,10 @@ public class AffiliateService {
 	        
 	        entityManager.close();
 	        
+	        // The client will need to deal with an affiliate that is deleted. Dont show them!
 	        
-	        return affiliate;        
+	        
+	        return affiliate;      
         }
         
         @POST
