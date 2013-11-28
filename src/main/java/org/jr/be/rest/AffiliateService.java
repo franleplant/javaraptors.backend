@@ -114,7 +114,7 @@ public class AffiliateService {
         @Path("/{id:[0-9][0-9]*}")
         @Consumes(MediaType.APPLICATION_JSON)
         @Produces(MediaType.APPLICATION_JSON)
-        public String edit(Affiliate affiliate, @PathParam("id") Long id) throws Exception {
+        public JsonResponseMsg edit(Affiliate affiliate, @PathParam("id") Long id) throws Exception {
         	
         	
         	affiliate.setDeleted(false);
@@ -140,14 +140,14 @@ public class AffiliateService {
         	u.commit();
             entityManager.close();
             
-        	return "{'status': 'ok'}";
+            return new JsonResponseMsg("ok", "no msg");
         };
         
         
         @DELETE
         @Path("/{id:[0-9][0-9]*}")
         @Produces(MediaType.APPLICATION_JSON)
-        public String delete(@PathParam("id") Long id) throws Exception {
+        public JsonResponseMsg delete(@PathParam("id") Long id) throws Exception {
         	
         	
         	Affiliate affiliate = null;     
@@ -169,7 +169,7 @@ public class AffiliateService {
         	u.commit();
             entityManager.close();
             
-        	return "{status: ok}";
+            return new JsonResponseMsg("ok", "no msg");
         };
         
 }
