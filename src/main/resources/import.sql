@@ -55,12 +55,12 @@ insert into book (id, createdate, createuser_id, deleted, title, val, price, lan
 insert into book_genre (book_id, genres_id) values (1,1);
 insert into book_author (book_id, authors_id) values (1,1);
 
-insert into COPY (id, createdate, createuser_id, deleted, editionYear, state, location_id, type_id ) values (1, '2013-10-10', 1, false, 2010, 'nuevo', 1, 2);
-insert into COPY (id, createdate, createuser_id, deleted, editionYear, state, location_id, type_id ) values (2, '2013-10-10', 1, false, 2010, 'bueno, un poco desgastado', 1, 2);
-insert into book_copy (book_id, copys_id ) values (1,1), (1,2);
+insert into COPY (id, createdate, createuser_id, deleted, editionYear, state, location_id, type_id, book_id ) values (1, '2013-10-10', 1, false, 2010, 'nuevo', 1, 2, 1);
+insert into COPY (id, createdate, createuser_id, deleted, editionYear, state, location_id, type_id, book_id ) values (2, '2013-10-10', 1, false, 2010, 'bueno, un poco desgastado', 1, 2, 1);
 insert into copy_lendtype (copy_id, lendtypes_id ) values (1, 1);
 insert into copy_lendtype (copy_id, lendtypes_id ) values (1, 2);
 insert into copy_lendtype (copy_id, lendtypes_id ) values (2, 1);
+
 
 
 insert into LEND (id, actualreturndate, expectedreturndate, lenddate, affiliate_id, copy_id, lendtype_id, lendinguser_id, returninguser_id ) values (1, '2013-10-15', '2013-10-15', '2013-10-10', 1, 1, 2, 1, 1);
