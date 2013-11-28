@@ -2,6 +2,30 @@
 insert into Country (id, name) values (1, 'Argentina');
 insert into country (id, name) values (2, 'Gran Bretaña');
 insert into prov (id, name, country_id ) values (1, 'Buenos Aires', 1);
+insert into prov (id, name, country_id ) values (2, 'Capital Federal', 1);
+insert into prov (id, name, country_id ) values (3, 'Salta', 1);
+insert into prov (id, name, country_id ) values (4, 'Chaco', 1);
+insert into prov (id, name, country_id ) values (5, 'Formosa', 1);
+insert into prov (id, name, country_id ) values (6, 'Santiago del Estero', 1);
+insert into prov (id, name, country_id ) values (7, 'Misiones', 1);
+insert into prov (id, name, country_id ) values (8, 'Corrientes', 1);
+insert into prov (id, name, country_id ) values (9, 'Entre Rios', 1);
+insert into prov (id, name, country_id ) values (10, 'Catamarca', 1);
+insert into prov (id, name, country_id ) values (11, 'Jujuy', 1);
+insert into prov (id, name, country_id ) values (12, 'San Juan', 1);
+insert into prov (id, name, country_id ) values (13, 'San Luis', 1);
+insert into prov (id, name, country_id ) values (14, 'Santa Fe', 1);
+insert into prov (id, name, country_id ) values (15, 'Cordoba', 1);
+insert into prov (id, name, country_id ) values (16, 'Tucuman', 1);
+insert into prov (id, name, country_id ) values (17, 'La Rioja', 1);
+insert into prov (id, name, country_id ) values (18, 'La Pampa', 1);
+insert into prov (id, name, country_id ) values (19, 'Mendoza', 1);
+insert into prov (id, name, country_id ) values (20, 'Neuquen', 1);
+insert into prov (id, name, country_id ) values (21, 'Rio Negro', 1);
+insert into prov (id, name, country_id ) values (22, 'Santa Cruz', 1);
+insert into prov (id, name, country_id ) values (23, 'Tierra del Fuego, Antártida e Islas del Atlántico Sur', 1);
+insert into prov (id, name, country_id ) values (24, 'Chubut', 1);
+
 insert into city (id, cp, name, prov_id ) values (1, '1234', 'Campana', 1);
 
 
