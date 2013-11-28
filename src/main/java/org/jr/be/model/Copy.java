@@ -41,6 +41,10 @@ public class Copy {
 	@ManyToOne(fetch = FetchType.EAGER)
 	private EntityType type;
 	
+	@ManyToOne(fetch = FetchType.EAGER)
+	private Book book;
+	
+	
 	@ManyToMany(fetch = FetchType.EAGER)
 	private Set<LendType> lendTypes = new HashSet<LendType>();
 	
@@ -119,10 +123,13 @@ public class Copy {
 		this.deleted = deleted;
 	}
 
-	@Override
-	public String toString() {
-		return "Copy [editionYear=" + editionYear
-				+ ", location=" + location + ", lendTypes=" + lendTypes + "]";
+
+	public Book getBook() {
+		return book;
+	}
+
+	public void setBook(Book book) {
+		this.book = book;
 	}
 
 	@Override
@@ -130,6 +137,9 @@ public class Copy {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((audit == null) ? 0 : audit.hashCode());
+		result = prime * result + ((book == null) ? 0 : book.hashCode());
+		result = prime * result
+				+ ((comments == null) ? 0 : comments.hashCode());
 		result = prime * result + (deleted ? 1231 : 1237);
 		result = prime * result + editionYear;
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
@@ -137,6 +147,8 @@ public class Copy {
 				+ ((lendTypes == null) ? 0 : lendTypes.hashCode());
 		result = prime * result
 				+ ((location == null) ? 0 : location.hashCode());
+		result = prime * result + ((state == null) ? 0 : state.hashCode());
+		result = prime * result + ((type == null) ? 0 : type.hashCode());
 		return result;
 	}
 
@@ -153,6 +165,16 @@ public class Copy {
 			if (other.audit != null)
 				return false;
 		} else if (!audit.equals(other.audit))
+			return false;
+		if (book == null) {
+			if (other.book != null)
+				return false;
+		} else if (!book.equals(other.book))
+			return false;
+		if (comments == null) {
+			if (other.comments != null)
+				return false;
+		} else if (!comments.equals(other.comments))
 			return false;
 		if (deleted != other.deleted)
 			return false;
@@ -173,6 +195,24 @@ public class Copy {
 				return false;
 		} else if (!location.equals(other.location))
 			return false;
+		if (state == null) {
+			if (other.state != null)
+				return false;
+		} else if (!state.equals(other.state))
+			return false;
+		if (type == null) {
+			if (other.type != null)
+				return false;
+		} else if (!type.equals(other.type))
+			return false;
 		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "Copy [state=" + state + ", editionYear=" + editionYear
+				+ ", comments=" + comments + ", location=" + location
+				+ ", audit=" + audit + ", type=" + type + ", book=" + book
+				+ ", lendTypes=" + lendTypes + "]";
 	}
 }
