@@ -18,17 +18,17 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import org.jr.be.model.Affiliate;
+import org.jr.be.model.Book;
 import org.jr.be.model.Audit;
 import org.jr.be.model.EntityType;
 
 
 import org.jr.be.util.JsonResponseMsg;
 
-@Path("/affiliate")
-public class AffiliateService {
+@Path("/book")
+public class BookService {
         
-	private long entityTypeID = 3;
+	private long entityTypeID = 1;
     
     @PersistenceUnit(unitName = "primary")
     private EntityManagerFactory entityManagerFactory;
@@ -36,45 +36,45 @@ public class AffiliateService {
     @Resource
     private UserTransaction u;
         
-        @GET
-        @Path("/{id:[0-9][0-9]*}")
-        @Produces(MediaType.APPLICATION_JSON)
-        public Affiliate getOne(@PathParam("id") Long id) {
-                
-        	Affiliate affiliate = null;
-                
-	        EntityManager entityManager = entityManagerFactory.createEntityManager();             
-	
-	        try {
-	        	affiliate = entityManager.find(Affiliate.class, id);
-	        	
-	        	//Has it found any entity?
-	        	affiliate.getId();
-	        	
-	        	
-	        } catch(NullPointerException ex) {
-	        	throw new WebApplicationException(Response.Status.NOT_FOUND);
-	        } finally {
-	        	entityManager.close();
-	        }      
-	        
-	       
-	        if (  affiliate.isDeleted()  ) {
-	        	throw new WebApplicationException(Response.Status.NOT_FOUND);
-	        }
-	        
-	        
-	        
-	        return affiliate;      
+    @GET
+    @Path("/{id:[0-9][0-9]*}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Book getOne(@PathParam("id") Long id) {
+            
+    	Book book = null;
+            
+        EntityManager entityManager = entityManagerFactory.createEntityManager();             
+
+        try {
+        	book = entityManager.find(Book.class, id);
+        	
+        	//Has it found any entity?
+        	book.getId();
+        	
+        	
+        } catch(NullPointerException ex) {
+        	throw new WebApplicationException(Response.Status.NOT_FOUND);
+        } finally {
+        	entityManager.close();
+        }      
+        
+       
+        if (  book.isDeleted()  ) {
+        	throw new WebApplicationException(Response.Status.NOT_FOUND);
         }
+        
+        
+        
+        return book;      
+    }
         
         @POST
         @Consumes(MediaType.APPLICATION_JSON)
         @Produces(MediaType.APPLICATION_JSON)
-        public JsonResponseMsg create(Affiliate affiliate) throws Exception {
+        public JsonResponseMsg create(Book book) throws Exception {
         	
         	
-        	affiliate.setDeleted(false);
+        	book.setDeleted(false);
         	Audit audit = new Audit();
         	
         	//http://docs.oracle.com/javase/6/docs/api/java/util/Date.html
@@ -88,9 +88,8 @@ public class AffiliateService {
         	// When login is done do this:
         	//audit.setCreateUser(createUser);
         	
-        	affiliate.getPerson().setAudit(audit);
+        	book.setAudit(audit);
         	
-        	System.err.println(affiliate.getPerson().getAddress().getCity().getName());
         	
         	u.begin();
         	EntityManager entityManager = entityManagerFactory.createEntityManager(); 
@@ -98,15 +97,15 @@ public class AffiliateService {
         	
         	EntityType type = entityManager.find(EntityType.class, entityTypeID);
         	
-        	affiliate.setType(type);
+        	book.setType(type);
         	
         	
-        	entityManager.merge(affiliate);
+        	entityManager.merge(book);
         	entityManager.flush();
         	u.commit();
             entityManager.close();
             
-        	return new JsonResponseMsg("ok", "no msg");
+        	return new JsonResponseMsg("ok", "oohhh yeeeeaaaaaaaah!");
         };
         
         
@@ -114,33 +113,30 @@ public class AffiliateService {
         @Path("/{id:[0-9][0-9]*}")
         @Consumes(MediaType.APPLICATION_JSON)
         @Produces(MediaType.APPLICATION_JSON)
-        public JsonResponseMsg edit(Affiliate affiliate, @PathParam("id") Long id) throws Exception {
+        public JsonResponseMsg edit(Book book, @PathParam("id") Long id) throws Exception {
         	
         	
-        	affiliate.setDeleted(false);
+        	book.setDeleted(false);
       
         	//http://docs.oracle.com/javase/6/docs/api/java/util/Date.html
         	//This references to right now
         	Date date = new Date();
         	
-        	affiliate.getPerson().getAudit().setEditDate(date);
+        	book.getAudit().setEditDate(date);
         	
         	// When login is done do this:
         	//affiliate.getPerson().getAudit().setEditUser();
         	
-    	
-        	
-        	System.err.println(affiliate.getPerson().getAddress().getCity().getName());
         	
         	u.begin();
         	EntityManager entityManager = entityManagerFactory.createEntityManager(); 
         	
-        	entityManager.merge(affiliate);
+        	entityManager.merge(book);
         	entityManager.flush();
         	u.commit();
             entityManager.close();
             
-            return new JsonResponseMsg("ok", "no msg");
+            return new JsonResponseMsg("ok", "oohhh yeeeeaaaaaaaah!");
         };
         
         
@@ -150,26 +146,26 @@ public class AffiliateService {
         public JsonResponseMsg delete(@PathParam("id") Long id) throws Exception {
         	
         	
-        	Affiliate affiliate = null;     
+        	Book book = null;     
 	        
         	u.begin();
 	        EntityManager entityManager = entityManagerFactory.createEntityManager();             
 	        
-	        affiliate = entityManager.find(Affiliate.class, id);
+	        book = entityManager.find(Book.class, id);
 	        
-	        affiliate.setDeleted(true);
+	        book.setDeleted(true);
 	        
-	        affiliate.getPerson().getAudit().setDeleteDate(new Date());
+	        book.getAudit().setDeleteDate(new Date());
 	        
 	        //Finish this when loggin is working
-	        //affiliate.getPerson().getAudit().setDeleteUser(deleteDate);
+	        //book.getAudit().setDeleteUser(deleteDate);
         	
-        	entityManager.merge(affiliate);
+        	entityManager.merge(book);
         	entityManager.flush();
         	u.commit();
             entityManager.close();
             
-            return new JsonResponseMsg("ok", "no msg");
+            return new JsonResponseMsg("ok", "oohhh yeeeeaaaaaaaah!");
         };
         
 }
