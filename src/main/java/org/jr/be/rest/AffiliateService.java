@@ -20,12 +20,15 @@ import javax.ws.rs.core.Response;
 
 import org.jr.be.model.Affiliate;
 import org.jr.be.model.Audit;
+import org.jr.be.model.EntityType;
 
+
+import org.jr.be.util.JsonResponseMsg;
 
 @Path("/affiliate")
 public class AffiliateService {
         
-   
+	private long entityTypeID = 3;
     
     @PersistenceUnit(unitName = "primary")
     private EntityManagerFactory entityManagerFactory;
@@ -68,7 +71,7 @@ public class AffiliateService {
         @POST
         @Consumes(MediaType.APPLICATION_JSON)
         @Produces(MediaType.APPLICATION_JSON)
-        public String create(Affiliate affiliate) throws Exception {
+        public JsonResponseMsg create(Affiliate affiliate) throws Exception {
         	
         	
         	affiliate.setDeleted(false);
@@ -80,6 +83,8 @@ public class AffiliateService {
         	
         	audit.setCreateDate(date);
         	
+
+        	
         	// When login is done do this:
         	//audit.setCreateUser(createUser);
         	
@@ -90,12 +95,18 @@ public class AffiliateService {
         	u.begin();
         	EntityManager entityManager = entityManagerFactory.createEntityManager(); 
         	
+        	
+        	EntityType type = entityManager.find(EntityType.class, entityTypeID);
+        	
+        	affiliate.setType(type);
+        	
+        	
         	entityManager.merge(affiliate);
         	entityManager.flush();
         	u.commit();
             entityManager.close();
             
-        	return "{status: ok}";
+        	return new JsonResponseMsg("ok", "no msg");
         };
         
         
@@ -129,7 +140,7 @@ public class AffiliateService {
         	u.commit();
             entityManager.close();
             
-        	return "{status: ok}";
+        	return "{'status': 'ok'}";
         };
         
         
