@@ -1,7 +1,7 @@
 /*
  * Note that this test suit is heavily couple with the ID of the entities, be carefull with that
  * 
- * 
+ * MAKE SURE TO RESTART THE SERVER BEFORE RUNNING THIS TEST SUITE
  * 
  * 
  */
@@ -579,6 +579,104 @@ describe('POST: edit', function () {
   });
   
   
+
+
+
+
+
+
+
+
+
+
+
+
+
+describe('DELETE', function () {
+	  
+	  
+	
+		  
+  it('should return a success JSON with status: ok', function () {
+	  var dfd, response, response_code;
+	  
+	  
+		 runs(function () {
+			 
+				//Delete affiliate
+				dfd = $.ajax({
+						type: 'DELETE',
+						url: '/javaraptors.backend/api/affiliate/1',
+						contentType: 'application/json'
+					});
+				
+				dfd.done(function (data, textStatus, jqXHR) {
+					response = data;
+					response_code = jqXHR.status;
+				});
+		 });
+		 
+		 waitsFor(function() {
+		      return dfd.state() === 'resolved';
+		    }, "The Ajax request has not returned", 2000);
+		 
+		 
+		    runs(function() {
+		    	expect(response_code).toBe(200);
+		    	
+		    	expect(response.status).toBe('ok');
+		    	
+		      });	
+		 
+		 
+  });
+  
+  it('should reflect the changes in the DB', function () {
+	 var dfd, response, reponse_code;
+	 
+
+	 
+	 var dfd, reponse_code;
+	 
+	 runs(function () {
+		dfd = $.ajax({
+				type: 'GET',
+				url: '/javaraptors.backend/api/affiliate/1',
+				contentType: 'application/json'				
+			});
+					
+		dfd.fail(function( jqXHR, textStatus, errorThrown ) {
+			response_code = jqXHR.status;
+			
+		});
+	 });
+	 
+	 waitsFor(function() {
+	      return dfd.state() === 'rejected';
+	  }, 'The Ajax request has not returned', 2000);
+	 
+	 
+    runs(function() {
+    	expect(response_code).toBe(404);
+     }); 
+    
+    
+  });
+		  
+	  
+	  
+	  
+	  
+	  
+	  
+
+	  
+	  
+	  
+	  
+	  
+	  
+});
   
   
   
