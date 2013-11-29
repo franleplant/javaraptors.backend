@@ -1,5 +1,6 @@
 package org.jr.be.rest;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -17,6 +18,7 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -25,6 +27,7 @@ import org.jr.be.dto.AddressDTO;
 import org.jr.be.dto.AffiliateCopyDTO;
 import org.jr.be.dto.AffiliateDTO;
 import org.jr.be.dto.AffiliateLendDTO;
+import org.jr.be.dto.AffiliateSearchDTO;
 import org.jr.be.dto.AuditDTO;
 import org.jr.be.model.Affiliate;
 import org.jr.be.model.Audit;
@@ -45,6 +48,159 @@ public class AffiliateService {
     
     @Resource
     private UserTransaction u;
+    
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public AffiliateSearchDTO search(@QueryParam("q") String query) {
+    	
+    	String q = '%' + query + '%';
+    	
+    	EntityManager entityManager = entityManagerFactory.createEntityManager();
+    	
+        // Search by name or by lastname
+        List<Affiliate> results = entityManager.createQuery(
+        	    "FROM Affiliate as a WHERE upper(a.person.name) LIKE ?1 OR upper(a.person.lastName) like ?2", Affiliate.class)
+        	    .setParameter(1, q.toUpperCase() )
+        	    .setParameter(2, q.toUpperCase() )
+        	    .getResultList();	
+    	
+    	
+    	
+    	
+    	List<AffiliateDTO> resultsDTO = new ArrayList<AffiliateDTO>();
+    	AffiliateDTO affiliateDTO;
+    	
+    	//Create the dto
+    	for (Affiliate a : results){
+    		affiliateDTO = new AffiliateDTO();
+    		
+            if (  a.isDeleted()  ) {
+            	break;
+            }
+    		
+    	       // Fetch all the affiliates current lends
+            List<Lend> lends = entityManager.createQuery(
+            	    "from Lend as lend where lend.affiliate = ?1 and lend.actualReturnDate is null", Lend.class)
+            	    .setParameter(1, a)
+            	    .getResultList();
+         
+            
+            AffiliateLendDTO lendDTO;;
+            AffiliateCopyDTO copyDTO;
+            
+        	for (Lend lend : lends) {
+
+
+    	        lendDTO = new AffiliateLendDTO();
+    	        copyDTO = new AffiliateCopyDTO();
+    	        
+    	        //Lend DTO
+    	        lendDTO.setId(                  lend.getId()                  );
+    	        lendDTO.setLendingDate(         lend.getLendDate()            );
+    	        lendDTO.setExpectedReturnDate(  lend.getExpectedReturnDate()  );        
+    	        lendDTO.setType(                lend.getLendType().getName()  );
+    	        lendDTO.setComments(            lend.getComments()            );
+    	        
+    	        // Lend DTO . copy
+    	        copyDTO.setId(        lend.getCopy().getId()               );
+    	        copyDTO.setTitle(     lend.getCopy().getBook().getTitle()  );
+    	        
+    	        lendDTO.setCopy(  copyDTO  );
+    	        
+    	        
+    	        //Add to the Affiliate DTO
+    	        affiliateDTO.getLends().add(  lendDTO  );
+        	}
+    		
+	
+	    	
+	    	
+	      	// Can the affiliate request more lends?
+	        Set<Suspension> suspensions = a.getSuspensions();
+	        boolean active = true;
+	        
+	        for (Suspension s : suspensions){
+	        	if (  s.getEndDate().after(new Date())  ) {
+	        		active = false;
+	        		break;
+	        	}
+	        }
+	        
+	        affiliateDTO.setActive(active);
+	        
+	
+	        
+	        
+	        
+	        // Transfer all the data into the DTO
+	        affiliateDTO.setId(       a.getId()  );
+	        affiliateDTO.setName(     a.getPerson().getName()  );
+	        affiliateDTO.setLastName( a.getPerson().getLastName()  );
+	        affiliateDTO.setDni(      a.getPerson().getDni()  );
+	        affiliateDTO.setCuil(     a.getPerson().getCuil()  );
+	        affiliateDTO.setImg(      a.getPerson().getImg());
+	        
+	        affiliateDTO.setEmail(    a.getPerson().getContact().getEmail() );
+	        affiliateDTO.setTel(      a.getPerson().getContact().getTel() );
+	        affiliateDTO.setCel(      a.getPerson().getContact().getCel() );
+	        
+	        
+	        affiliateDTO.setReputation(  a.getReputation()  );
+	        affiliateDTO.setType( a.getType().getName()  );
+	        
+	        
+	        affiliateDTO.setAudit(  new AuditDTO()  );
+	        affiliateDTO.getAudit().setCreateDate(   a.getPerson().getAudit().getCreateDate()   );
+	        affiliateDTO.getAudit().setEditDate(     a.getPerson().getAudit().getEditDate()     );
+	        affiliateDTO.getAudit().setDeleteDate(   a.getPerson().getAudit().getDeleteDate()   );
+	        
+	        
+	        
+	        affiliateDTO.getAudit().setCreateUser(   a.getPerson().getAudit().getCreateUser().getPerson().getFullName() );
+	        
+	        
+	        if (  a.getPerson().getAudit().getEditUser() != null  ){
+	        	affiliateDTO.getAudit().setEditUser(     a.getPerson().getAudit().getEditUser().getPerson().getFullName()   );
+	        }
+	        
+	        
+	        if (  a.getPerson().getAudit().getDeleteUser() != null  ) {
+	        	affiliateDTO.getAudit().setDeleteUser(   a.getPerson().getAudit().getDeleteUser().getPerson().getFullName() );        
+	        }
+	        
+	        
+	       
+	        
+	        
+	        
+	        affiliateDTO.setAddress(  new AddressDTO()  );
+	        affiliateDTO.getAddress().setStreet(     a.getPerson().getAddress().getStreet()     );
+	        affiliateDTO.getAddress().setNumber(     a.getPerson().getAddress().getNumber()     );
+	        affiliateDTO.getAddress().setDepartment( a.getPerson().getAddress().getDepartment() );
+	        affiliateDTO.getAddress().setCity(       a.getPerson().getAddress().getCity().getName() );
+	        affiliateDTO.getAddress().setCp(         a.getPerson().getAddress().getCity().getCp()   );
+	        affiliateDTO.getAddress().setProv(       a.getPerson().getAddress().getCity().getProv().getName()  );
+	        affiliateDTO.getAddress().setCountry(    a.getPerson().getAddress().getCity().getProv().getCountry().getName()  );
+	
+	        
+	          
+	        resultsDTO.add(affiliateDTO);
+    	}
+    	
+    	
+    	
+    	entityManager.close();
+    	
+    	
+    	
+    	AffiliateSearchDTO response = new AffiliateSearchDTO(); 	
+    	response.setPage_number(1);
+    	response.setPage_total(1);
+    	response.setResults(resultsDTO);
+    	
+    	return response;
+    }
+    
         
     @GET
     @Path("/{id:[0-9][0-9]*}")
@@ -117,9 +273,9 @@ public class AffiliateService {
         	throw new WebApplicationException(Response.Status.NOT_FOUND);
         }
         
-    	// Can the affiliate request more lends?
-        // This require more logic
         
+        
+    	// Can the affiliate request more lends?
         Set<Suspension> suspensions = affiliate.getSuspensions();
         boolean active = true;
         
