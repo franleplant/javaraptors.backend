@@ -23,6 +23,7 @@ import org.jr.be.dto.AddressDTO;
 import org.jr.be.dto.AffiliateDTO;
 import org.jr.be.dto.AuditDTO;
 import org.jr.be.model.Affiliate;
+import org.jr.be.model.Audit;
 import org.jr.be.model.City;
 import org.jr.be.model.EntityType;
 import org.jr.be.model.Prov;
@@ -270,9 +271,7 @@ public class AffiliateService {
         affiliate.getPerson().getAddress().setFloor(      dto.getAddress().getFloor()      );
         
     	
-    	//http://docs.oracle.com/javase/6/docs/api/java/util/Date.html
-    	//This references to today
-    	affiliate.getPerson().getAudit().setEditDate(  new Date()  );
+
     	
     	affiliate.setReputation( dto.getReputation()  );
     	
@@ -281,6 +280,17 @@ public class AffiliateService {
     	u.begin();
     	EntityManager entityManager = entityManagerFactory.createEntityManager(); 
     	
+    	
+    	Affiliate existing_affiliate = entityManager.find(Affiliate.class, dto.getId()  ); 
+    	
+    	Audit audit = existing_affiliate.getPerson().getAudit();
+    	
+    	
+    	//http://docs.oracle.com/javase/6/docs/api/java/util/Date.html
+    	//This references to today
+    	audit.setEditDate(  new Date()  );
+    	
+    	affiliate.getPerson().setAudit(  audit  );
 
     	//
     	// City, Prov, Country Handling
