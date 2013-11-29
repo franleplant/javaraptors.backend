@@ -36,7 +36,7 @@ public class Affiliate {
     private Set<Suspension> suspensions = new HashSet<Suspension>();
 	
 	@NotNull
-	private Boolean deleted;
+	private boolean deleted;
 
 	public Long getId() {
 		return id;
@@ -79,11 +79,19 @@ public class Affiliate {
 		this.suspensions = suspensions;
 	}
 
-	public Boolean getDeleted() {
+	
+
+	@Override
+	public String toString() {
+		return "Affiliate [reputation=" + reputation + ", person=" + person
+				+ ", deleted=" + deleted + "]";
+	}
+
+	public boolean isDeleted() {
 		return deleted;
 	}
 
-	public void setDeleted(Boolean deleted) {
+	public void setDeleted(boolean deleted) {
 		this.deleted = deleted;
 	}
 
@@ -91,11 +99,14 @@ public class Affiliate {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((deleted == null) ? 0 : deleted.hashCode());
+		result = prime * result + (deleted ? 1231 : 1237);
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((person == null) ? 0 : person.hashCode());
 		long temp;
 		temp = Double.doubleToLongBits(reputation);
 		result = prime * result + (int) (temp ^ (temp >>> 32));
+		result = prime * result
+				+ ((suspensions == null) ? 0 : suspensions.hashCode());
 		result = prime * result + ((type == null) ? 0 : type.hashCode());
 		return result;
 	}
@@ -109,10 +120,12 @@ public class Affiliate {
 		if (getClass() != obj.getClass())
 			return false;
 		Affiliate other = (Affiliate) obj;
-		if (deleted == null) {
-			if (other.deleted != null)
+		if (deleted != other.deleted)
+			return false;
+		if (id == null) {
+			if (other.id != null)
 				return false;
-		} else if (!deleted.equals(other.deleted))
+		} else if (!id.equals(other.id))
 			return false;
 		if (person == null) {
 			if (other.person != null)
@@ -122,18 +135,17 @@ public class Affiliate {
 		if (Double.doubleToLongBits(reputation) != Double
 				.doubleToLongBits(other.reputation))
 			return false;
+		if (suspensions == null) {
+			if (other.suspensions != null)
+				return false;
+		} else if (!suspensions.equals(other.suspensions))
+			return false;
 		if (type == null) {
 			if (other.type != null)
 				return false;
 		} else if (!type.equals(other.type))
 			return false;
 		return true;
-	}
-
-	@Override
-	public String toString() {
-		return "Affiliate [reputation=" + reputation + ", person=" + person
-				+ ", deleted=" + deleted + "]";
 	}
 	
 }

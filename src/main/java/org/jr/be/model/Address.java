@@ -22,7 +22,7 @@ public class Address {
 	
 	
 	@NotNull
-	@ManyToOne(cascade = CascadeType.PERSIST)
+	@ManyToOne(cascade = CascadeType.ALL)
 	private City city;
 
 	public String getStreet() {

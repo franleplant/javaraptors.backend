@@ -14,7 +14,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.NotEmpty;
@@ -56,9 +55,7 @@ public class Book {
 	@ManyToOne(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
 	private Editorial editorial;
 	
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	private Set<Copy> copys = new HashSet<Copy>();
-	
+
 	private String img;
 	
 	private String summary;
@@ -147,13 +144,6 @@ public class Book {
 		this.editorial = editorial;
 	}
 
-	public Set<Copy> getCopys() {
-		return copys;
-	}
-
-	public void setCopys(Set<Copy> copys) {
-		this.copys = copys;
-	}
 
 	public String getImg() {
 		return img;
@@ -242,7 +232,6 @@ public class Book {
 		int result = 1;
 		result = prime * result + ((audit == null) ? 0 : audit.hashCode());
 		result = prime * result + ((authors == null) ? 0 : authors.hashCode());
-		result = prime * result + ((copys == null) ? 0 : copys.hashCode());
 		result = prime * result
 				+ ((editionCountry == null) ? 0 : editionCountry.hashCode());
 		result = prime * result
@@ -277,11 +266,6 @@ public class Book {
 			if (other.authors != null)
 				return false;
 		} else if (!authors.equals(other.authors))
-			return false;
-		if (copys == null) {
-			if (other.copys != null)
-				return false;
-		} else if (!copys.equals(other.copys))
 			return false;
 		if (editionCountry == null) {
 			if (other.editionCountry != null)
