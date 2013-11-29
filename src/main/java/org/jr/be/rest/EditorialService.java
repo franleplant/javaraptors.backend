@@ -28,7 +28,7 @@ import org.jr.be.util.JsonResponseMsg;
 @Path("/editorial")
 public class EditorialService {
         
-	private long entityTypeID = 4;
+	private long entityTypeID = 7;
     
     @PersistenceUnit(unitName = "primary")
     private EntityManagerFactory entityManagerFactory;
