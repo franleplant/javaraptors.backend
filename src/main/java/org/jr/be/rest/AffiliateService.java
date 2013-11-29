@@ -137,9 +137,7 @@ public class AffiliateService {
     	
     	Affiliate affiliate = new Affiliate();
     	
-    	//http://docs.oracle.com/javase/6/docs/api/java/util/Date.html
-    	//This references to today
-    	Date today = new Date();
+
     	
     	// Person
     	affiliate.getPerson().setName(      dto.getName()     );
@@ -165,6 +163,10 @@ public class AffiliateService {
         affiliate.setDeleted(false);
         affiliate.setReputation( dto.getReputation()  );
     	
+        
+    	//http://docs.oracle.com/javase/6/docs/api/java/util/Date.html
+    	//This references to today
+    	Date today = new Date();
     	affiliate.getPerson().getAudit().setCreateDate(today);
         
      
@@ -236,66 +238,144 @@ public class AffiliateService {
     };
         
         
-        @POST
-        @Path("/{id:[0-9][0-9]*}")
-        @Consumes(MediaType.APPLICATION_JSON)
-        @Produces(MediaType.APPLICATION_JSON)
-        public JsonResponseMsg edit(Affiliate affiliate, @PathParam("id") Long id) throws Exception {
-        	
-        	
-        	affiliate.setDeleted(false);
-      
-        	//http://docs.oracle.com/javase/6/docs/api/java/util/Date.html
-        	//This references to right now
-        	Date date = new Date();
-        	
-        	affiliate.getPerson().getAudit().setEditDate(date);
-        	
-        	// When login is done do this:
-        	//affiliate.getPerson().getAudit().setEditUser();
-        	
+    @POST
+    @Path("/{id:[0-9][0-9]*}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public JsonResponseMsg edit(AffiliateDTO dto, @PathParam("id") Long id) throws Exception {
     	
-        	
-        	System.err.println(affiliate.getPerson().getAddress().getCity().getName());
-        	
-        	u.begin();
-        	EntityManager entityManager = entityManagerFactory.createEntityManager(); 
-        	
-        	entityManager.merge(affiliate);
-        	entityManager.flush();
-        	u.commit();
-            entityManager.close();
-            
-            return new JsonResponseMsg("ok", "no msg");
-        };
+    	Affiliate affiliate = new Affiliate();
+    	
+
+    	affiliate.setId(  dto.getId()  );
+    	
+    	// Person
+    	affiliate.getPerson().setName(      dto.getName()     );
+    	affiliate.getPerson().setLastName(  dto.getLastName() );
+        affiliate.getPerson().setDni(       dto.getDni()      );
+        affiliate.getPerson().setCuil(      dto.getCuil()     );
+        affiliate.getPerson().setImg(       dto.getImg()      );
         
         
-        @DELETE
-        @Path("/{id:[0-9][0-9]*}")
-        @Produces(MediaType.APPLICATION_JSON)
-        public JsonResponseMsg delete(@PathParam("id") Long id) throws Exception {
-        	
-        	
-        	Affiliate affiliate = null;     
-	        
-        	u.begin();
-	        EntityManager entityManager = entityManagerFactory.createEntityManager();             
-	        
-	        affiliate = entityManager.find(Affiliate.class, id);
-	        
-	        affiliate.setDeleted(true);
-	        
-	        affiliate.getPerson().getAudit().setDeleteDate(new Date());
-	        
-	        //Finish this when loggin is working
-	        //affiliate.getPerson().getAudit().setDeleteUser(deleteDate);
-        	
-        	entityManager.merge(affiliate);
-        	entityManager.flush();
+        //Contact
+        affiliate.getPerson().getContact().setEmail( dto.getEmail() );
+        affiliate.getPerson().getContact().setTel(   dto.getTel()   );
+        affiliate.getPerson().getContact().setCel(   dto.getCel()   );
+    		
+    	
+    	// Address    	
+        affiliate.getPerson().getAddress().setStreet(     dto.getAddress().getStreet()     );
+        affiliate.getPerson().getAddress().setNumber(     dto.getAddress().getNumber()     );
+        affiliate.getPerson().getAddress().setDepartment( dto.getAddress().getDepartment() );
+        affiliate.getPerson().getAddress().setFloor(      dto.getAddress().getFloor()      );
+        
+    	
+    	//http://docs.oracle.com/javase/6/docs/api/java/util/Date.html
+    	//This references to today
+    	affiliate.getPerson().getAudit().setEditDate(  new Date()  );
+    	
+    	affiliate.setReputation( dto.getReputation()  );
+    	
+   	
+    	
+    	u.begin();
+    	EntityManager entityManager = entityManagerFactory.createEntityManager(); 
+    	
+
+    	//
+    	// City, Prov, Country Handling
+    	//
+    	
+        //Country country = entityManager.find(Country.class, dto.getAddress().getCountry()  );
+    	
+    	Prov prov;
+    	City city;
+    	
+    	String cp = dto.getAddress().getCp();
+    	
+    	// Search the prov, if not found send and error msg and do not do anything else
+    	try {  		
+	        prov = (Prov) entityManager.createQuery(
+	    		    "select p from Prov p where p.name = ?1")
+	    		    .setParameter(1, dto.getAddress().getProv()  )
+	    		    .getSingleResult(); 
+	        	     
+    	} catch (NoResultException e) {
+    		
         	u.commit();
             entityManager.close();
-            
-            return new JsonResponseMsg("ok", "no msg");
-        };
+    		return new JsonResponseMsg("error", "La provincia no exite");
+    		
+    	}
+    	
+    	
+        // Search for the city, if not found create it       
+    	try {
+        	city = (City) entityManager.createQuery(
+        		    "select c from City as c where c.cp = ?1")
+        		    .setParameter(1, cp)
+        		    .getSingleResult();
+ 	
+    		
+    	} catch (NoResultException e) {
+    		
+    		city = new City();
+    		city.setCp(cp);
+    		city.setName(  dto.getAddress().getCity()  );
+    		city.setProv(  prov  );
+    	} 
+        
+    	affiliate.getPerson().getAddress().setCity(city);
+    	
+    	
+            	
+    	// Set Entity Type
+    	EntityType type = entityManager.find(EntityType.class, entityTypeID);    	
+    	affiliate.setType(type);
+    	
+    	// When login is done do this:
+    	//affiliate.getPerson().getAudit().setCreateUser(current_loged_user);
+    	
+    	// Merge it
+    	entityManager.merge(affiliate);
+    	entityManager.flush(); 	
+    	
+    	u.commit();
+        entityManager.close();
+        
+    	return new JsonResponseMsg("ok", "OOOHHH YEEEEAAAAAAHHHHHH!!!!");
+    };
+        
+        
+    @DELETE
+    @Path("/{id:[0-9][0-9]*}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public JsonResponseMsg delete(@PathParam("id") Long id) throws Exception {
+    	
+    	
+    	Affiliate affiliate = null;     
+        
+    	u.begin();
+        EntityManager entityManager = entityManagerFactory.createEntityManager();             
+        
+
+        affiliate = entityManager.find(Affiliate.class, id);
+
+        
+        
+        affiliate.setDeleted(true);
+        
+        affiliate.getPerson().getAudit().setDeleteDate(new Date());
+        
+        //Finish this when loggin is working
+        //affiliate.getPerson().getAudit().setDeleteUser(deleteDate);
+    	
+    	entityManager.merge(affiliate);
+    	entityManager.flush();
+    	u.commit();
+        entityManager.close();
+        
+        return new JsonResponseMsg("ok", "successfully deleted");
+    };
         
 }
