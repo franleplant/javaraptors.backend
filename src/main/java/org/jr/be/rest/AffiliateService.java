@@ -5,6 +5,7 @@ import java.util.Date;
 import javax.annotation.Resource;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceUnit;
 import javax.transaction.UserTransaction;
 import javax.ws.rs.Consumes;
@@ -18,11 +19,13 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import org.jr.be.dto.AddressDTO;
+import org.jr.be.dto.AffiliateDTO;
+import org.jr.be.dto.AuditDTO;
 import org.jr.be.model.Affiliate;
-import org.jr.be.model.Audit;
+import org.jr.be.model.City;
 import org.jr.be.model.EntityType;
-
-
+import org.jr.be.model.Prov;
 import org.jr.be.util.JsonResponseMsg;
 
 @Path("/affiliate")
@@ -36,78 +39,201 @@ public class AffiliateService {
     @Resource
     private UserTransaction u;
         
-        @GET
-        @Path("/{id:[0-9][0-9]*}")
-        @Produces(MediaType.APPLICATION_JSON)
-        public Affiliate getOne(@PathParam("id") Long id) {
-                
-        	Affiliate affiliate = null;
-                
-	        EntityManager entityManager = entityManagerFactory.createEntityManager();             
-	
-	        try {
-	        	affiliate = entityManager.find(Affiliate.class, id);
-	        	
-	        	//Has it found any entity?
-	        	affiliate.getId();
-	        	
-	        	
-	        } catch(NullPointerException ex) {
-	        	throw new WebApplicationException(Response.Status.NOT_FOUND);
-	        } finally {
-	        	entityManager.close();
-	        }      
-	        
-	       
-	        if (  affiliate.isDeleted()  ) {
-	        	throw new WebApplicationException(Response.Status.NOT_FOUND);
-	        }
-	        
-	        
-	        
-	        return affiliate;      
+    @GET
+    @Path("/{id:[0-9][0-9]*}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public AffiliateDTO getOne(@PathParam("id") Long id) {
+            
+    	Affiliate affiliate = null;
+    	AffiliateDTO dto = new AffiliateDTO();
+            
+        EntityManager entityManager = entityManagerFactory.createEntityManager();             
+
+        try {
+        	affiliate = entityManager.find(Affiliate.class, id);
+        	
+        	//Has it found any entity?
+        	affiliate.getId();
+        	
+        	
+        } catch(NullPointerException ex) {
+        	throw new WebApplicationException(Response.Status.NOT_FOUND);
+        } finally {
+        	entityManager.close();
+        }      
+        
+       
+        if (  affiliate.isDeleted()  ) {
+        	throw new WebApplicationException(Response.Status.NOT_FOUND);
         }
         
-        @POST
-        @Consumes(MediaType.APPLICATION_JSON)
-        @Produces(MediaType.APPLICATION_JSON)
-        public JsonResponseMsg create(Affiliate affiliate) throws Exception {
-        	
-        	
-        	affiliate.setDeleted(false);
-        	Audit audit = new Audit();
-        	
-        	//http://docs.oracle.com/javase/6/docs/api/java/util/Date.html
-        	//This references to right now
-        	Date date = new Date();
-        	
-        	audit.setCreateDate(date);
-        	
+        // Transfer all the data into the DTO
+        dto.setId(       affiliate.getId()  );
+        dto.setName(     affiliate.getPerson().getName()  );
+        dto.setLastName( affiliate.getPerson().getLastName()  );
+        dto.setDni(      affiliate.getPerson().getDni()  );
+        dto.setCuil(     affiliate.getPerson().getCuil()  );
+        dto.setImg(      affiliate.getPerson().getImg());
+        
+        dto.setEmail(    affiliate.getPerson().getContact().getEmail() );
+        dto.setTel(      affiliate.getPerson().getContact().getTel() );
+        dto.setCel(      affiliate.getPerson().getContact().getCel() );
+        
+        
+        dto.setReputation(  affiliate.getReputation()  );
+        dto.setType( affiliate.getType().getName()  );
+        
+        // This require more logic
+        dto.setActive(true);
+        
+        dto.setAudit(  new AuditDTO()  );
+        dto.getAudit().setCreateDate(   affiliate.getPerson().getAudit().getCreateDate()   );
+        dto.getAudit().setEditDate(     affiliate.getPerson().getAudit().getEditDate()     );
+        dto.getAudit().setDeleteDate(   affiliate.getPerson().getAudit().getDeleteDate()   );
+        
+        
+        
+        dto.getAudit().setCreateUser(   affiliate.getPerson().getAudit().getCreateUser().getPerson().getFullName() );
+        
+        
+        if (  affiliate.getPerson().getAudit().getEditUser() != null  ){
+        	dto.getAudit().setEditUser(     affiliate.getPerson().getAudit().getEditUser().getPerson().getFullName()   );
+        }
+        
+        
+        if (  affiliate.getPerson().getAudit().getDeleteUser() != null  ) {
+        	dto.getAudit().setDeleteUser(   affiliate.getPerson().getAudit().getDeleteUser().getPerson().getFullName() );        
+        }
+        
+        
+       
+        
+        
+        
+        dto.setAddress(  new AddressDTO()  );
+        dto.getAddress().setStreet(     affiliate.getPerson().getAddress().getStreet()     );
+        dto.getAddress().setNumber(     affiliate.getPerson().getAddress().getNumber()     );
+        dto.getAddress().setDepartment( affiliate.getPerson().getAddress().getDepartment() );
+        dto.getAddress().setFloor(      affiliate.getPerson().getAddress().getFloor()      );
+        dto.getAddress().setCity(       affiliate.getPerson().getAddress().getCity().getName() );
+        dto.getAddress().setCp(         affiliate.getPerson().getAddress().getCity().getCp()   );
+        dto.getAddress().setProv(       affiliate.getPerson().getAddress().getCity().getProv().getName()  );
+        dto.getAddress().setCountry(    affiliate.getPerson().getAddress().getCity().getProv().getCountry().getName()  );
 
-        	
-        	// When login is done do this:
-        	//audit.setCreateUser(createUser);
-        	
-        	affiliate.getPerson().setAudit(audit);
-        	
-        	System.err.println(affiliate.getPerson().getAddress().getCity().getName());
-        	
-        	u.begin();
-        	EntityManager entityManager = entityManagerFactory.createEntityManager(); 
-        	
-        	
-        	EntityType type = entityManager.find(EntityType.class, entityTypeID);
-        	
-        	affiliate.setType(type);
-        	
-        	
-        	entityManager.merge(affiliate);
-        	entityManager.flush();
+        
+        return dto;      
+    }
+    
+    
+    
+    
+        
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public JsonResponseMsg create(AffiliateDTO dto) throws Exception {
+    	
+ 	
+    	
+    	Affiliate affiliate = new Affiliate();
+    	
+    	//http://docs.oracle.com/javase/6/docs/api/java/util/Date.html
+    	//This references to today
+    	Date today = new Date();
+    	
+    	// Person
+    	affiliate.getPerson().setName(      dto.getName()     );
+    	affiliate.getPerson().setLastName(  dto.getLastName() );
+        affiliate.getPerson().setDni(       dto.getDni()      );
+        affiliate.getPerson().setCuil(      dto.getCuil()     );
+        affiliate.getPerson().setImg(       dto.getImg()      );
+        
+        
+        //Contact
+        affiliate.getPerson().getContact().setEmail( dto.getEmail() );
+        affiliate.getPerson().getContact().setTel(   dto.getTel()   );
+        affiliate.getPerson().getContact().setCel(   dto.getCel()   );
+    		
+    	
+    	// Address    	
+        affiliate.getPerson().getAddress().setStreet(     dto.getAddress().getStreet()     );
+        affiliate.getPerson().getAddress().setNumber(     dto.getAddress().getNumber()     );
+        affiliate.getPerson().getAddress().setDepartment( dto.getAddress().getDepartment() );
+        affiliate.getPerson().getAddress().setFloor(      dto.getAddress().getFloor()      );
+        
+        
+        affiliate.setDeleted(false);
+        affiliate.setReputation( dto.getReputation()  );
+    	
+    	affiliate.getPerson().getAudit().setCreateDate(today);
+        
+     
+    	u.begin();
+    	EntityManager entityManager = entityManagerFactory.createEntityManager(); 
+    	
+    	
+    	
+
+    	// Very simplified approach
+        //Country country = entityManager.find(Country.class, dto.getAddress().getCountry()  );
+    	
+    	Prov prov;
+    	City city;
+    	
+    	String cp = dto.getAddress().getCp();
+    	
+    	// Search the prov, if not found send and error msg and do not do anything else
+    	try {  		
+	        prov = (Prov) entityManager.createQuery(
+	    		    "select p from Prov p where p.name = ?1")
+	    		    .setParameter(1, dto.getAddress().getProv()  )
+	    		    .getSingleResult(); 
+	        	     
+    	} catch (NoResultException e) {
+    		
         	u.commit();
             entityManager.close();
-            
-        	return new JsonResponseMsg("ok", "no msg");
-        };
+    		return new JsonResponseMsg("error", "La provincia no exite");
+    		
+    	}
+    	
+    	
+        // Search for the city, if not found create it       
+    	try {
+        	city = (City) entityManager.createQuery(
+        		    "select c from City as c where c.cp = ?1")
+        		    .setParameter(1, cp)
+        		    .getSingleResult();
+ 	
+    		
+    	} catch (NoResultException e) {
+    		
+    		city = new City();
+    		city.setCp(cp);
+    		city.setName(  dto.getAddress().getCity()  );
+    		city.setProv(  prov  );
+    	} 
+        
+    	affiliate.getPerson().getAddress().setCity(city);
+    	
+    	
+            	
+    	// Set Entity Type
+    	EntityType type = entityManager.find(EntityType.class, entityTypeID);    	
+    	affiliate.setType(type);
+    	
+    	// When login is done do this:
+    	//affiliate.getPerson().getAudit().setCreateUser(current_loged_user);
+    	
+    	// Persist it
+    	entityManager.merge(affiliate);
+    	entityManager.flush(); 	
+    	
+    	u.commit();
+        entityManager.close();
+        
+    	return new JsonResponseMsg("ok", "OOOHHH YEEEEAAAAAAHHHHHH!!!!");
+    };
         
         
         @POST
