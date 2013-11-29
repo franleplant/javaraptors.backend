@@ -90,11 +90,11 @@ public class AffiliateService {
 	        lendDTO.setLendingDate(         lend.getLendDate()            );
 	        lendDTO.setExpectedReturnDate(  lend.getExpectedReturnDate()  );        
 	        lendDTO.setType(                lend.getLendType().getName()  );
+	        lendDTO.setComments(            lend.getComments()            );
 	        
 	        // Lend DTO . copy
 	        copyDTO.setId(        lend.getCopy().getId()               );
 	        copyDTO.setTitle(     lend.getCopy().getBook().getTitle()  );
-	        copyDTO.setComments(  lend.getCopy().getComments()         );
 	        
 	        lendDTO.setCopy(  copyDTO  );
 	        

@@ -17,6 +17,8 @@ public class AffiliateLendDTO {
 	
 	private Date expectedReturnDate;
 	
+	private String comments;
+	
 	private AffiliateCopyDTO copy;
 
 	public Long getId() {
@@ -57,6 +59,14 @@ public class AffiliateLendDTO {
 
 	public void setCopy(AffiliateCopyDTO copy) {
 		this.copy = copy;
+	}
+
+	public String getComments() {
+		return comments;
+	}
+
+	public void setComments(String comments) {
+		this.comments = comments;
 	}
 
 }

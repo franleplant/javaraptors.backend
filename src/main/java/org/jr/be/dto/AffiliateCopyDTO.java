@@ -6,7 +6,6 @@ public class AffiliateCopyDTO {
 	
 	private String title;
 	
-	private String comments;
 
 	public Long getId() {
 		return id;
@@ -22,13 +21,5 @@ public class AffiliateCopyDTO {
 
 	public void setTitle(String title) {
 		this.title = title;
-	}
-
-	public String getComments() {
-		return comments;
-	}
-
-	public void setComments(String comments) {
-		this.comments = comments;
 	}
 }
