@@ -1,6 +1,7 @@
 package org.jr.be.rest;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.annotation.Resource;
 import javax.persistence.EntityManager;
@@ -20,12 +21,15 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.jr.be.dto.AddressDTO;
+import org.jr.be.dto.AffiliateCopyDTO;
 import org.jr.be.dto.AffiliateDTO;
+import org.jr.be.dto.AffiliateLendDTO;
 import org.jr.be.dto.AuditDTO;
 import org.jr.be.model.Affiliate;
 import org.jr.be.model.Audit;
 import org.jr.be.model.City;
 import org.jr.be.model.EntityType;
+import org.jr.be.model.Lend;
 import org.jr.be.model.Prov;
 import org.jr.be.util.JsonResponseMsg;
 
@@ -48,7 +52,9 @@ public class AffiliateService {
     	Affiliate affiliate = null;
     	AffiliateDTO dto = new AffiliateDTO();
             
-        EntityManager entityManager = entityManagerFactory.createEntityManager();             
+        EntityManager entityManager = entityManagerFactory.createEntityManager();    
+        
+
 
         try {
         	affiliate = entityManager.find(Affiliate.class, id);
@@ -59,9 +65,48 @@ public class AffiliateService {
         	
         } catch(NullPointerException ex) {
         	throw new WebApplicationException(Response.Status.NOT_FOUND);
-        } finally {
-        	entityManager.close();
-        }      
+        }
+        
+   
+        
+        // Fetch all the affiliates current lends
+        List<Lend> lends = entityManager.createQuery(
+        	    "from Lend as lend where lend.affiliate = ?1 and lend.actualReturnDate is null", Lend.class)
+        	    .setParameter(1, affiliate)
+        	    .getResultList();
+     
+        
+        AffiliateLendDTO lendDTO;;
+        AffiliateCopyDTO copyDTO;
+        
+    	for (Lend lend : lends) {
+
+
+	        lendDTO = new AffiliateLendDTO();
+	        copyDTO = new AffiliateCopyDTO();
+	        
+	        //Lend DTO
+	        lendDTO.setId(                  lend.getId()                  );
+	        lendDTO.setLendingDate(         lend.getLendDate()            );
+	        lendDTO.setExpectedReturnDate(  lend.getExpectedReturnDate()  );        
+	        lendDTO.setType(                lend.getLendType().getName()  );
+	        
+	        // Lend DTO . copy
+	        copyDTO.setId(        lend.getCopy().getId()               );
+	        copyDTO.setTitle(     lend.getCopy().getBook().getTitle()  );
+	        copyDTO.setComments(  lend.getCopy().getComments()         );
+	        
+	        lendDTO.setCopy(  copyDTO  );
+	        
+	        
+	        //Add to the Affiliate DTO
+	        dto.getLends().add(  lendDTO  );
+    	}
+        
+        
+        
+        entityManager.close();
+     
         
        
         if (  affiliate.isDeleted()  ) {

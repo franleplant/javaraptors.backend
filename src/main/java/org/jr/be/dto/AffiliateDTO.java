@@ -1,5 +1,8 @@
 package org.jr.be.dto;
 
+import java.util.HashSet;
+import java.util.Set;
+
 public class AffiliateDTO {
 
 	private Long id;
@@ -31,8 +34,8 @@ public class AffiliateDTO {
 	
 	private AddressDTO address;
 
-	// TODO
-	//private LendsDTO lends; 
+	
+	private Set<AffiliateLendDTO> lends = new HashSet<AffiliateLendDTO>(); 
 	
 	
 	public Long getId() {
@@ -145,6 +148,14 @@ public class AffiliateDTO {
 
 	public void setAddress(AddressDTO address) {
 		this.address = address;
+	}
+
+	public Set<AffiliateLendDTO> getLends() {
+		return lends;
+	}
+
+	public void setLends(Set<AffiliateLendDTO> lends) {
+		this.lends = lends;
 	}
 	
 
