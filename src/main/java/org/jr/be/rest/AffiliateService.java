@@ -2,6 +2,7 @@ package org.jr.be.rest;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import javax.annotation.Resource;
 import javax.persistence.EntityManager;
@@ -31,6 +32,7 @@ import org.jr.be.model.City;
 import org.jr.be.model.EntityType;
 import org.jr.be.model.Lend;
 import org.jr.be.model.Prov;
+import org.jr.be.model.Suspension;
 import org.jr.be.util.JsonResponseMsg;
 
 @Path("/affiliate")
@@ -102,6 +104,8 @@ public class AffiliateService {
 	        //Add to the Affiliate DTO
 	        dto.getLends().add(  lendDTO  );
     	}
+    	
+    
         
         
         
@@ -112,6 +116,25 @@ public class AffiliateService {
         if (  affiliate.isDeleted()  ) {
         	throw new WebApplicationException(Response.Status.NOT_FOUND);
         }
+        
+    	// Can the affiliate request more lends?
+        // This require more logic
+        
+        Set<Suspension> suspensions = affiliate.getSuspensions();
+        boolean active = true;
+        
+        for (Suspension s : suspensions){
+        	if (  s.getEndDate().after(new Date())  ) {
+        		active = false;
+        		break;
+        	}
+        }
+        
+        dto.setActive(active);
+        
+
+        
+        
         
         // Transfer all the data into the DTO
         dto.setId(       affiliate.getId()  );
@@ -129,8 +152,6 @@ public class AffiliateService {
         dto.setReputation(  affiliate.getReputation()  );
         dto.setType( affiliate.getType().getName()  );
         
-        // This require more logic
-        dto.setActive(true);
         
         dto.setAudit(  new AuditDTO()  );
         dto.getAudit().setCreateDate(   affiliate.getPerson().getAudit().getCreateDate()   );
