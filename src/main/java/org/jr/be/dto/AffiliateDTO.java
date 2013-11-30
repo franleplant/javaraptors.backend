@@ -54,6 +54,7 @@ public class AffiliateDTO {
 		cel = 		affiliate.getPerson().getContact().getCel();
 		reputation = affiliate.getReputation();
 		type = 		affiliate.getType().getName();
+		isActive =  affiliate.isActive();
 		
 		AuditDTO auditDTO = new AuditDTO();
         auditDTO.toDTO(  affiliate.getPerson().getAudit()  );
