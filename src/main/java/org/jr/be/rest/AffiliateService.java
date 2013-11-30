@@ -3,7 +3,6 @@ package org.jr.be.rest;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
 import javax.annotation.Resource;
 import javax.persistence.EntityManager;
@@ -23,19 +22,15 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import org.jr.be.dto.AddressDTO;
-import org.jr.be.dto.AffiliateCopyDTO;
 import org.jr.be.dto.AffiliateDTO;
 import org.jr.be.dto.AffiliateLendDTO;
 import org.jr.be.dto.AffiliateSearchDTO;
-import org.jr.be.dto.AuditDTO;
 import org.jr.be.model.Affiliate;
 import org.jr.be.model.Audit;
 import org.jr.be.model.City;
 import org.jr.be.model.EntityType;
 import org.jr.be.model.Lend;
 import org.jr.be.model.Prov;
-import org.jr.be.model.Suspension;
 import org.jr.be.util.JsonResponseMsg;
 
 @Path("/affiliate")
@@ -190,42 +185,12 @@ public class AffiliateService {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public JsonResponseMsg create(AffiliateDTO dto) throws Exception {
-    	
- 	
-    	
-    	Affiliate affiliate = new Affiliate();
-    	
-
-    	
-    	// Person
-    	affiliate.getPerson().setName(      dto.getName()     );
-    	affiliate.getPerson().setLastName(  dto.getLastName() );
-        affiliate.getPerson().setDni(       dto.getDni()      );
-        affiliate.getPerson().setCuil(      dto.getCuil()     );
-        affiliate.getPerson().setImg(       dto.getImg()      );
-        
-        
-        //Contact
-        affiliate.getPerson().getContact().setEmail( dto.getEmail() );
-        affiliate.getPerson().getContact().setTel(   dto.getTel()   );
-        affiliate.getPerson().getContact().setCel(   dto.getCel()   );
-    		
-    	
-    	// Address    	
-        affiliate.getPerson().getAddress().setStreet(     dto.getAddress().getStreet()     );
-        affiliate.getPerson().getAddress().setNumber(     dto.getAddress().getNumber()     );
-        affiliate.getPerson().getAddress().setDepartment( dto.getAddress().getDepartment() );
-        affiliate.getPerson().getAddress().setFloor(      dto.getAddress().getFloor()      );
-        
-        
-        affiliate.setDeleted(false);
-        affiliate.setReputation( dto.getReputation()  );
-    	
+    	   	
+    	Affiliate affiliate = dto.toEntity();   	
         
     	//http://docs.oracle.com/javase/6/docs/api/java/util/Date.html
     	//This references to today
-    	Date today = new Date();
-    	affiliate.getPerson().getAudit().setCreateDate(today);
+    	affiliate.getPerson().getAudit().setCreateDate(  new Date()  );
         
      
     	u.begin();
@@ -302,52 +267,28 @@ public class AffiliateService {
     @Produces(MediaType.APPLICATION_JSON)
     public JsonResponseMsg edit(AffiliateDTO dto, @PathParam("id") Long id) throws Exception {
     	
-    	Affiliate affiliate = new Affiliate();
-    	
-
-    	affiliate.setId(  dto.getId()  );
-    	
-    	// Person
-    	affiliate.getPerson().setName(      dto.getName()     );
-    	affiliate.getPerson().setLastName(  dto.getLastName() );
-        affiliate.getPerson().setDni(       dto.getDni()      );
-        affiliate.getPerson().setCuil(      dto.getCuil()     );
-        affiliate.getPerson().setImg(       dto.getImg()      );
-        
-        
-        //Contact
-        affiliate.getPerson().getContact().setEmail( dto.getEmail() );
-        affiliate.getPerson().getContact().setTel(   dto.getTel()   );
-        affiliate.getPerson().getContact().setCel(   dto.getCel()   );
-    		
-    	
-    	// Address    	
-        affiliate.getPerson().getAddress().setStreet(     dto.getAddress().getStreet()     );
-        affiliate.getPerson().getAddress().setNumber(     dto.getAddress().getNumber()     );
-        affiliate.getPerson().getAddress().setDepartment( dto.getAddress().getDepartment() );
-        affiliate.getPerson().getAddress().setFloor(      dto.getAddress().getFloor()      );
-        
-    	
-
-    	
-    	affiliate.setReputation( dto.getReputation()  );
-    	
+    	Affiliate affiliate = dto.toEntity();   	
+   	
    	
     	
     	u.begin();
     	EntityManager entityManager = entityManagerFactory.createEntityManager(); 
     	
-    	
-    	Affiliate existing_affiliate = entityManager.find(Affiliate.class, dto.getId()  ); 
-    	
+    	// Copy current audit object and paste it into the new modified version of affiliate
+    	Affiliate existing_affiliate = entityManager.find(Affiliate.class, dto.getId()  );    	
     	Audit audit = existing_affiliate.getPerson().getAudit();
     	
-    	
-    	//http://docs.oracle.com/javase/6/docs/api/java/util/Date.html
-    	//This references to today
+
+    	//This references to today http://docs.oracle.com/javase/6/docs/api/java/util/Date.html
     	audit.setEditDate(  new Date()  );
-    	
     	affiliate.getPerson().setAudit(  audit  );
+    	
+    	
+    	
+		// Set Entity Type  	
+		affiliate.setType(  existing_affiliate.getType() );
+    	
+    	System.out.println(affiliate);
 
     	//
     	// City, Prov, Country Handling
@@ -395,10 +336,7 @@ public class AffiliateService {
     	affiliate.getPerson().getAddress().setCity(city);
     	
     	
-            	
-    	// Set Entity Type
-    	EntityType type = entityManager.find(EntityType.class, entityTypeID);    	
-    	affiliate.setType(type);
+
     	
     	// When login is done do this:
     	//affiliate.getPerson().getAudit().setCreateUser(current_loged_user);

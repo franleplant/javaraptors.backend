@@ -28,11 +28,30 @@ public class AddressDTO {
 		number = 		address.getNumber();
 		department = 	address.getDepartment();
 		floor = 		address.getFloor();
-		city = 			address.getCity().getName();
-		cp = 			address.getCity().getCp();
-		prov = 			address.getCity().getProv().getName();
-		country = 		address.getCity().getProv().getCountry().getName();
+		
+		if ( address.getCity() != null){
+			city = 			address.getCity().getName();
+			cp = 			address.getCity().getCp();
+			prov = 			address.getCity().getProv().getName();
+			country = 		address.getCity().getProv().getCountry().getName();
+		}
 
+	}
+	
+	
+	public Address toEntity() {
+		
+		Address address = new Address();
+		
+		
+		address.setStreet(     street     );
+		address.setNumber(     number     );
+		address.setDepartment( department );
+		address.setFloor(      floor      );
+		
+		//The city, prov and country object will be handled by hand in each case
+		
+		return address;
 	}
 	
 	

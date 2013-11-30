@@ -69,6 +69,43 @@ public class AffiliateDTO {
 	}
 	
 	
+	public Affiliate toEntity() {
+		Affiliate affiliate = new Affiliate();
+		
+		// If id is not null
+		if (  id > 0  ) {
+			affiliate.setId(  id  );
+		}
+		
+		affiliate.setDeleted(false);
+		
+    	// Person
+    	affiliate.getPerson().setName(      name     );
+    	affiliate.getPerson().setLastName(  lastName );
+        affiliate.getPerson().setDni(       dni      );
+        affiliate.getPerson().setCuil(      cuil     );
+        affiliate.getPerson().setImg(       img      );
+        affiliate.setReputation( reputation  );
+        
+        
+        //Contact
+        affiliate.getPerson().getContact().setEmail( email );
+        affiliate.getPerson().getContact().setTel(   tel   );
+        affiliate.getPerson().getContact().setCel(   cel   );
+        
+        
+        
+    		
+    	
+    	// Address    	
+        AddressDTO addressDTO = new AddressDTO();
+        addressDTO.toDTO(  affiliate.getPerson().getAddress()  );
+        affiliate.getPerson().setAddress(  addressDTO.toEntity()  );
+		
+		return affiliate;
+	};
+	
+	
 	public Long getId() {
 		return id;
 	}
