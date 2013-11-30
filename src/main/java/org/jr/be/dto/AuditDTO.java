@@ -18,9 +18,12 @@ public class AuditDTO {
 		createDate = audit.getCreateDate();
 		editDate = audit.getEditDate();
 		deleteDate = audit.getDeleteDate();
-		createUser = audit.getCreateUser().getPerson().getFullName();
 		
-        
+		
+		if ( audit.getCreateUser() != null ){
+			createUser = audit.getCreateUser().getPerson().getFullName();
+		}
+		
         
         if (  audit.getEditUser() != null  ){
         	editUser =    audit.getEditUser().getPerson().getFullName();

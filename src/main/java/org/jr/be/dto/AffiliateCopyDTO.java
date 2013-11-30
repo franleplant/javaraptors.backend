@@ -5,7 +5,7 @@ import org.jr.be.model.Copy;
 public class AffiliateCopyDTO {
 
 	//Copys book id
-	private Long id;
+	private long id;
 	
 	private String title;
 	
@@ -15,11 +15,11 @@ public class AffiliateCopyDTO {
 	}
 	
 
-	public Long getId() {
+	public long getId() {
 		return id;
 	}
 
-	public void setId(Long id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 

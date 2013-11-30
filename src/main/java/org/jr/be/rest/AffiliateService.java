@@ -46,10 +46,11 @@ public class AffiliateService {
     @Resource
     private UserTransaction u;
     
+    
+    
     private Set<AffiliateLendDTO> fetchLends(EntityManager entityManager, Affiliate affiliate) {
     	
     	Set<AffiliateLendDTO> lendsDTO = new HashSet<AffiliateLendDTO>(); 
-    	
     	
 	    // Fetch all the affiliates current lends
 	    List<Lend> lends = entityManager.createQuery(
@@ -65,9 +66,36 @@ public class AffiliateService {
 	        lendDTO.toDTO(lend);
 	        lendsDTO.add(  lendDTO  );
 	 	}
-	 	
 	 	return lendsDTO;
     }
+    
+    
+    private City fetchCreateCity(EntityManager entityManager, AffiliateDTO affiliateDTO, Prov prov) {
+    	
+    	City city;
+    	String cp = affiliateDTO.getAddress().getCp();
+    	String city_name =  affiliateDTO.getAddress().getCity();
+    	
+        // Search for the city, if not found create it       
+    	try {
+        	city = (City) entityManager.createQuery(
+        		    "select c from City as c where c.cp = ?1")
+        		    .setParameter(1, cp)
+        		    .getSingleResult();
+ 	
+    		
+    	} catch (NoResultException e) {
+    		
+    		city = new City();
+    		city.setCp(  cp  );
+    		city.setName(  city_name  );
+    		city.setProv(  prov  );
+    	} 
+    	
+    	return city;
+    }
+    
+    
     
     @GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -96,13 +124,10 @@ public class AffiliateService {
     		
             if (  affiliate.isDeleted()  ) {
             	break;
-            }
-    		           
-            
+            }    
             affiliateDTO.setLends(  fetchLends(entityManager, affiliate)  );
             
-    	  
-	        
+
 	        // Transfer all the data into the DTO
 	        affiliateDTO.toDTO(affiliate);
 	        resultsDTO.add(affiliateDTO);
@@ -134,25 +159,20 @@ public class AffiliateService {
         EntityManager entityManager = entityManagerFactory.createEntityManager();    
         
 
-
         try {
         	affiliate = entityManager.find(Affiliate.class, id);
         	
         	//Has it found any entity?
         	affiliate.getId();
-        	
-        	
+
         } catch(NullPointerException ex) {
+        	
         	throw new WebApplicationException(Response.Status.NOT_FOUND);
         }
         
 
         //GET All the lends
         dto.setLends(  fetchLends(entityManager, affiliate)  );
-    	
-    
-        
-        
         
         entityManager.close();
      
@@ -172,8 +192,7 @@ public class AffiliateService {
     }
     
     
-    
-    
+
         
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
@@ -197,9 +216,6 @@ public class AffiliateService {
         //Country country = entityManager.find(Country.class, dto.getAddress().getCountry()  );
     	
     	Prov prov;
-    	City city;
-    	
-    	String cp = dto.getAddress().getCp();
     	
     	// Search the prov, if not found send and error msg and do not do anything else
     	try {  		
@@ -216,24 +232,10 @@ public class AffiliateService {
     		
     	}
     	
+    	  	
+    	// Search for the city, if not found create it    
+    	affiliate.getPerson().getAddress().setCity(  fetchCreateCity(entityManager, dto, prov)  );
     	
-        // Search for the city, if not found create it       
-    	try {
-        	city = (City) entityManager.createQuery(
-        		    "select c from City as c where c.cp = ?1")
-        		    .setParameter(1, cp)
-        		    .getSingleResult();
- 	
-    		
-    	} catch (NoResultException e) {
-    		
-    		city = new City();
-    		city.setCp(cp);
-    		city.setName(  dto.getAddress().getCity()  );
-    		city.setProv(  prov  );
-    	} 
-        
-    	affiliate.getPerson().getAddress().setCity(city);
     	
     	
             	
@@ -290,9 +292,6 @@ public class AffiliateService {
         //Country country = entityManager.find(Country.class, dto.getAddress().getCountry()  );
     	
     	Prov prov;
-    	City city;
-    	
-    	String cp = dto.getAddress().getCp();
     	
     	// Search the prov, if not found send and error msg and do not do anything else
     	try {  		
@@ -310,24 +309,10 @@ public class AffiliateService {
     	}
     	
     	
-        // Search for the city, if not found create it       
-    	try {
-        	city = (City) entityManager.createQuery(
-        		    "select c from City as c where c.cp = ?1")
-        		    .setParameter(1, cp)
-        		    .getSingleResult();
- 	
-    		
-    	} catch (NoResultException e) {
-    		
-    		city = new City();
-    		city.setCp(cp);
-    		city.setName(  dto.getAddress().getCity()  );
-    		city.setProv(  prov  );
-    	} 
-        
-    	affiliate.getPerson().getAddress().setCity(city);
+
     	
+    	// Search for the city, if not found create it    
+    	affiliate.getPerson().getAddress().setCity(  fetchCreateCity(entityManager, dto, prov)  );
     	
 
     	

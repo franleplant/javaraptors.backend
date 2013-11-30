@@ -10,7 +10,7 @@ import org.jr.be.model.Lend;
 // This will contain a single affiliate lend info
 public class AffiliateLendDTO {
 	
-	private Long id;
+	private long id;
 	
 	// Lend Type
 	private String type;
@@ -37,11 +37,11 @@ public class AffiliateLendDTO {
 		copy = copyDTO;
 	}
 
-	public Long getId() {
+	public long getId() {
 		return id;
 	}
 
-	public void setId(Long id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 
