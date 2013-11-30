@@ -2,7 +2,9 @@ package org.jr.be.rest;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.annotation.Resource;
 import javax.persistence.EntityManager;
@@ -44,6 +46,29 @@ public class AffiliateService {
     @Resource
     private UserTransaction u;
     
+    private Set<AffiliateLendDTO> fetchLends(EntityManager entityManager, Affiliate affiliate) {
+    	
+    	Set<AffiliateLendDTO> lendsDTO = new HashSet<AffiliateLendDTO>(); 
+    	
+    	
+	    // Fetch all the affiliates current lends
+	    List<Lend> lends = entityManager.createQuery(
+	     	    "from Lend as lend where lend.affiliate = ?1 and lend.actualReturnDate is null", Lend.class)
+	     	    .setParameter(1, affiliate)
+	     	    .getResultList();
+	  
+	     
+	    AffiliateLendDTO lendDTO;
+	     
+	 	for (Lend lend : lends) {
+	        lendDTO = new AffiliateLendDTO();  	        
+	        lendDTO.toDTO(lend);
+	        lendsDTO.add(  lendDTO  );
+	 	}
+	 	
+	 	return lendsDTO;
+    }
+    
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public AffiliateSearchDTO search(@QueryParam("q") String query) {
@@ -72,25 +97,10 @@ public class AffiliateService {
             if (  affiliate.isDeleted()  ) {
             	break;
             }
-    		
-    	       // Fetch all the affiliates current lends
-            List<Lend> lends = entityManager.createQuery(
-            	    "from Lend as lend where lend.affiliate = ?1 and lend.actualReturnDate is null", Lend.class)
-            	    .setParameter(1, affiliate)
-            	    .getResultList();
-         
+    		           
             
-            AffiliateLendDTO lendDTO;
+            affiliateDTO.setLends(  fetchLends(entityManager, affiliate)  );
             
-        	for (Lend lend : lends) {
-
-
-    	        lendDTO = new AffiliateLendDTO();  	        
-    	        lendDTO.toDTO(lend);
-    	        
-    	        //Add to the Affiliate DTO
-    	        affiliateDTO.getLends().add(  lendDTO  );
-        	}
     	  
 	        
 	        // Transfer all the data into the DTO
@@ -137,24 +147,8 @@ public class AffiliateService {
         }
         
 
-        //GET All te lends
-        List<Lend> lends = entityManager.createQuery(
-        	    "from Lend as lend where lend.affiliate = ?1 and lend.actualReturnDate is null", Lend.class)
-        	    .setParameter(1, affiliate)
-        	    .getResultList();
-     
-        
-        AffiliateLendDTO lendDTO;;
-        
-    	for (Lend lend : lends) {
-
-
-	        lendDTO = new AffiliateLendDTO();  	        
-	        lendDTO.toDTO(lend);
-	        
-	        //Add to the Affiliate DTO
-	        dto.getLends().add(  lendDTO  );
-    	}
+        //GET All the lends
+        dto.setLends(  fetchLends(entityManager, affiliate)  );
     	
     
         
@@ -288,7 +282,6 @@ public class AffiliateService {
 		// Set Entity Type  	
 		affiliate.setType(  existing_affiliate.getType() );
     	
-    	System.out.println(affiliate);
 
     	//
     	// City, Prov, Country Handling
