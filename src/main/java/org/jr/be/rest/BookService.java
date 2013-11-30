@@ -18,11 +18,10 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import org.jr.be.model.Book;
+import org.jr.be.dto.BookDTO;
 import org.jr.be.model.Audit;
+import org.jr.be.model.Book;
 import org.jr.be.model.EntityType;
-
-
 import org.jr.be.util.JsonResponseMsg;
 
 @Path("/book")
@@ -39,9 +38,10 @@ public class BookService {
     @GET
     @Path("/{id:[0-9][0-9]*}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Book getOne(@PathParam("id") Long id) {
+    public BookDTO getOne(@PathParam("id") Long id) {
             
     	Book book = null;
+    	BookDTO dto = new BookDTO();
             
         EntityManager entityManager = entityManagerFactory.createEntityManager();             
 
@@ -50,6 +50,9 @@ public class BookService {
         	
         	//Has it found any entity?
         	book.getId();
+        		
+            
+            dto.toDTO(  book, entityManager  );
         	
         	
         } catch(NullPointerException ex) {
@@ -63,9 +66,10 @@ public class BookService {
         	throw new WebApplicationException(Response.Status.NOT_FOUND);
         }
         
+
         
         
-        return book;      
+        return dto;      
     }
         
         @POST

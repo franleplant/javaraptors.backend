@@ -98,6 +98,142 @@ public class BookDTO {
 		
 		return book;
 	}
+
+	public long getId() {
+		return id;
+	}
+
+	public void setId(long id) {
+		this.id = id;
+	}
+
+	public String getIsbn() {
+		return isbn;
+	}
+
+	public void setIsbn(String isbn) {
+		this.isbn = isbn;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
+	public String getEditionNumber() {
+		return editionNumber;
+	}
+
+	public void setEditionNumber(String editionNumber) {
+		this.editionNumber = editionNumber;
+	}
+
+	public String getEditionCountry() {
+		return editionCountry;
+	}
+
+	public void setEditionCountry(String editionCountry) {
+		this.editionCountry = editionCountry;
+	}
+
+	public String getSummary() {
+		return summary;
+	}
+
+	public void setSummary(String summary) {
+		this.summary = summary;
+	}
+
+	public String getImg() {
+		return img;
+	}
+
+	public void setImg(String img) {
+		this.img = img;
+	}
+
+	public String getLang() {
+		return lang;
+	}
+
+	public void setLang(String lang) {
+		this.lang = lang;
+	}
+
+	public double getVal() {
+		return val;
+	}
+
+	public void setVal(double val) {
+		this.val = val;
+	}
+
+	public String getPrice() {
+		return price;
+	}
+
+	public void setPrice(String price) {
+		this.price = price;
+	}
+
+	public String getComments() {
+		return comments;
+	}
+
+	public void setComments(String comments) {
+		this.comments = comments;
+	}
+
+	public Set<BookAuthorDTO> getAuthors() {
+		return authors;
+	}
+
+	public void setAuthors(Set<BookAuthorDTO> authors) {
+		this.authors = authors;
+	}
+
+	public Set<GenreDTO> getGenres() {
+		return genres;
+	}
+
+	public void setGenres(Set<GenreDTO> genres) {
+		this.genres = genres;
+	}
+
+	public BookEditorialDTO getEditorial() {
+		return editorial;
+	}
+
+	public void setEditorial(BookEditorialDTO editorial) {
+		this.editorial = editorial;
+	}
+
+	public Set<BookCopyDTO> getCopies() {
+		return copies;
+	}
+
+	public void setCopies(Set<BookCopyDTO> copies) {
+		this.copies = copies;
+	}
+
+	public AuditDTO getAudit() {
+		return audit;
+	}
+
+	public void setAudit(AuditDTO audit) {
+		this.audit = audit;
+	}
 	
 	
 	

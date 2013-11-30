@@ -10,5 +10,13 @@ public class GenreDTO {
 		name = genre.getName();
 		
 	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
 	
 }

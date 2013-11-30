@@ -18,4 +18,36 @@ public class BookCopyLendDTO {
     	
     }
 
+	public String getLendType() {
+		return lendType;
+	}
+
+	public void setLendType(String lendType) {
+		this.lendType = lendType;
+	}
+
+	public Date getLendingDate() {
+		return lendingDate;
+	}
+
+	public void setLendingDate(Date lendingDate) {
+		this.lendingDate = lendingDate;
+	}
+
+	public Date getExpectedReturnDate() {
+		return expectedReturnDate;
+	}
+
+	public void setExpectedReturnDate(Date expectedReturnDate) {
+		this.expectedReturnDate = expectedReturnDate;
+	}
+
+	public String getComments() {
+		return comments;
+	}
+
+	public void setComments(String comments) {
+		this.comments = comments;
+	}
+
 }

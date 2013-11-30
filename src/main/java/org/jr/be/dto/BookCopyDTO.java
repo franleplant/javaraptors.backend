@@ -1,10 +1,11 @@
 package org.jr.be.dto;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
+
 
 import org.jr.be.model.Copy;
 import org.jr.be.model.Lend;
@@ -31,18 +32,91 @@ public class BookCopyDTO {
 			lendTypes.add(  lt.getName()  );
 		}
 		
-	    Lend lend_entity = em.createQuery(
-	     	    "from Lend as lend where lend.copy = ?1 and lend.actualReturnDate is null", Lend.class)
-	     	    .setParameter(1, copy)
-	     	    .getSingleResult();
+		
+        try {
+    	    Lend lend_entity = em.createQuery(
+    	     	    "from Lend as lend where lend.copy = ?1 and lend.actualReturnDate is null", Lend.class)
+    	     	    .setParameter(1, copy)
+    	     	    .getSingleResult();
+    	    lend.toDTO(  lend_entity  );
+ 	
+        } catch(NoResultException ex) {
+        	
+        	//Dont do anything
+        } 
+
 	    
-	    lend.toDTO(  lend_entity  );
+	    
 	    
 	    location.toDTO(  copy.getLocation()  );
 	    
 	    
 	    audit.toDTO(  copy.getAudit()  );
 		
+	}
+
+	public long getId() {
+		return id;
+	}
+
+	public void setId(long id) {
+		this.id = id;
+	}
+
+	public String getState() {
+		return state;
+	}
+
+	public void setState(String state) {
+		this.state = state;
+	}
+
+	public int getEditionYear() {
+		return editionYear;
+	}
+
+	public void setEditionYear(int editionYear) {
+		this.editionYear = editionYear;
+	}
+
+	public String getComments() {
+		return comments;
+	}
+
+	public void setComments(String comments) {
+		this.comments = comments;
+	}
+
+	public Set<String> getLendTypes() {
+		return lendTypes;
+	}
+
+	public void setLendTypes(Set<String> lendTypes) {
+		this.lendTypes = lendTypes;
+	}
+
+	public BookCopyLendDTO getLend() {
+		return lend;
+	}
+
+	public void setLend(BookCopyLendDTO lend) {
+		this.lend = lend;
+	}
+
+	public LocationDTO getLocation() {
+		return location;
+	}
+
+	public void setLocation(LocationDTO location) {
+		this.location = location;
+	}
+
+	public AuditDTO getAudit() {
+		return audit;
+	}
+
+	public void setAudit(AuditDTO audit) {
+		this.audit = audit;
 	}
 
 }

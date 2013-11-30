@@ -14,4 +14,34 @@ public class LocationDTO {
 		shelf = location.getShelf();
 	}
 
+
+	public long getId() {
+		return id;
+	}
+
+
+	public void setId(long id) {
+		this.id = id;
+	}
+
+
+	public String getShelves() {
+		return shelves;
+	}
+
+
+	public void setShelves(String shelves) {
+		this.shelves = shelves;
+	}
+
+
+	public String getShelf() {
+		return shelf;
+	}
+
+
+	public void setShelf(String shelf) {
+		this.shelf = shelf;
+	}
+
 }
