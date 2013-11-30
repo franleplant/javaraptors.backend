@@ -1,5 +1,8 @@
 package org.jr.be.dto;
 
+import org.jr.be.model.Address;
+
+
 public class AddressDTO {
 	
 	private String street;
@@ -18,6 +21,21 @@ public class AddressDTO {
 	
 	private String country;
 
+	public void toDTO(Address address) {
+		
+		
+		street = 		address.getStreet();
+		number = 		address.getNumber();
+		department = 	address.getDepartment();
+		floor = 		address.getFloor();
+		city = 			address.getCity().getName();
+		cp = 			address.getCity().getCp();
+		prov = 			address.getCity().getProv().getName();
+		country = 		address.getCity().getProv().getCountry().getName();
+
+	}
+	
+	
 	public String getStreet() {
 		return street;
 	}

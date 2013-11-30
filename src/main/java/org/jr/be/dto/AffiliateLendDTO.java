@@ -2,6 +2,8 @@ package org.jr.be.dto;
 
 import java.util.Date;
 
+import org.jr.be.model.Lend;
+
 
 
 
@@ -20,6 +22,20 @@ public class AffiliateLendDTO {
 	private String comments;
 	
 	private AffiliateCopyDTO copy;
+	
+	public void toDTO(Lend lend) {
+		
+		id = lend.getId();
+		type = lend.getLendType().getName();
+		lendingDate = lend.getLendDate();
+		expectedReturnDate = getExpectedReturnDate();
+		comments = lend.getComments();
+        
+		AffiliateCopyDTO copyDTO = new AffiliateCopyDTO();
+		copyDTO.toDTO(lend.getCopy());
+		
+		copy = copyDTO;
+	}
 
 	public Long getId() {
 		return id;

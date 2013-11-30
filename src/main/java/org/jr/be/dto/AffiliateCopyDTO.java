@@ -1,10 +1,18 @@
 package org.jr.be.dto;
 
+import org.jr.be.model.Copy;
+
 public class AffiliateCopyDTO {
 
+	//Copys book id
 	private Long id;
 	
 	private String title;
+	
+	public void toDTO(Copy copy){
+		id = copy.getBook().getId();;
+		title = copy.getBook().getTitle();
+	}
 	
 
 	public Long getId() {

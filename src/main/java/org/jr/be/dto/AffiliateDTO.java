@@ -3,6 +3,9 @@ package org.jr.be.dto;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.jr.be.model.Affiliate;
+
+
 public class AffiliateDTO {
 
 	private Long id;
@@ -36,6 +39,33 @@ public class AffiliateDTO {
 
 	
 	private Set<AffiliateLendDTO> lends = new HashSet<AffiliateLendDTO>(); 
+	
+	
+	public void toDTO(Affiliate affiliate){
+		
+		id = 		affiliate.getId();
+		name = 		affiliate.getPerson().getName();
+		lastName = 	affiliate.getPerson().getLastName();
+		dni = 		affiliate.getPerson().getDni();
+		cuil =  	affiliate.getPerson().getCuil();
+		img = 		affiliate.getPerson().getImg();
+		email = 	affiliate.getPerson().getContact().getEmail();
+		tel = 		affiliate.getPerson().getContact().getTel();
+		cel = 		affiliate.getPerson().getContact().getCel();
+		reputation = affiliate.getReputation();
+		type = 		affiliate.getType().getName();
+		
+		AuditDTO auditDTO = new AuditDTO();
+        auditDTO.toDTO(  affiliate.getPerson().getAudit()  );
+		
+		audit =   auditDTO;
+		
+		
+        AddressDTO addressDTO = new AddressDTO();
+        addressDTO.toDTO(  affiliate.getPerson().getAddress()  );
+        
+        address = addressDTO;
+	}
 	
 	
 	public Long getId() {

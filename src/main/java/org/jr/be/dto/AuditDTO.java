@@ -2,6 +2,8 @@ package org.jr.be.dto;
 
 import java.util.Date;
 
+import org.jr.be.model.Audit;
+
 public class AuditDTO {
 	
 	private Date createDate;
@@ -11,6 +13,24 @@ public class AuditDTO {
 	private String createUser;
 	private String editUser;
 	private String deleteUser;
+	
+	public void toDTO(Audit audit){
+		createDate = audit.getCreateDate();
+		editDate = audit.getEditDate();
+		deleteDate = audit.getDeleteDate();
+		createUser = audit.getCreateUser().getPerson().getFullName();
+		
+        
+        
+        if (  audit.getEditUser() != null  ){
+        	editUser =    audit.getEditUser().getPerson().getFullName();
+        }
+        
+        
+        if (  audit.getDeleteUser() != null  ) {
+        	deleteUser =    audit.getDeleteUser().getPerson().getFullName();        
+        }
+	}
 	
 	
 	

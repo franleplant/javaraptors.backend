@@ -86,27 +86,12 @@ public class AffiliateService {
          
             
             AffiliateLendDTO lendDTO;;
-            AffiliateCopyDTO copyDTO;
             
         	for (Lend lend : lends) {
 
 
-    	        lendDTO = new AffiliateLendDTO();
-    	        copyDTO = new AffiliateCopyDTO();
-    	        
-    	        //Lend DTO
-    	        lendDTO.setId(                  lend.getId()                  );
-    	        lendDTO.setLendingDate(         lend.getLendDate()            );
-    	        lendDTO.setExpectedReturnDate(  lend.getExpectedReturnDate()  );        
-    	        lendDTO.setType(                lend.getLendType().getName()  );
-    	        lendDTO.setComments(            lend.getComments()            );
-    	        
-    	        // Lend DTO . copy
-    	        copyDTO.setId(        lend.getCopy().getId()               );
-    	        copyDTO.setTitle(     lend.getCopy().getBook().getTitle()  );
-    	        
-    	        lendDTO.setCopy(  copyDTO  );
-    	        
+    	        lendDTO = new AffiliateLendDTO();  	        
+    	        lendDTO.toDTO(lend);
     	        
     	        //Add to the Affiliate DTO
     	        affiliateDTO.getLends().add(  lendDTO  );
@@ -114,7 +99,7 @@ public class AffiliateService {
     		
 	
 	    	
-	    	
+	    	//MOVE TO affiliate CLASS
 	      	// Can the affiliate request more lends?
 	        Set<Suspension> suspensions = a.getSuspensions();
 	        boolean active = true;
@@ -133,56 +118,11 @@ public class AffiliateService {
 	        
 	        
 	        // Transfer all the data into the DTO
-	        affiliateDTO.setId(       a.getId()  );
-	        affiliateDTO.setName(     a.getPerson().getName()  );
-	        affiliateDTO.setLastName( a.getPerson().getLastName()  );
-	        affiliateDTO.setDni(      a.getPerson().getDni()  );
-	        affiliateDTO.setCuil(     a.getPerson().getCuil()  );
-	        affiliateDTO.setImg(      a.getPerson().getImg());
 	        
-	        affiliateDTO.setEmail(    a.getPerson().getContact().getEmail() );
-	        affiliateDTO.setTel(      a.getPerson().getContact().getTel() );
-	        affiliateDTO.setCel(      a.getPerson().getContact().getCel() );
-	        
-	        
-	        affiliateDTO.setReputation(  a.getReputation()  );
-	        affiliateDTO.setType( a.getType().getName()  );
-	        
-	        
-	        affiliateDTO.setAudit(  new AuditDTO()  );
-	        affiliateDTO.getAudit().setCreateDate(   a.getPerson().getAudit().getCreateDate()   );
-	        affiliateDTO.getAudit().setEditDate(     a.getPerson().getAudit().getEditDate()     );
-	        affiliateDTO.getAudit().setDeleteDate(   a.getPerson().getAudit().getDeleteDate()   );
-	        
-	        
-	        
-	        affiliateDTO.getAudit().setCreateUser(   a.getPerson().getAudit().getCreateUser().getPerson().getFullName() );
-	        
-	        
-	        if (  a.getPerson().getAudit().getEditUser() != null  ){
-	        	affiliateDTO.getAudit().setEditUser(     a.getPerson().getAudit().getEditUser().getPerson().getFullName()   );
-	        }
-	        
-	        
-	        if (  a.getPerson().getAudit().getDeleteUser() != null  ) {
-	        	affiliateDTO.getAudit().setDeleteUser(   a.getPerson().getAudit().getDeleteUser().getPerson().getFullName() );        
-	        }
-	        
-	        
-	       
-	        
-	        
-	        
-	        affiliateDTO.setAddress(  new AddressDTO()  );
-	        affiliateDTO.getAddress().setStreet(     a.getPerson().getAddress().getStreet()     );
-	        affiliateDTO.getAddress().setNumber(     a.getPerson().getAddress().getNumber()     );
-	        affiliateDTO.getAddress().setDepartment( a.getPerson().getAddress().getDepartment() );
-	        affiliateDTO.getAddress().setCity(       a.getPerson().getAddress().getCity().getName() );
-	        affiliateDTO.getAddress().setCp(         a.getPerson().getAddress().getCity().getCp()   );
-	        affiliateDTO.getAddress().setProv(       a.getPerson().getAddress().getCity().getProv().getName()  );
-	        affiliateDTO.getAddress().setCountry(    a.getPerson().getAddress().getCity().getProv().getCountry().getName()  );
-	
-	        
+	        // Already refactored
+	        affiliateDTO.toDTO(a);
+            
+	                
 	          
 	        resultsDTO.add(affiliateDTO);
     	}
