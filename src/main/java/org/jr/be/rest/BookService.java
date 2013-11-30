@@ -1,6 +1,8 @@
 package org.jr.be.rest;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import javax.annotation.Resource;
 import javax.persistence.EntityManager;
@@ -14,10 +16,12 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import org.jr.be.dto.BookSearchDTO;
 import org.jr.be.dto.BookDTO;
 import org.jr.be.model.Audit;
 import org.jr.be.model.Book;
@@ -35,6 +39,61 @@ public class BookService {
     @Resource
     private UserTransaction u;
         
+    
+    
+    
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public BookSearchDTO search(@QueryParam("q") String query) {
+    	
+    	String q = '%' + query + '%';
+    	
+    	EntityManager entityManager = entityManagerFactory.createEntityManager();
+    	
+        // Search by title
+        List<Book> results = entityManager.createQuery(
+        	    "FROM Book as b WHERE upper(b.title) LIKE ?1", Book.class)
+        	    .setParameter(1, q.toUpperCase() )
+        	    .getResultList();	
+    	
+    	
+    	
+    	
+    	List<BookDTO> resultsDTO = new ArrayList<BookDTO>();
+    	BookDTO bookDTO;
+    	
+    	//Create the dto
+    	for (Book book : results){
+    		bookDTO = new BookDTO();
+    		
+            if (  book.isDeleted()  ) {
+            	break;
+            }    
+
+            
+
+	        // Transfer all the data into the DTO
+            bookDTO.toDTO(  book, entityManager  );
+	        resultsDTO.add(bookDTO);
+    	}
+    	
+    	
+    	
+    	entityManager.close();
+    	
+    	
+    	
+    	BookSearchDTO response = new BookSearchDTO(); 	
+    	response.setPage_number(1);
+    	response.setPage_total(1);
+    	response.setResults(resultsDTO);
+    	
+    	return response;
+    }
+    
+    
+    
+    
     @GET
     @Path("/{id:[0-9][0-9]*}")
     @Produces(MediaType.APPLICATION_JSON)
