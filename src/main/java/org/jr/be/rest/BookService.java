@@ -509,32 +509,32 @@ public class BookService {
     };
         
         
-        @DELETE
-        @Path("/{id:[0-9][0-9]*}")
-        @Produces(MediaType.APPLICATION_JSON)
-        public JsonResponseMsg delete(@PathParam("id") Long id) throws Exception {
-        	
-        	
-        	Book book = null;     
-	        
-        	u.begin();
-	        EntityManager entityManager = entityManagerFactory.createEntityManager();             
-	        
-	        book = entityManager.find(Book.class, id);
-	        
-	        book.setDeleted(true);
-	        
-	        book.getAudit().setDeleteDate(new Date());
-	        
-	        //Finish this when loggin is working
-	        //book.getAudit().setDeleteUser(deleteDate);
-        	
-        	entityManager.merge(book);
-        	entityManager.flush();
-        	u.commit();
-            entityManager.close();
-            
-            return new JsonResponseMsg("ok", "oohhh yeeeeaaaaaaaah!");
-        };
+    @DELETE
+    @Path("/{id:[0-9][0-9]*}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public JsonResponseMsg delete(@PathParam("id") Long id) throws Exception {
+    	
+    	
+    	Book book = null;     
+        
+    	u.begin();
+        EntityManager entityManager = entityManagerFactory.createEntityManager();             
+        
+        book = entityManager.find(Book.class, id);
+        
+        book.setDeleted(true);
+        
+        book.getAudit().setDeleteDate(new Date());
+        
+        //Finish this when loggin is working
+        //book.getAudit().setDeleteUser(deleteDate);
+    	
+    	entityManager.merge(book);
+    	entityManager.flush();
+    	u.commit();
+        entityManager.close();
+        
+        return new JsonResponseMsg("ok", "oohhh yeeeeaaaaaaaah!");
+    };
         
 }
