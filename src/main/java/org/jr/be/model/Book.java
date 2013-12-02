@@ -41,7 +41,7 @@ public class Book {
 	@ManyToMany(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
 	private Set<Author> authors = new HashSet<Author>();
 	
-	@NotNull
+	//@NotNull
 	@ManyToMany(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
 	private Set<Genre> genres = new HashSet<Genre>();
 	
@@ -73,7 +73,7 @@ public class Book {
 	@Embedded
     private Audit audit = new Audit();
 	
-	@NotNull
+	//Deprecating
 	@ManyToOne(fetch = FetchType.EAGER)
 	private EntityType type;
 	
@@ -111,6 +111,10 @@ public class Book {
 	public void setAuthors(Set<Author> authors) {
 		this.authors = authors;
 	}
+	
+	public void addAuthor(Author author) {
+		this.authors.add(  author  );
+	}
 
 	public Set<Genre> getGenres() {
 		return genres;
@@ -118,6 +122,10 @@ public class Book {
 
 	public void setGenres(Set<Genre> genres) {
 		this.genres = genres;
+	}
+	
+	public void addGenre(Genre genre) {
+		this.genres.add(  genre  );
 	}
 
 	public String getEditionNumber() {

@@ -37,7 +37,7 @@ public class Editorial {
 	
 	private String comments;
 	
-	@NotNull
+	//Depreacting this
 	@ManyToOne(fetch = FetchType.EAGER)
 	private EntityType type;
 	

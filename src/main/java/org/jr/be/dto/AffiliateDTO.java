@@ -99,9 +99,7 @@ public class AffiliateDTO {
     		
     	
     	// Address    	
-        AddressDTO addressDTO = new AddressDTO();
-        addressDTO.toDTO(  affiliate.getPerson().getAddress()  );
-        affiliate.getPerson().setAddress(  addressDTO.toEntity()  );
+        affiliate.getPerson().setAddress(  address.toEntity()  );
 		
 		return affiliate;
 	};

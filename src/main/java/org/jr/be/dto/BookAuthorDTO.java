@@ -1,5 +1,8 @@
 package org.jr.be.dto;
 
+import java.util.Date;
+
+
 import org.jr.be.model.Author;
 
 
@@ -17,8 +20,10 @@ public class BookAuthorDTO {
 	
 	public Author toEntity() {
 		Author author = new Author();
-		
-		
+
+		author.setNick(nick);
+		author.setDeleted(false);
+		author.getAudit().setCreateDate( new Date() );
 		
 		return author;
 	}

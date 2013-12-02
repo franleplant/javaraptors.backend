@@ -1,5 +1,9 @@
 package org.jr.be.dto;
 
+import java.util.Date;
+
+import javax.persistence.EntityManager;
+
 import org.jr.be.model.Editorial;
 
 public class BookEditorialDTO {
@@ -10,6 +14,19 @@ public class BookEditorialDTO {
 	public void toDTO(  Editorial editorial  ){
 		id = editorial.getId();
 		name = editorial.getName();
+	}
+	
+	public Editorial toEntity(){
+		Editorial editorial = new Editorial();
+		
+		editorial.setName(name);
+		editorial.setDeleted(false);
+		editorial.getAudit().setCreateDate(  new Date()  );
+		//editorial.getAudit().setCreateUser( session user);
+
+
+		
+		return editorial;
 	}
 
 	public long getId() {

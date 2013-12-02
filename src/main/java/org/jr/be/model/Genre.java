@@ -32,6 +32,8 @@ public class Genre{
 	
 	private String comments;
 	
+	
+	//Deprecatign, removing in the next iteration
 	@ManyToOne(fetch = FetchType.EAGER)
 	private EntityType type;
 	

@@ -6,10 +6,10 @@ import java.util.Set;
 
 import javax.persistence.EntityManager;
 
-import org.jr.be.model.Book;
 import org.jr.be.model.Author;
-import org.jr.be.model.Genre;
+import org.jr.be.model.Book;
 import org.jr.be.model.Copy;
+import org.jr.be.model.Genre;
 
 
 
@@ -39,7 +39,7 @@ public class BookDTO {
 	public void toDTO(Book book, EntityManager em) {
 		id = book.getId();
 		isbn = book.getIsbn();
-		type = book.getType().getName();
+		type = "book";
 		title = book.getTitle();
 		editionNumber = book.getEditionNumber();
 		editionCountry = book.getEditionCountry().getName();
@@ -91,13 +91,26 @@ public class BookDTO {
 		audit = audit_dto;
 	}
 	
-	public Book toEntity() {
+	public Book toEntity( EntityManager em) {
 		Book book = new Book();
 		
+		book.setId(id);
+		book.setIsbn(isbn);
+		book.setTitle(title);
+		book.setEditionNumber(editionNumber);
+		book.setSummary(summary);
+		book.setImg(img);
+		book.setLang(lang);
+		book.setVal(val);
+		book.setPrice(price);
+		book.setComments(comments);
 		
-		
+    			
 		return book;
 	}
+	
+	
+
 
 	public long getId() {
 		return id;

@@ -110,6 +110,10 @@ public class Copy {
 	public Set<LendType> getLendTypes() {
 		return lendTypes;
 	}
+	
+	public void addLendType( LendType type) {
+		this.lendTypes.add(  type  );
+	}
 
 	public void setLendTypes(Set<LendType> lendTypes) {
 		this.lendTypes = lendTypes;

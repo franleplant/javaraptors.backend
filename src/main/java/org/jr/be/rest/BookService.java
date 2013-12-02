@@ -7,6 +7,7 @@ import java.util.List;
 import javax.annotation.Resource;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceUnit;
 import javax.transaction.UserTransaction;
 import javax.ws.rs.Consumes;
@@ -21,18 +22,21 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import org.jr.be.dto.BookSearchDTO;
+import org.jr.be.dto.BookAuthorDTO;
 import org.jr.be.dto.BookDTO;
-import org.jr.be.model.Audit;
+import org.jr.be.dto.BookEditorialDTO;
+import org.jr.be.dto.BookSearchDTO;
+import org.jr.be.dto.GenreDTO;
+import org.jr.be.model.Author;
 import org.jr.be.model.Book;
-import org.jr.be.model.EntityType;
+import org.jr.be.model.Country;
+import org.jr.be.model.Editorial;
+import org.jr.be.model.Genre;
 import org.jr.be.util.JsonResponseMsg;
 
 @Path("/book")
 public class BookService {
-        
-	private long entityTypeID = 1;
-    
+           
     @PersistenceUnit(unitName = "primary")
     private EntityManagerFactory entityManagerFactory;
     
@@ -131,45 +135,154 @@ public class BookService {
         return dto;      
     }
         
-        @POST
-        @Consumes(MediaType.APPLICATION_JSON)
-        @Produces(MediaType.APPLICATION_JSON)
-        public JsonResponseMsg create(Book book) throws Exception {
-        	
-        	
-        	book.setDeleted(false);
-        	Audit audit = new Audit();
-        	
-        	//http://docs.oracle.com/javase/6/docs/api/java/util/Date.html
-        	//This references to right now
-        	Date date = new Date();
-        	
-        	audit.setCreateDate(date);
-        	
+    
+    
+    public Country fetchCreateCountry( EntityManager em, BookDTO dto) {
+    	Country country;
+    	
+    	try {
+    		
+        	country = em.createQuery(
+    	     	    "from Country as c where c.name = ?1", Country.class)
+    	     	    .setParameter(1, dto.getEditionCountry())
+    	     	    .getSingleResult();  
+    	} catch (NoResultException e) {
+    		
+    		country = new Country();
+    		country.setName(  dto.getEditionCountry()  );
+    	}
+ 
+    	return country;
+    }
+    
+       
+    
+    public Editorial fetchCreateEditorial(EntityManager em, BookEditorialDTO editorialDTO) {
+    	
+    	Editorial editorial = new Editorial();
+    	
+		if ( editorialDTO.getId() != 0) {
+			
+			try {
+				editorial = em.find(Editorial.class, editorialDTO.getId());
+				
+			} catch(NoResultException ex) {
+				//Something really bad happened
+			}
 
-        	
-        	// When login is done do this:
-        	//audit.setCreateUser(createUser);
-        	
-        	book.setAudit(audit);
-        	
-        	
-        	u.begin();
-        	EntityManager entityManager = entityManagerFactory.createEntityManager(); 
-        	
-        	
-        	EntityType type = entityManager.find(EntityType.class, entityTypeID);
-        	
-        	book.setType(type);
-        	
-        	
-        	entityManager.merge(book);
-        	entityManager.flush();
-        	u.commit();
-            entityManager.close();
-            
-        	return new JsonResponseMsg("ok", "oohhh yeeeeaaaaaaaah!");
-        };
+		} else {
+			editorial = editorialDTO.toEntity();
+			
+		}
+		
+		return editorial;
+    }
+    
+    public Author fetchCreateAuthor(EntityManager em, BookAuthorDTO authorDTO) {
+    	Author author = new Author();
+    	
+    	// Check if the author exist
+		if ( authorDTO.getId() != 0) {
+			
+			try {
+				
+				author = em.find(Author.class, authorDTO.getId());
+				
+			} catch(NoResultException ex) {
+			
+					//Something really bad happened
+			}
+
+		} else {
+        	// Author does not exist, prepare for the cascade creation
+			author = authorDTO.toEntity();
+						
+			em.persist(author);			
+		}
+    	
+    	
+    	return author;
+    }
+    
+    public Genre fetchCreateGenre(  EntityManager em, GenreDTO genreDTO) {
+    	Genre genre = new Genre();
+    	
+    	if ( genreDTO.getId() != 0) {
+    	
+			try {
+				genre = em.find(Genre.class, genreDTO.getId());
+		    		    	
+			} catch(NoResultException ex) {
+		    	// Something really bad happened
+			}
+		
+    	} else {
+			genre = genreDTO.toEntity();
+			em.persist(genre);	
+		}
+    	    	
+    	return genre;
+    }
+    
+    
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public JsonResponseMsg create(BookDTO dto) throws Exception {
+     	
+    	
+    	u.begin();
+    	EntityManager entityManager = entityManagerFactory.createEntityManager(); 
+    	
+    	
+    	Book book = dto.toEntity(entityManager);
+    	book.getAudit().setCreateDate(  new Date()  );
+    	// When login is done do this:
+    	//audit.setCreateUser(createUser);
+    	book.setDeleted(false);
+    	
+    	book.setEditionCountry(  fetchCreateCountry(entityManager, dto)  );
+    	
+    	book.setEditorial(  fetchCreateEditorial(entityManager, dto.getEditorial())  );
+		
+		
+		for (  BookAuthorDTO authorDTO : dto.getAuthors()  ){
+			book.addAuthor(  fetchCreateAuthor(entityManager, authorDTO)  );
+		}
+		
+		
+		
+		for (  GenreDTO genreDTO : dto.getGenres()  ) {
+			book.addGenre (  fetchCreateGenre(entityManager, genreDTO)  );
+		}
+		
+		System.out.println(book.getGenres());
+		 
+		
+//		public void persistCopies(Book book, EntityManager em) {
+//			for (BookCopyDTO copy_dto : copies) {
+//				// Persist the new copy
+//				em.persist(  copy_dto.toEntity(book, em)  );		
+//			}
+//			
+//			em.flush();
+//		}
+    	
+    	
+    	entityManager.merge(book);
+    	entityManager.flush();
+    	
+    	System.out.println(  book.getId()  );
+    	
+    	//dto.persistCopies(book, entityManager);
+    	
+    	
+    	
+    	u.commit();
+        entityManager.close();
+        
+    	return new JsonResponseMsg("ok", "oohhh yeeeeaaaaaaaah!");
+    };
         
         
         @POST

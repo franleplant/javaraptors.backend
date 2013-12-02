@@ -24,7 +24,7 @@ public class Location {
 	@NotEmpty
 	private String shelf;
 	
-	@NotNull
+	//Deprecating
 	@ManyToOne(fetch = FetchType.EAGER)
 	private EntityType type;
 	
