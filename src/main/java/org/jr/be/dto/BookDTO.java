@@ -109,7 +109,6 @@ public class BookDTO {
 		return book;
 	}
 	
-	
 
 
 	public long getId() {

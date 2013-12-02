@@ -1,8 +1,5 @@
 package org.jr.be.dto;
 
-import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
-
 import org.jr.be.model.Location;
 
 public class LocationDTO {

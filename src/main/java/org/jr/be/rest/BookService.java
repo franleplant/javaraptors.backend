@@ -154,6 +154,7 @@ public class BookService {
     		
     		country = new Country();
     		country.setName(  dto.getEditionCountry()  );
+    		em.persist(country);
     	}
  
     	return country;
@@ -165,17 +166,16 @@ public class BookService {
     	
     	Editorial editorial = new Editorial();
     	
-		if ( editorialDTO.getId() != 0) {
+		if ( editorialDTO.getId() > 0) {
 			
-			try {
-				editorial = em.find(Editorial.class, editorialDTO.getId());
-				
-			} catch(NoResultException ex) {
-				//Something really bad happened
-			}
+			editorial = em.find(Editorial.class, editorialDTO.getId());
+			
 
 		} else {
 			editorial = editorialDTO.toEntity();
+			em.persist(  editorial  );
+			
+			
 			
 		}
 		
@@ -198,6 +198,8 @@ public class BookService {
 			}
 
 		} else {
+			
+			
         	// Author does not exist, prepare for the cascade creation
 			author = authorDTO.toEntity();
 						
@@ -205,6 +207,8 @@ public class BookService {
 		}
     	
     	
+		
+		
     	return author;
     }
     
@@ -327,7 +331,6 @@ public class BookService {
 	     	    .setParameter(1, book.getTitle())
 	     	    .setParameter(2, book.getEditorial())
 	     	    .getSingleResult();
-    	System.out.println(  created_book.getId()  );
     	
     	
     	
@@ -347,35 +350,60 @@ public class BookService {
     };
         
         
-        @POST
-        @Path("/{id:[0-9][0-9]*}")
-        @Consumes(MediaType.APPLICATION_JSON)
-        @Produces(MediaType.APPLICATION_JSON)
-        public JsonResponseMsg edit(Book book, @PathParam("id") Long id) throws Exception {
-        	
-        	
-        	book.setDeleted(false);
-      
-        	//http://docs.oracle.com/javase/6/docs/api/java/util/Date.html
-        	//This references to right now
-        	Date date = new Date();
-        	
-        	book.getAudit().setEditDate(date);
-        	
-        	// When login is done do this:
-        	//affiliate.getPerson().getAudit().setEditUser();
-        	
-        	
-        	u.begin();
-        	EntityManager entityManager = entityManagerFactory.createEntityManager(); 
-        	
-        	entityManager.merge(book);
-        	entityManager.flush();
-        	u.commit();
-            entityManager.close();
-            
-            return new JsonResponseMsg("ok", "oohhh yeeeeaaaaaaaah!");
-        };
+    @POST
+    @Path("/{id:[0-9][0-9]*}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public JsonResponseMsg edit(BookDTO dto, @PathParam("id") Long id) throws Exception {
+    	
+    	u.begin();
+    	EntityManager entityManager = entityManagerFactory.createEntityManager(); 
+    	
+    	Book book = dto.toEntity(entityManager);
+    	book.setDeleted(false);
+    	
+		
+		Book existing_book = entityManager.find(Book.class, book.getId()  );
+		
+
+		book.setAudit(  existing_book.getAudit()  );
+    	book.getAudit().setEditDate( new Date()  );
+    	//book.getAudit().setEditUser(editUser);
+    	
+    	book.setEditionCountry(  fetchCreateCountry(entityManager, dto)  );
+    	
+    	book.setEditorial(  fetchCreateEditorial(entityManager, dto.getEditorial())  );
+
+    	System.out.println("CHHHHHHHHAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAUUUUUUUUU");
+    	
+		for (  BookAuthorDTO authorDTO : dto.getAuthors()  ){
+			book.addAuthor(  fetchCreateAuthor(entityManager, authorDTO)  );
+		}
+		
+		for (  GenreDTO genreDTO : dto.getGenres()  ) {
+			book.addGenre (  fetchCreateGenre(entityManager, genreDTO)  );
+		}
+		
+		
+		entityManager.merge(book);
+		entityManager.flush();
+		
+		//Fetch the edited entity (yes, again)
+		book = entityManager.find(Book.class, book.getId()  );
+		
+		//buscar todo las copies del libro en la db
+		// Comparar con las del dto
+		// Las que estan en ambos, editarlas en caso de que haga falta
+		// Las que no estan en el dto y estan en la db, borrarlas, logicamente
+		
+    	
+    	
+    	
+    	u.commit();
+        entityManager.close();
+        
+        return new JsonResponseMsg("ok", "oohhh yeeeeaaaaaaaah!");
+    };
         
         
         @DELETE

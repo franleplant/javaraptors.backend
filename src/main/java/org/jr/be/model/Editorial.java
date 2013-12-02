@@ -21,7 +21,6 @@ public class Editorial {
 	@GeneratedValue(strategy = IDENTITY)
 	private Long id;
 	
-	@NotEmpty
 	@Column(unique = true)
 	private String legal_name;
 	
