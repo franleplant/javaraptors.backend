@@ -32,7 +32,29 @@ public class EditorialDTO {
                 AddressDTO addressDTO = new AddressDTO();
                 addressDTO.toDTO(  editorial.getAddress()  );
                 address = addressDTO;
+                
     }
+    
+    public Editorial toEntity() {
+        
+    	Editorial editorial = new Editorial();
+        
+        // If id is not null
+        if (  id > 0  ) {
+                editorial.setId(  id  );
+        }
+            
+        editorial.setLegal_name(legal_name);
+        //editorial.getType().getName(); should be added but will be discontinued
+        editorial.setName(name);
+        editorial.setName(cuit);
+        
+		editorial.setAddress(address.toEntity());
+		//editorial.setAudit(audit.toEntity());
+		editorial.setDeleted(false);
+        
+        return editorial;
+};
 
 	public Long getId() {
 		return id;
