@@ -487,6 +487,8 @@ public class BookService {
         //The rest of the copies should be removed
         for (Copy copy : copies){
         	copy.setDeleted(true);
+			copy.getAudit().setEditDate(  new Date()  );
+			//copy.getAudit().setEditUser(editUser);
         	entityManager.persist(copy);
         }
         
