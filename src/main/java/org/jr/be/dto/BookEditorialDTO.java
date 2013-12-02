@@ -2,7 +2,6 @@ package org.jr.be.dto;
 
 import java.util.Date;
 
-import javax.persistence.EntityManager;
 
 import org.jr.be.model.Editorial;
 

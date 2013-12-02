@@ -37,7 +37,7 @@ public class Copy {
 	@Embedded
     private Audit audit = new Audit();
 	
-	@NotNull
+	//Deprecating
 	@ManyToOne(fetch = FetchType.EAGER)
 	private EntityType type;
 	

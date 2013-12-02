@@ -17,37 +17,15 @@ public class LocationDTO {
 		shelf = location.getShelf();
 	}
 
-	public Location toEntity(  EntityManager em ) {
+	public Location toEntity() {
 		Location location = new Location();
 		
-		
-		
-		
-		if ( id != 0) {
-			
-			try {
-		    	Location existing_location = em.createQuery(
-			     	    "from Author as a where a.id = ?1", Location.class)
-			     	    .setParameter(1, id)
-			     	    .getSingleResult();
-		    	
-		    	location = existing_location;
-			} catch(NoResultException ex) {
-			
-					//Something really bad happened
-			}
 
-		} else {
-			location.setShelves(shelves);
-			location.setShelf(shelf);
-			location.setDeleted(false);
+		location.setShelves(shelves);
+		location.setShelf(shelf);
+		location.setDeleted(false);
 			
-			em.persist(location);
-			em.flush();
-			
-		}	
 
-			
 		
 		return location;
 	}

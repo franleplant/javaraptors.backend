@@ -8,9 +8,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 
 import org.jr.be.model.Audit;
-import org.jr.be.model.Book;
 import org.jr.be.model.Copy;
-import org.jr.be.model.EntityType;
 import org.jr.be.model.Lend;
 import org.jr.be.model.LendType;
 
@@ -59,56 +57,19 @@ public class BookCopyDTO {
 	}
 	
 	
-	public Copy toEntity(  Book book,  EntityManager em  ){
+	public Copy toEntity(){
 		Copy copy = new Copy();
 		
-		
-		// Check if it is editing or creating
-		if (  id > 0  ){
-			copy.setId(id);
-		} else {
-			
-		}
-		
+				
 		copy.setState(state);
 		copy.setEditionYear(editionYear);
-		copy.setComments(comments);
-		copy.setBook(book);
-		
-		
-    	EntityType type = em.createQuery(
-	     	    "from EntityType as e where e.name = ?1", EntityType.class)
-	     	    .setParameter(1, "copy")
-	     	    .getSingleResult();    	
-    	copy.setType(type);
-		
+		copy.setComments(comments);	
+			
 		
 		Audit audit = new Audit();
 		audit.setCreateDate(  new Date()  );
 		//audit.getCreateUser( session.getUser() );
 		
-		
-		copy.setLocation(  location.toEntity(em)  );
-		
-		
-		for (String lendType_name : lendTypes) {
-	        try {
-	    	    LendType lendType_entity = em.createQuery(
-	    	     	    "from LendType as t where t.name = ?1", LendType.class)
-	    	     	    .setParameter(1, lendType_name)
-	    	     	    .getSingleResult();
-	   
-				copy.addLendType(lendType_entity);
-	 	
-	        } catch(NoResultException ex) {
-	        	
-	        	//If this happens, something very messy is happening
-	        	//Ignoring for now
-	        } 	
-
-		}
-
-
 		
 		
 		return copy;

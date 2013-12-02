@@ -23,15 +23,19 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.jr.be.dto.BookAuthorDTO;
+import org.jr.be.dto.BookCopyDTO;
 import org.jr.be.dto.BookDTO;
 import org.jr.be.dto.BookEditorialDTO;
 import org.jr.be.dto.BookSearchDTO;
 import org.jr.be.dto.GenreDTO;
 import org.jr.be.model.Author;
 import org.jr.be.model.Book;
+import org.jr.be.model.Copy;
 import org.jr.be.model.Country;
 import org.jr.be.model.Editorial;
 import org.jr.be.model.Genre;
+import org.jr.be.model.LendType;
+import org.jr.be.model.Location;
 import org.jr.be.util.JsonResponseMsg;
 
 @Path("/book")
@@ -224,6 +228,60 @@ public class BookService {
     	return genre;
     }
     
+    public void createCopy( EntityManager em, BookCopyDTO copyDTO, Book book) {
+		
+    	
+    	//COPY's LOCATION
+    	Location location = new Location();
+    	
+    	//If the location exist then fetch it
+		if ( copyDTO.getLocation().getId() != 0) {
+			
+			try {
+				
+				location = em.find(Location.class, copyDTO.getLocation().getId()  );
+
+			} catch(NoResultException ex) {
+			
+					//Something really bad happened
+			}
+
+		} else {
+			// The location does not exist, create one
+			location = copyDTO.getLocation().toEntity();
+			em.persist(location);			
+		}	
+		
+		
+		
+		Copy copy = copyDTO.toEntity();
+		copy.setLocation(  location  );
+		copy.setBook(book);
+		
+		copy.getAudit().setCreateDate(  new Date()  );
+		//copy.getAudit().setCreateUser( sesion user);
+		
+		for (String lendType_name : copyDTO.getLendTypes() ) {
+	        try {
+	    	    LendType lendType_entity = em.createQuery(
+	    	     	    "from LendType as t where t.name = ?1", LendType.class)
+	    	     	    .setParameter(1, lendType_name)
+	    	     	    .getSingleResult();
+	   
+				copy.addLendType(lendType_entity);
+	 	
+	        } catch(NoResultException ex) {
+	        	
+	        	//If this happens, something very messy is happening
+	        	//Ignoring for now
+	        } 	
+
+		}
+		
+		
+		em.persist(copy);
+    }
+    
     
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
@@ -250,33 +308,37 @@ public class BookService {
 			book.addAuthor(  fetchCreateAuthor(entityManager, authorDTO)  );
 		}
 		
-		
-		
 		for (  GenreDTO genreDTO : dto.getGenres()  ) {
 			book.addGenre (  fetchCreateGenre(entityManager, genreDTO)  );
 		}
+				 
 		
-		System.out.println(book.getGenres());
-		 
-		
-//		public void persistCopies(Book book, EntityManager em) {
-//			for (BookCopyDTO copy_dto : copies) {
-//				// Persist the new copy
-//				em.persist(  copy_dto.toEntity(book, em)  );		
-//			}
-//			
-//			em.flush();
-//		}
+
+			
+
     	
     	
     	entityManager.merge(book);
     	entityManager.flush();
     	
-    	System.out.println(  book.getId()  );
     	
-    	//dto.persistCopies(book, entityManager);
+    	Book created_book = entityManager.createQuery(
+	     	    "from Book as b where b.title = ?1 and b.editorial = ?2", Book.class)
+	     	    .setParameter(1, book.getTitle())
+	     	    .setParameter(2, book.getEditorial())
+	     	    .getSingleResult();
+    	System.out.println(  created_book.getId()  );
     	
     	
+    	
+    	
+		for (BookCopyDTO copyDTO : dto.getCopies()) {
+			// Persist the new copy
+			createCopy(entityManager, copyDTO, created_book);		
+		}
+    	
+		
+		
     	
     	u.commit();
         entityManager.close();
