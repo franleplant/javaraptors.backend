@@ -1,13 +1,11 @@
 package org.jr.be.dto;
 
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 
-import org.jr.be.model.Audit;
 import org.jr.be.model.Copy;
 import org.jr.be.model.Lend;
 import org.jr.be.model.LendType;
@@ -23,6 +21,8 @@ public class BookCopyDTO {
 	private AuditDTO audit = new AuditDTO();
 	
 	public void toDTO(  Copy copy, EntityManager em  ){
+		
+		//TODO: if in copy.isDeleted()
 		id = copy.getId();
 		state = copy.getState();
 		editionYear = copy.getEditionYear();
@@ -63,12 +63,8 @@ public class BookCopyDTO {
 				
 		copy.setState(state);
 		copy.setEditionYear(editionYear);
-		copy.setComments(comments);	
-			
-		
-		Audit audit = new Audit();
-		audit.setCreateDate(  new Date()  );
-		//audit.getCreateUser( session.getUser() );
+		copy.setComments(comments);
+		copy.setDeleted(false);
 		
 		
 		

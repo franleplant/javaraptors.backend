@@ -2,6 +2,7 @@ package org.jr.be.rest;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -28,6 +29,7 @@ import org.jr.be.dto.BookDTO;
 import org.jr.be.dto.BookEditorialDTO;
 import org.jr.be.dto.BookSearchDTO;
 import org.jr.be.dto.GenreDTO;
+import org.jr.be.dto.LocationDTO;
 import org.jr.be.model.Author;
 import org.jr.be.model.Book;
 import org.jr.be.model.Copy;
@@ -232,18 +234,16 @@ public class BookService {
     	return genre;
     }
     
-    public void createCopy( EntityManager em, BookCopyDTO copyDTO, Book book) {
-		
-    	
+    public Location fetchCreateLocation (  EntityManager em, LocationDTO locationDTO) {
     	//COPY's LOCATION
     	Location location = new Location();
     	
     	//If the location exist then fetch it
-		if ( copyDTO.getLocation().getId() != 0) {
+		if ( locationDTO.getId() != 0) {
 			
 			try {
 				
-				location = em.find(Location.class, copyDTO.getLocation().getId()  );
+				location = em.find(Location.class, locationDTO.getId()  );
 
 			} catch(NoResultException ex) {
 			
@@ -252,14 +252,25 @@ public class BookService {
 
 		} else {
 			// The location does not exist, create one
-			location = copyDTO.getLocation().toEntity();
+			location = locationDTO.toEntity();
 			em.persist(location);			
 		}	
 		
 		
+		return location;
+    }
+    
+       
+    
+    public void createCopy( EntityManager em, BookCopyDTO copyDTO, Book book) {
+		
+    		
 		
 		Copy copy = copyDTO.toEntity();
-		copy.setLocation(  location  );
+		
+    	//COPY's LOCATION
+    	copy.setLocation(  fetchCreateLocation(em, copyDTO.getLocation())	  );
+		
 		copy.setBook(book);
 		
 		copy.getAudit().setCreateDate(  new Date()  );
@@ -374,7 +385,6 @@ public class BookService {
     	
     	book.setEditorial(  fetchCreateEditorial(entityManager, dto.getEditorial())  );
 
-    	System.out.println("CHHHHHHHHAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAUUUUUUUUU");
     	
 		for (  BookAuthorDTO authorDTO : dto.getAuthors()  ){
 			book.addAuthor(  fetchCreateAuthor(entityManager, authorDTO)  );
@@ -391,12 +401,103 @@ public class BookService {
 		//Fetch the edited entity (yes, again)
 		book = entityManager.find(Book.class, book.getId()  );
 		
-		//buscar todo las copies del libro en la db
-		// Comparar con las del dto
-		// Las que estan en ambos, editarlas en caso de que haga falta
-		// Las que no estan en el dto y estan en la db, borrarlas, logicamente
+			
 		
-    	
+		//Fetch all book's not deleted copies
+        List<Copy> copies = entityManager.createQuery(
+        	    "FROM Copy as c WHERE c.book = ?1 and c.deleted = false", Copy.class)
+        	    .setParameter(1, book )
+        	    .getResultList();	
+        
+        List<BookCopyDTO> new_copies = new ArrayList<BookCopyDTO>();
+        List<BookCopyDTO> existing_copies = new ArrayList<BookCopyDTO>();
+        
+        // Divide the copies in the DTO in two groups
+        // existing ones and new ones
+        Iterator<BookCopyDTO> c_iterator = dto.getCopies().iterator();
+        while (  c_iterator.hasNext()  ) {
+        	BookCopyDTO c = c_iterator.next();
+        	
+        	if (  c.getId() == 0  ) {
+        		new_copies.add(  c  );
+        		
+        	} else {
+        		existing_copies.add(  c  );
+        	}
+        	
+        	//Remove the element
+        	c_iterator.remove();
+        }
+        
+
+        
+
+        	
+        // Deal with the existing copies
+        Iterator<Copy> copy_iterator = copies.iterator();
+        while ( copy_iterator.hasNext()  ) {
+        	
+        	Copy copy = copy_iterator.next();
+        	
+        	for ( BookCopyDTO existing_copy : existing_copies){
+        		if ( copy.getId() == existing_copy.getId()  ) {
+        			
+        			Copy edited_copy = new Copy();
+
+        			//State, comments, deleted, editionYear
+        			edited_copy = existing_copy.toEntity();
+        			
+        			//ID
+        			edited_copy.setId(  copy.getId()  );
+        			
+        			//Audit
+        			edited_copy.setAudit( copy.getAudit() );
+        			//Assume it has been modified
+        			edited_copy.getAudit().setEditDate(  new Date()  );
+        			//copy.getAudit().setEditUser(editUser);
+        			
+        			
+        			//Location
+        			edited_copy.setLocation(  fetchCreateLocation(entityManager, existing_copy.getLocation())  );
+        			
+        			//Book
+        			edited_copy.setBook(book);
+
+        			//LendTypes
+        			for (String lendType_name : existing_copy.getLendTypes() ) {
+    		    	    LendType lendType_entity = entityManager.createQuery(
+    		    	     	    "from LendType as t where t.name = ?1", LendType.class)
+    		    	     	    .setParameter(1, lendType_name)
+    		    	     	    .getSingleResult();
+    		   
+    					edited_copy.addLendType(lendType_entity);
+        			}
+
+        			
+        			//Delete the copy from the copies list
+        			copy_iterator.remove();
+        			
+        			
+        			//Merge the edited copy
+        			entityManager.merge( edited_copy );
+        		}
+        	}
+        }
+        
+        //The rest of the copies should be removed
+        for (Copy copy : copies){
+        	copy.setDeleted(true);
+        	entityManager.persist(copy);
+        }
+        
+
+        
+        //Deal with the new copies
+		for (  BookCopyDTO copyDTO : new_copies  ) {
+			// Persist the new copy
+			createCopy(entityManager, copyDTO, book);		
+		}
+         	
     	
     	
     	u.commit();
