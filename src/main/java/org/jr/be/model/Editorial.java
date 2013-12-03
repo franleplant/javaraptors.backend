@@ -28,6 +28,9 @@ public class Editorial {
 	@NotEmpty
 	private String name;
 	
+	@NotEmpty
+	private String cuit_cuil;
+	
 	@Embedded
     private Address address = new Address();
 	
@@ -69,6 +72,14 @@ public class Editorial {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+	
+	public String getCuit_cuil() {
+		return cuit_cuil;
+	}
+
+	public void setCuit_cuil(String cuit_cuil) {
+		this.cuit_cuil = cuit_cuil;
 	}
 
 	public Address getAddress() {

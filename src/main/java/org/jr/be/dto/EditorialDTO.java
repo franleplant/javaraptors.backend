@@ -1,7 +1,13 @@
 package org.jr.be.dto;
 
+import java.util.List;
+import java.util.Set;
+
 import org.jr.be.model.Editorial;
 import org.jr.be.model.Contact;
+import org.jr.be.model.Book;
+
+import javax.persistence.EntityManager;
 
 
 public class EditorialDTO {
@@ -19,14 +25,15 @@ public class EditorialDTO {
 	private String email;
 	private String web;
 	private AuditDTO audit;
+	private Set<EditorialBookDTO> books;
         
-    public void toDTO(Editorial editorial){
+    public void toDTO(Editorial editorial, EntityManager em){
                 
                 id =                 editorial.getId();
                 legal_name =         editorial.getLegal_name();
                 type =        		 editorial.getType().getName();
                 name =               editorial.getName();
-                //cuit =               editorial.getCuit();
+                cuit_cuil =          editorial.getCuit_cuil();
                 tel =                editorial.getContact().getTel();
                 email =              editorial.getContact().getEmail();
                 web =        		 editorial.getContact().getWeb();
@@ -39,6 +46,18 @@ public class EditorialDTO {
                 addressDTO.toDTO(  editorial.getAddress()  );
                 address = addressDTO;
                 
+                List<Book> books_entities = em.createQuery(
+                        "from Book as c where c.editorial = ?1 and c.deleted = false", Book.class)
+                        .setParameter(1, editorial)
+                        .getResultList();
+              
+               EditorialBookDTO book_dto;
+               
+               for (Book book : books_entities) {
+                               book_dto = new EditorialBookDTO();         
+                               book_dto.toDTO(book);
+                               books.add( book_dto );
+               }
                 
                 
     }
@@ -55,7 +74,7 @@ public class EditorialDTO {
        
         //editorial.getType().getName(); should be added but will be discontinued
         editorial.setName(name);
-        //editorial.setCuit_cuil(cuit_cuil);
+        editorial.setCuit_cuil(cuit_cuil);
         editorial.setLegal_name(legal_name);
         
         Contact contact = new Contact();
