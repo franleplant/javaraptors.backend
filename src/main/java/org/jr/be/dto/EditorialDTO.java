@@ -1,5 +1,6 @@
 package org.jr.be.dto;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -25,7 +26,7 @@ public class EditorialDTO {
 	private String email;
 	private String web;
 	private AuditDTO audit;
-	private Set<EditorialBookDTO> books;
+	private Set<EditorialBookDTO> books = new HashSet<EditorialBookDTO>();
         
     public void toDTO(Editorial editorial, EntityManager em){
                 
@@ -50,6 +51,8 @@ public class EditorialDTO {
                         "from Book as c where c.editorial = ?1 and c.deleted = false", Book.class)
                         .setParameter(1, editorial)
                         .getResultList();
+                
+                if (!books_entities.isEmpty()) {
               
                EditorialBookDTO book_dto;
                
@@ -57,6 +60,8 @@ public class EditorialDTO {
                                book_dto = new EditorialBookDTO();         
                                book_dto.toDTO(book);
                                books.add( book_dto );
+               }
+               
                }
                 
                 
@@ -169,6 +174,14 @@ public class EditorialDTO {
 
 	public void setAudit(AuditDTO audit) {
 		this.audit = audit;
+	}
+
+	public Set<EditorialBookDTO> getBooks() {
+		return books;
+	}
+
+	public void setBooks(Set<EditorialBookDTO> books) {
+		this.books = books;
 	};
 
         

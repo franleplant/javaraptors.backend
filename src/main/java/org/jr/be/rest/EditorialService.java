@@ -87,12 +87,13 @@ public class EditorialService {
         }
         
 
-        entityManager.close();
+        
               
         
         // Transfer all the data into the DTO
         dto.toDTO(editorial,entityManager);
-                    
+        
+        entityManager.close();
         return dto;      
     }
     
