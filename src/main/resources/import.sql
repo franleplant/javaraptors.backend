@@ -50,7 +50,7 @@ insert into location (id, deleted, shelf, shelves, type_id ) values (1, false, '
 insert into genre (id, deleted, name, type_id ) values (1, false, 'fantasía', 5);
 
 insert into author (id, nick, createdate, createuser_id, deleted, country_id, type_id, birth) values (1, 'Jk Rowling', '2013-10-10', 1, false, 2, 8, '1956-10-10');
-insert into editorial (id, legal_name, name, createdate, createuser_id, street, number, tel, email, city_id, type_id, deleted) values (1, 'Salamandra SA', 'Salamandra', '2013-10-10', 1, 'Cordoba', 123, 1234567, 'tu@salamandra.com.ar', 1, 7, false);
+insert into editorial (id, legal_name, name,cuit_cuil, createdate, createuser_id, street, number, tel, email, city_id, type_id, deleted) values (1, 'Salamandra SA', 'Salamandra','30-12345678-2', '2013-10-10', 1, 'Cordoba', 123, 1234567, 'tu@salamandra.com.ar', 1, 7, false);
 insert into book (id, createdate, createuser_id, deleted, title, val, price, lang, isbn, editioncountry_id, type_id, editorial_id) values (1, '2013-10-10', 1, false, 'Harry Potter y La Piedra Filosofal', 7, '10.2', 'Español', 1234556678, 1, 1, 1);
 insert into book (id, createdate, createuser_id, deleted, title, val, price, lang, isbn, editioncountry_id, type_id, editorial_id) values (2, '2013-10-10', 1, true, 'Libro Borrado', 7, '10.2', 'Español', 14556678, 1, 1, 1);
 insert into book_genre (book_id, genres_id) values (1,1);
