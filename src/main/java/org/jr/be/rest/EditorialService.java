@@ -17,15 +17,14 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.persistence.NoResultException;
 
 import org.jr.be.model.Editorial;
 import org.jr.be.dto.EditorialDTO;
 import org.jr.be.model.Audit;
-import org.jr.be.dto.AuditDTO;
-import org.jr.be.model.Address;
-import org.jr.be.dto.AddressDTO;
 import org.jr.be.model.EntityType;
-
+import org.jr.be.model.City;
+import org.jr.be.model.Prov;
 
 import org.jr.be.util.JsonResponseMsg;
 
@@ -40,6 +39,31 @@ public class EditorialService {
     @Resource
     private UserTransaction u;
         
+    private City fetchCreateCity(EntityManager entityManager, EditorialDTO editorialDTO, Prov prov) {
+        
+        City city;
+        String cp = editorialDTO.getAddress().getCp();
+        String city_name = editorialDTO.getAddress().getCity();
+        
+    // Search for the city, if not found create it
+        try {
+            city = (City) entityManager.createQuery(
+                     "select c from City as c where c.cp = ?1")
+                     .setParameter(1, cp)
+                     .getSingleResult();
+     
+                
+        } catch (NoResultException e) {
+                
+                city = new City();
+                city.setCp( cp );
+                city.setName( city_name );
+                city.setProv( prov );
+        }
+        
+        return city;
+    }
+    
     @GET
     @Path("/{id:[0-9][0-9]*}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -87,7 +111,28 @@ public class EditorialService {
             u.begin();
             EntityManager entityManager = entityManagerFactory.createEntityManager(); 
             
-            //Placeholder for all city-prov logic       
+            //Placeholder for all city-prov logic 
+            
+            Prov prov;
+            
+            // Search the prov, if not found send and error msg and do not do anything else
+            try {                 
+            				prov = (Prov) entityManager.createQuery(
+                          "select p from Prov p where p.name = ?1")
+                          .setParameter(1, dto.getAddress().getProv() )
+                          .getSingleResult();
+                 
+            } catch (NoResultException e) {
+                    
+                u.commit();
+            entityManager.close();
+                    return new JsonResponseMsg("error", "La provincia no exite");
+                    
+            }
+            
+                     
+            // Search for the city, if not found create it
+            editorial.getAddress().setCity( fetchCreateCity(entityManager, dto, prov) );
                      
             // Set Entity Type
             EntityType type = entityManager.find(EntityType.class, entityTypeID);            
@@ -123,7 +168,25 @@ public class EditorialService {
             u.begin();
             EntityManager entityManager = entityManagerFactory.createEntityManager(); 
             
-            //Placeholder for all city-prov logic       
+            Prov prov;
+            
+            // Search the prov, if not found send and error msg and do not do anything else
+            try {                 
+            prov = (Prov) entityManager.createQuery(
+                          "select p from Prov p where p.name = ?1")
+                          .setParameter(1, dto.getAddress().getProv() )
+                          .getSingleResult();
+                 
+            } catch (NoResultException e) {
+                    
+            u.commit();
+            entityManager.close();
+            return new JsonResponseMsg("error", "La provincia no exite");
+                    
+            }
+                      
+            // Search for the city, if not found create it
+            editorial.getAddress().setCity( fetchCreateCity(entityManager, dto, prov) );       
                      
             // Set Entity Type
             EntityType type = entityManager.find(EntityType.class, entityTypeID);            
@@ -171,12 +234,12 @@ public class EditorialService {
         
         editorial.getAudit().setDeleteDate(new Date());
         
-        //Finish this when loggin is working
+        //Finish this when logging is working
         //affiliate.getPerson().getAudit().setDeleteUser(deleteDate);
             
-            entityManager.merge(editorial);
-            entityManager.flush();
-            u.commit();
+        entityManager.merge(editorial);
+        entityManager.flush();
+        u.commit();
         entityManager.close();
         
         return new JsonResponseMsg("ok", "Editorial Birmaniamente deleted");
