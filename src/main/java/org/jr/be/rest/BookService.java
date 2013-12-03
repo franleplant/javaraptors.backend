@@ -217,20 +217,26 @@ public class BookService {
     public Genre fetchCreateGenre(  EntityManager em, GenreDTO genreDTO) {
     	Genre genre = new Genre();
     	
-    	if ( genreDTO.getId() != 0) {
+
     	
-			try {
-				genre = em.find(Genre.class, genreDTO.getId());
-		    		    	
-			} catch(NoResultException ex) {
-		    	// Something really bad happened
-			}
-		
-    	} else {
-			genre = genreDTO.toEntity();
-			em.persist(genre);	
-		}
-    	    	
+    	try {
+    		
+    		
+        	genre = em.createQuery(
+    	     	    "from Genre as g where g.name = ?1 and g.deleted = false", Genre.class)
+    	     	    .setParameter(1, genreDTO.getName())
+    	     	    .getSingleResult();  
+        	
+ 
+      
+    	} catch (NoResultException e) {
+    		
+    		
+    		genre = genreDTO.toEntity();
+    		em.persist(genre);
+
+    	}
+    	
     	return genre;
     }
     

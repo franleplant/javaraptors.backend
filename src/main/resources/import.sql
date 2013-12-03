@@ -47,7 +47,7 @@ insert into affiliate (id, deleted, street, number, createdate, createuser_id, b
 
 insert into location (id, deleted, shelf, shelves, type_id ) values (1, false, '2', 'A', 6);
 
-insert into genre (id, deleted, name, type_id ) values (1, false, 'fantasía', 5);
+insert into genre (id, deleted, name, type_id ) values (1, false, 'fantasia', 5);
 
 insert into author (id, nick, createdate, createuser_id, deleted, country_id, type_id, birth) values (1, 'Jk Rowling', '2013-10-10', 1, false, 2, 8, '1956-10-10');
 insert into editorial (id, legal_name, name, createdate, createuser_id, street, number, tel, email, city_id, type_id, deleted) values (1, 'Salamandra SA', 'Salamandra', '2013-10-10', 1, 'Cordoba', 123, 1234567, 'tu@salamandra.com.ar', 1, 7, false);
