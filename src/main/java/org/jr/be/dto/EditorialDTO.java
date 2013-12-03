@@ -1,6 +1,7 @@
 package org.jr.be.dto;
 
 import org.jr.be.model.Editorial;
+import org.jr.be.model.Contact;
 
 
 public class EditorialDTO {
@@ -12,10 +13,12 @@ public class EditorialDTO {
 	private String legal_name;
 	private String type;
 	private String name;
-	private String cuit;
+	private String cuit_cuil;
     private AddressDTO address;
-    private ContactDTO contact;
-    private AuditDTO audit;
+    private Long tel;
+	private String email;
+	private String web;
+	private AuditDTO audit;
         
     public void toDTO(Editorial editorial){
                 
@@ -24,6 +27,9 @@ public class EditorialDTO {
                 type =        		 editorial.getType().getName();
                 name =               editorial.getName();
                 //cuit =               editorial.getCuit();
+                tel =                editorial.getContact().getTel();
+                email =              editorial.getContact().getEmail();
+                web =        		 editorial.getContact().getWeb();
               
                 AuditDTO auditDTO = new AuditDTO();
                 auditDTO.toDTO(editorial.getAudit());
@@ -32,6 +38,8 @@ public class EditorialDTO {
                 AddressDTO addressDTO = new AddressDTO();
                 addressDTO.toDTO(  editorial.getAddress()  );
                 address = addressDTO;
+                
+                
                 
     }
     
@@ -44,17 +52,25 @@ public class EditorialDTO {
                 editorial.setId(  id  );
         }
             
-        editorial.setLegal_name(legal_name);
+       
         //editorial.getType().getName(); should be added but will be discontinued
         editorial.setName(name);
-        editorial.setName(cuit);
+        //editorial.setCuit_cuil(cuit_cuil);
+        editorial.setLegal_name(legal_name);
         
-		editorial.setAddress(address.toEntity());
+        Contact contact = new Contact();
+        contact.setTel(tel);
+        contact.setEmail(email);
+        contact.setWeb(web);
+        
+        editorial.setContact(contact);
+        editorial.setAddress(address.toEntity());
 		//editorial.setAudit(audit.toEntity());
+        
 		editorial.setDeleted(false);
         
         return editorial;
-};
+}
 
 	public Long getId() {
 		return id;
@@ -88,12 +104,12 @@ public class EditorialDTO {
 		this.name = name;
 	}
 
-	public String getCuit() {
-		return cuit;
+	public String getCuit_cuil() {
+		return cuit_cuil;
 	}
 
-	public void setCuit(String cuit) {
-		this.cuit = cuit;
+	public void setCuit_cuil(String cuit_cuil) {
+		this.cuit_cuil = cuit_cuil;
 	}
 
 	public AddressDTO getAddress() {
@@ -104,12 +120,28 @@ public class EditorialDTO {
 		this.address = address;
 	}
 
-	public ContactDTO getContact() {
-		return contact;
+	public Long getTel() {
+		return tel;
 	}
 
-	public void setContact(ContactDTO contact) {
-		this.contact = contact;
+	public void setTel(Long tel) {
+		this.tel = tel;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public String getWeb() {
+		return web;
+	}
+
+	public void setWeb(String web) {
+		this.web = web;
 	}
 
 	public AuditDTO getAudit() {
@@ -118,8 +150,8 @@ public class EditorialDTO {
 
 	public void setAudit(AuditDTO audit) {
 		this.audit = audit;
-	}
-        
+	};
+
         
 
      
