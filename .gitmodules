@@ -1,0 +1,7 @@
+[submodule "src/main/webapp/frontend"]
+
+path = src/main/webapp/frontend
+
+url = https://github.com/franleplant/JavaRaptors.frontend.git
+
+
