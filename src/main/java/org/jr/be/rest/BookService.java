@@ -187,27 +187,25 @@ public class BookService {
     public Author fetchCreateAuthor(EntityManager em, BookAuthorDTO authorDTO) {
     	Author author = new Author();
     	
-    	// Check if the author exist
-		if ( authorDTO.getId() != 0) {
-			
-			try {
-				
-				author = em.find(Author.class, authorDTO.getId());
-				
-			} catch(NoResultException ex) {
-			
-					//Something really bad happened
-			}
-
-		} else {
-			
-			
-        	// Author does not exist, prepare for the cascade creation
-			author = authorDTO.toEntity();
-						
-			em.persist(author);			
-		}
     	
+    	
+    	try {
+    		
+    		
+        	author = em.createQuery(
+    	     	    "from Author as a where a.nick = ?1 and  a.deleted = false", Author.class)
+    	     	    .setParameter(1, authorDTO.getNick())
+    	     	    .getSingleResult();  
+        	
+ 
+      
+    	} catch (NoResultException e) {
+    		
+    		
+			author = authorDTO.toEntity();					
+			em.persist(author);	
+
+    	}  	
     	
 		
 		
@@ -244,10 +242,7 @@ public class BookService {
     	//COPY's LOCATION
     	Location location = new Location();
     	
-    	
-    	
-    	
-    	
+
     	try {
     		
     		
