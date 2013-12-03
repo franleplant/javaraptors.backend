@@ -91,7 +91,7 @@ public class EditorialService {
               
         
         // Transfer all the data into the DTO
-        dto.toDTO(editorial);
+        dto.toDTO(editorial,entityManager);
                     
         return dto;      
     }
