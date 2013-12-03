@@ -21,7 +21,6 @@ public class Editorial {
 	@GeneratedValue(strategy = IDENTITY)
 	private Long id;
 	
-	@NotEmpty
 	@Column(unique = true)
 	private String legal_name;
 	
@@ -37,7 +36,7 @@ public class Editorial {
 	
 	private String comments;
 	
-	@NotNull
+	//Depreacting this
 	@ManyToOne(fetch = FetchType.EAGER)
 	private EntityType type;
 	

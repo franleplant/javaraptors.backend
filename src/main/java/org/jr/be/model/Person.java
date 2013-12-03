@@ -42,6 +42,12 @@ public class Person {
 	@Embedded
     private Audit audit = new Audit();
 	
+	
+	public String getFullName() {
+		return lastName + name;
+	}
+	
+	
 	public String getName() {
 		return name;
 	}

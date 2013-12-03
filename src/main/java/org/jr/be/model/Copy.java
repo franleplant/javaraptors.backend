@@ -37,7 +37,7 @@ public class Copy {
 	@Embedded
     private Audit audit = new Audit();
 	
-	@NotNull
+	//Deprecating
 	@ManyToOne(fetch = FetchType.EAGER)
 	private EntityType type;
 	
@@ -109,6 +109,10 @@ public class Copy {
 
 	public Set<LendType> getLendTypes() {
 		return lendTypes;
+	}
+	
+	public void addLendType( LendType type) {
+		this.lendTypes.add(  type  );
 	}
 
 	public void setLendTypes(Set<LendType> lendTypes) {

@@ -44,7 +44,7 @@ public class Author {
 	private Country country;
 	
 	
-	@NotNull
+	//This is getting deprecated since we are using DAO's
 	@ManyToOne(fetch = FetchType.EAGER)
 	private EntityType type;
 	

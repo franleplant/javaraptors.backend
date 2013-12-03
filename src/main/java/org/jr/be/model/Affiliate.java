@@ -3,6 +3,7 @@ package org.jr.be.model;
 import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.GenerationType.IDENTITY;
 
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -37,6 +38,19 @@ public class Affiliate {
 	
 	@NotNull
 	private boolean deleted;
+	
+	public boolean isActive() {
+        boolean active = true;
+        
+        for (Suspension s : suspensions){
+        	if (  s.getEndDate().after(new Date())  ) {
+        		active = false;
+        		break;
+        	}
+        }
+        
+        return active;
+	}
 
 	public Long getId() {
 		return id;
