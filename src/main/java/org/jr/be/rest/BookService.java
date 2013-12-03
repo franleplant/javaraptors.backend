@@ -244,23 +244,30 @@ public class BookService {
     	//COPY's LOCATION
     	Location location = new Location();
     	
-    	//If the location exist then fetch it
-		if ( locationDTO.getId() != 0) {
-			
-			try {
-				
-				location = em.find(Location.class, locationDTO.getId()  );
+    	
+    	
+    	
+    	
+    	try {
+    		
+    		
+        	location = em.createQuery(
+    	     	    "from Location as l where l.shelves = ?1 and l.shelf = ?2 and  l.deleted = false", Location.class)
+    	     	    .setParameter(1, locationDTO.getShelves())
+    	     	    .setParameter(2, locationDTO.getShelf())
+    	     	    .getSingleResult();  
+        	
+ 
+      
+    	} catch (NoResultException e) {
+    		
+    		
+    		location = locationDTO.toEntity();
+			em.persist(location);	
 
-			} catch(NoResultException ex) {
-			
-					//Something really bad happened
-			}
-
-		} else {
-			// The location does not exist, create one
-			location = locationDTO.toEntity();
-			em.persist(location);			
-		}	
+    	}
+    	
+    	
 		
 		
 		return location;
