@@ -168,18 +168,26 @@ public class BookService {
     	
     	Editorial editorial = new Editorial();
     	
-		if ( editorialDTO.getId() > 0) {
-			
-			editorial = em.find(Editorial.class, editorialDTO.getId());
-			
-
-		} else {
+    	
+    	
+    	try {
+    		
+    		
+        	editorial = em.createQuery(
+    	     	    "from Editorial as e where e.name = ?1 and  e.deleted = false", Editorial.class)
+    	     	    .setParameter(1, editorialDTO.getName())
+    	     	    .getSingleResult();  
+        	
+ 
+      
+    	} catch (NoResultException e) {
+    		
+    		
 			editorial = editorialDTO.toEntity();
 			em.persist(  editorial  );
-			
-			
-			
-		}
+
+    	}  	
+    	
 		
 		return editorial;
     }
