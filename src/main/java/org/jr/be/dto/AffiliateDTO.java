@@ -11,6 +11,8 @@ public class AffiliateDTO {
 	
 	private long id;
 	
+	private boolean suspended;
+	
 	private String name;
 	
 	private String lastName;
@@ -31,6 +33,8 @@ public class AffiliateDTO {
 	
 	private String img;
 	
+	//Deprecated, use suspended instead
+	//TODO: remove
 	// An affiliate can be unable to request more lends due to several suspensions in curse
 	private boolean isActive;	
 	
@@ -55,7 +59,7 @@ public class AffiliateDTO {
 		cel = 		affiliate.getPerson().getContact().getCel();
 		reputation = affiliate.getReputation();
 		type = 		affiliate.getType().getName();
-		isActive =  affiliate.isActive();
+		suspended = affiliate.isSuspended();
 		
 		AuditDTO auditDTO = new AuditDTO();
         auditDTO.toDTO(  affiliate.getPerson().getAudit()  );
@@ -223,6 +227,16 @@ public class AffiliateDTO {
 
 	public void setLends(Set<AffiliateLendDTO> lends) {
 		this.lends = lends;
+	}
+
+
+	public boolean isSuspended() {
+		return suspended;
+	}
+
+
+	public void setSuspended(boolean suspended) {
+		this.suspended = suspended;
 	}
 	
 

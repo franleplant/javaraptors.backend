@@ -39,7 +39,7 @@ public class Affiliate {
 	@NotNull
 	private boolean deleted;
 	
-	public boolean isActive() {
+	public boolean isSuspended() {
         boolean active = true;
         
         for (Suspension s : suspensions){

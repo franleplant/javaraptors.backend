@@ -173,7 +173,7 @@ public class AffiliateService {
 
         //GET All the lends
         dto.setLends(  fetchLends(entityManager, affiliate)  );
-        
+                
         entityManager.close();
      
         
