@@ -17,11 +17,12 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.persistence.NoResultException;
 
 import org.jr.be.model.Author;
+import org.jr.be.dto.AuthorDTO;
 import org.jr.be.model.Audit;
 import org.jr.be.model.EntityType;
-
 
 import org.jr.be.util.JsonResponseMsg;
 
@@ -35,141 +36,143 @@ public class AuthorService {
     
     @Resource
     private UserTransaction u;
+    
+    @GET
+    @Path("/{id:[0-9][0-9]*}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public AuthorDTO getOne(@PathParam("id") Long id) {
+            
+            AuthorDTO author = null;
+            AuthorDTO dto = new AuthorDTO();
+            
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
         
-        @GET
-        @Path("/{id:[0-9][0-9]*}")
-        @Produces(MediaType.APPLICATION_JSON)
-        public Author getOne(@PathParam("id") Long id) {
+
+        try {
+        	author = entityManager.find(Author.class, id);
                 
-                Author author = null;
+                //Has it found any entity?
+        	author.getId();
+
+        } catch(NullPointerException ex) {
                 
-                EntityManager entityManager = entityManagerFactory.createEntityManager();             
-        
-                try {
-                        author = entityManager.find(Author.class, id);
-                        
-                        //Has it found any entity?
-                        author.getId();
-                        
-                        
-                } catch(NullPointerException ex) {
-                        throw new WebApplicationException(Response.Status.NOT_FOUND);
-                } finally {
-                        entityManager.close();
-                }      
-                
-               
-                if (  author.isDeleted()  ) {
-                        throw new WebApplicationException(Response.Status.NOT_FOUND);
-                }
-                
-                
-                
-                return author;      
+                throw new WebApplicationException(Response.Status.NOT_FOUND);
         }
         
-        @POST
-        @Consumes(MediaType.APPLICATION_JSON)
-        @Produces(MediaType.APPLICATION_JSON)
-        public JsonResponseMsg create(Author author) throws Exception {
-                
-                
-                author.setDeleted(false);
-                Audit audit = new Audit();
-                
-                //http://docs.oracle.com/javase/6/docs/api/java/util/Date.html
-                //This references to right now
-                Date date = new Date();
-                
-                audit.setCreateDate(date);
-                
 
-                
-                // When login is done do this:
-                //audit.setCreateUser(createUser);
-                
-                author.setAudit(audit);
-                
-                //System.err.println(author.getPerson().getAddress().getCity().getName());
-                
-                u.begin();
-                EntityManager entityManager = entityManagerFactory.createEntityManager(); 
-                
-                
-                EntityType type = entityManager.find(EntityType.class, entityTypeID);
-                
-                author.setType(type);
-                
-                
-                entityManager.merge(author);
-                entityManager.flush();
-                u.commit();
+        
+              
+        
+        // Transfer all the data into the DTO
+        dto.toDTO(author,entityManager);
+        
+        entityManager.close();
+        return dto;
+    }
+    
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public JsonResponseMsg create(AuthorDTO dto) throws Exception {
+                       
+    		Author author = dto.toEntity();
+        
+            //http://docs.oracle.com/javase/6/docs/api/java/util/Date.html
+            //This references to today
+    		author.getAudit().setCreateDate( new Date() );
+        
+     
+            u.begin();
+            EntityManager entityManager = entityManagerFactory.createEntityManager();
+                              
+            // Set Entity Type
+            EntityType type = entityManager.find(EntityType.class, entityTypeID);
+            author.setType(type);
+            
+            // When login is done do this:
+            //affiliate.getPerson().getAudit().setCreateUser(current_loged_user);
+            
+            // Persist it
+            entityManager.merge(author);
+            entityManager.flush();
+            
+            u.commit();
             entityManager.close();
-            
-                return new JsonResponseMsg("ok", "no msg");
-        };
         
-        
-        @POST
-        @Path("/{id:[0-9][0-9]*}")
-        @Consumes(MediaType.APPLICATION_JSON)
-        @Produces(MediaType.APPLICATION_JSON)
-        public JsonResponseMsg edit(Author author, @PathParam("id") Long id) throws Exception {
-                
-                
-                author.setDeleted(false);
-      
-                //http://docs.oracle.com/javase/6/docs/api/java/util/Date.html
-                //This references to right now
-                Date date = new Date();
-                
-                author.getAudit().setEditDate(date);
-                
-                // When login is done do this:
-                
-                
+            return new JsonResponseMsg("ok", "Autor created birmania.");
             
-                
-                //System.err.println(author.getPerson().getAddress().getCity().getName());
-                
-                u.begin();
-                EntityManager entityManager = entityManagerFactory.createEntityManager(); 
-                
-                entityManager.merge(author);
-                entityManager.flush();
-                u.commit();
+            
+    }
+    
+    @POST
+    @Path("/{id:[0-9][0-9]*}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public JsonResponseMsg edit(AuthorDTO dto) throws Exception {
+                       
+            Author author = dto.toEntity();
+        
+            //http://docs.oracle.com/javase/6/docs/api/java/util/Date.html
+            //This references to today
+                   
+     
+            u.begin();
+            EntityManager entityManager = entityManagerFactory.createEntityManager();
+            
+            EntityType type = entityManager.find(EntityType.class, entityTypeID);
+            author.setType(type);
+            
+            Author existing_author = entityManager.find(Author.class, dto.getId() );
+            Audit audit = existing_author.getAudit();
+            audit.setEditDate( new Date() );
+            author.setAudit( audit );
+            
+            
+            // When login is done do this:
+            //affiliate.getPerson().getAudit().setCreateUser(current_loged_user);
+            
+            // Persist it
+            entityManager.merge(author);
+            entityManager.flush();
+            
+            u.commit();
             entityManager.close();
+        
+            return new JsonResponseMsg("ok", "Author edited birmania.");
             
-            return new JsonResponseMsg("ok", "no msg");
-        };
-        
-        
-        @DELETE
-        @Path("/{id:[0-9][0-9]*}")
-        @Produces(MediaType.APPLICATION_JSON)
-        public JsonResponseMsg delete(@PathParam("id") Long id) throws Exception {
-                
-                
-                Author author = null;     
-                
-                u.begin();
-                EntityManager entityManager = entityManagerFactory.createEntityManager();             
-                
-                author = entityManager.find(Author.class, id);
-                
-                author.setDeleted(true);
-                
-                author.getAudit().setDeleteDate(new Date());
-                
-                //Finish this when loggin is working
-        
-                
-                entityManager.merge(author);
-                entityManager.flush();
-                u.commit();
-            entityManager.close();
             
-            return new JsonResponseMsg("ok", "no msg");
-        };
+    }
+    
+    
+    @DELETE
+    @Path("/{id:[0-9][0-9]*}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public JsonResponseMsg delete(@PathParam("id") Long id) throws Exception {
+            
+            
+            Author author = null;
         
+            u.begin();
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        
+
+        author = entityManager.find(Author.class, id);
+
+        
+        
+        author.setDeleted(true);
+        
+        author.getAudit().setDeleteDate(new Date());
+        
+        //Finish this when logging is working
+        //affiliate.getPerson().getAudit().setDeleteUser(deleteDate);
+            
+        entityManager.merge(author);
+        entityManager.flush();
+        u.commit();
+        entityManager.close();
+        
+        return new JsonResponseMsg("ok", "Author Birmaniamente deleted");
+    };
+    
 }
