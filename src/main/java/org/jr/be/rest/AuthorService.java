@@ -42,7 +42,7 @@ public class AuthorService {
     @Produces(MediaType.APPLICATION_JSON)
     public AuthorDTO getOne(@PathParam("id") Long id) {
             
-            AuthorDTO author = null;
+            Author author = null;
             AuthorDTO dto = new AuthorDTO();
             
         EntityManager entityManager = entityManagerFactory.createEntityManager();
