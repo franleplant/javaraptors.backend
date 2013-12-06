@@ -1,6 +1,8 @@
 package org.jr.be.rest;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import javax.annotation.Resource;
 import javax.persistence.EntityManager;
@@ -14,16 +16,17 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.persistence.NoResultException;
+
 
 import org.jr.be.model.Author;
 import org.jr.be.dto.AuthorDTO;
+import org.jr.be.dto.AuthorSearchDTO;
 import org.jr.be.model.Audit;
 import org.jr.be.model.EntityType;
-
 import org.jr.be.util.JsonResponseMsg;
 
 @Path("/author")
@@ -36,6 +39,76 @@ public class AuthorService {
     
     @Resource
     private UserTransaction u;
+    
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public AuthorSearchDTO search(@QueryParam("q") String query) {
+
+            
+            String q = '%' + query + '%';
+
+            
+            EntityManager entityManager = entityManagerFactory.createEntityManager();
+
+            
+        // Search by nick
+
+        List<Author> results = entityManager.createQuery(
+
+                 "FROM Author as a WHERE upper(author.nick) LIKE ?1", Author.class)
+
+                 .setParameter(1, q.toUpperCase() )
+
+                 .getResultList();        
+
+            
+            
+            
+            
+            List<AuthorDTO> authorsDTO = new ArrayList<AuthorDTO>();
+
+            AuthorDTO authorDTO;
+            
+            //Create the dto
+            for (Author author : results){
+
+            	authorDTO = new AuthorDTO();
+
+                    
+            if ( author.isDeleted() ) {
+
+                    break;
+            }
+            authorDTO.toDTO(author, entityManager);
+
+            
+
+         // Transfer all the data into the DTO
+
+         authorsDTO.add(authorDTO);
+
+            }
+            
+            
+            
+            entityManager.close();
+
+            
+            
+            
+            AuthorSearchDTO response = new AuthorSearchDTO();         
+
+            response.setPage_number(1);
+
+            response.setPage_total(1);
+
+            response.setResults(authorsDTO);
+
+            
+            return response;
+
+    }
+    
     
     @GET
     @Path("/{id:[0-9][0-9]*}")
