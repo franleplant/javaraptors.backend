@@ -55,7 +55,7 @@ public class AuthorService {
 
         List<Author> results = entityManager.createQuery(
 
-                 "FROM Author as a WHERE upper(author.nick) LIKE ?1", Author.class)
+                 "FROM Author as c WHERE upper(c.nick) LIKE ?1", Author.class)
 
                  .setParameter(1, q.toUpperCase() )
 

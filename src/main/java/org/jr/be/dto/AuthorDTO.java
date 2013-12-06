@@ -42,7 +42,7 @@ public class AuthorDTO {
                 audit = auditDTO;
                 
                 List<Book> books_entities = em.createQuery(
-                        "from Book as c where c.author = ?1 and c.deleted = false", Book.class)
+                        "from Book as c where ?1 MEMBER OF c.authors and c.deleted = false", Book.class)
                         .setParameter(1, author)
                         .getResultList();
                 
