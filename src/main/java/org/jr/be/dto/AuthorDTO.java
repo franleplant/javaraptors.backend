@@ -70,7 +70,7 @@ public class AuthorDTO {
         	author.setId( id );
         }
          
-        author.getType().setName(type);
+        //author.getType().setName(type);
         author.setNick(nick);
         author.setBirth(birth);
         author.setIsni(isni);

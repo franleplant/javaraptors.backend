@@ -125,13 +125,14 @@ public class AuthorService {
         	author = entityManager.find(Author.class, id);
                 
                 //Has it found any entity?
-        	author.getId();
+        	 
 
         } catch(NullPointerException ex) {
                 
                 throw new WebApplicationException(Response.Status.NOT_FOUND);
         }
         
+        if ( author.isDeleted() ) throw new WebApplicationException(Response.Status.NOT_FOUND);
 
         
               
@@ -181,7 +182,7 @@ public class AuthorService {
     @Path("/{id:[0-9][0-9]*}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public JsonResponseMsg edit(AuthorDTO dto) throws Exception {
+    public JsonResponseMsg edit(AuthorDTO dto, @PathParam("id") Long id) throws Exception {
                        
             Author author = dto.toEntity();
         
@@ -195,7 +196,7 @@ public class AuthorService {
             EntityType type = entityManager.find(EntityType.class, entityTypeID);
             author.setType(type);
             
-            Author existing_author = entityManager.find(Author.class, dto.getId() );
+            Author existing_author = entityManager.find(Author.class, id );
             Audit audit = existing_author.getAudit();
             audit.setEditDate( new Date() );
             author.setAudit( audit );
