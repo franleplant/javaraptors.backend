@@ -1,13 +1,10 @@
 package org.jr.be.model;
 
-import static javax.persistence.TemporalType.DATE;
-
 import java.util.Date;
 
 import javax.persistence.Embeddable;
 import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
-import javax.persistence.Temporal;
 import javax.validation.constraints.NotNull;
 
 @Embeddable
@@ -17,19 +14,19 @@ public class Audit {
 	private User createUser;
 
 	@NotNull
-	@Temporal(DATE)
+	//@Temporal(DATE)
 	private Date createDate;
 
 	@ManyToOne(fetch = FetchType.EAGER)
 	private User editUser;
 
-	@Temporal(DATE)
+	//@Temporal(DATE)
 	private Date editDate;
 
 	@ManyToOne(fetch = FetchType.EAGER)
 	private User deleteUser;
 
-	@Temporal(DATE)
+	//@Temporal(DATE)
 	private Date deleteDate;
 
 	public User getCreateUser() {

@@ -1,7 +1,6 @@
 package org.jr.be.model;
 
 import static javax.persistence.GenerationType.IDENTITY;
-import static javax.persistence.TemporalType.DATE;
 
 import java.util.Date;
 
@@ -13,7 +12,6 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
-import javax.persistence.Temporal;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.NotEmpty;
@@ -29,7 +27,7 @@ public class Author {
 	@Column(unique = true)
 	private String nick;
 	
-	@Temporal(DATE)
+	//@Temporal(DATE)
 	private Date birth;
 	
 	
