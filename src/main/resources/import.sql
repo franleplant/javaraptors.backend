@@ -69,6 +69,9 @@ insert into LEND (id, actualreturndate, expectedreturndate, lenddate, affiliate_
 --Insert a current lend
 insert into lend (id, lenddate,  expectedreturndate, affiliate_id, copy_id , lendtype_id, lendinguser_id  ) values (2, '2013-11-29', '2013-12-30', 1, 2, 2, 1);
 
+--Insert a delayed lend
+insert into LEND (id, expectedreturndate, lenddate, affiliate_id, copy_id, lendtype_id, lendinguser_id) values (3, '2013-10-15', '2013-10-10', 1, 1, 2, 1);
+
 
 insert into hollyday (id, date, comments ) values (1, '2013-12-10', 'Dia de los hombres con acento judio que no son judios');
 
