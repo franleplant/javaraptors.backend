@@ -19,6 +19,7 @@ import javax.ws.rs.core.MediaType;
 
 import org.jr.be.dto.ReportLateReturnsDTO;
 import org.jr.be.dto.ReportLendDTO;
+import org.jr.be.dto.ReportTopBookDTO;
 import org.jr.be.model.Book;
 import org.jr.be.model.Lend;
 
@@ -130,5 +131,49 @@ public class ReportService {
     	return response;
     }
 	
+	
+	
+	@GET
+    @Path("/top")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Set<ReportTopBookDTO> topTen() {
+		Set<ReportTopBookDTO> response = new HashSet<ReportTopBookDTO>();
+    	
+    	EntityManager entityManager = entityManagerFactory.createEntityManager();  
+    	
+   	
+    	
+    	Iterator topBooks = entityManager.createQuery(
+                "SELECT l.copy.book, count(*)  FROM Lend l GROUP BY l.copy.book ORDER BY count(*) asc")
+                .getResultList()
+                .iterator();
+	
+    	
+    	entityManager.close();
+    	
+    	ReportTopBookDTO dto;
+    	
+	    while ( topBooks.hasNext() ) {
+	    	
+	    	dto = new ReportTopBookDTO();
+	    	
+	    	Object[] tuple = (Object[]) topBooks.next();
+	    	
+	    	
+	        Book book = (Book) tuple[0];
+	        Long lend_number = (Long) tuple[1];
+
+	        
+	        dto.toDTO( book );
+	        dto.setLend_number(lend_number);
+	        
+	        
+	        response.add(  dto );     
+	    }
+        
+
+    	
+    	return response;
+    }
 
 }
