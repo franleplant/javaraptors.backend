@@ -67,7 +67,7 @@ public class ReportService {
 	@GET
     @Path("/lends")
     @Produces(MediaType.APPLICATION_JSON)
-    public Set<ReportLendDTO> lends_by_month() {
+    public Set<ReportLendDTO> lends_by_month_by_book() {
 		Set<ReportLendDTO> response = new HashSet<ReportLendDTO>();
     	
     	EntityManager entityManager = entityManagerFactory.createEntityManager();  
