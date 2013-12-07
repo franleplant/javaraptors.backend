@@ -123,7 +123,7 @@ public class AuthorService {
 
         try {
         	author = entityManager.find(Author.class, id);
-                
+        	if ( author.isDeleted() ) throw new WebApplicationException(Response.Status.NOT_FOUND);  
                 //Has it found any entity?
         	 
 
@@ -132,7 +132,7 @@ public class AuthorService {
                 throw new WebApplicationException(Response.Status.NOT_FOUND);
         }
         
-        if ( author.isDeleted() ) throw new WebApplicationException(Response.Status.NOT_FOUND);
+        
 
         
               
@@ -185,6 +185,9 @@ public class AuthorService {
     public JsonResponseMsg edit(AuthorDTO dto, @PathParam("id") Long id) throws Exception {
                        
             Author author = dto.toEntity();
+            
+            System.out.println("\n" + dto.getNick() + "\n");
+            System.out.println("\n" + author.getNick() + "\n");
         
             //http://docs.oracle.com/javase/6/docs/api/java/util/Date.html
             //This references to today
@@ -196,11 +199,16 @@ public class AuthorService {
             EntityType type = entityManager.find(EntityType.class, entityTypeID);
             author.setType(type);
             
-            Author existing_author = entityManager.find(Author.class, id );
+            
+            Author existing_author = entityManager.find(Author.class, dto.getId() );
             Audit audit = existing_author.getAudit();
+            
             audit.setEditDate( new Date() );
             author.setAudit( audit );
             
+            System.out.println("\n AAAATENCION!!! \n");
+            System.out.println("\n NOMBRE:" + author.toString() + "\n");
+            System.out.println("\n NOMBRE:" + existing_author.toString() + "\n");
             
             // When login is done do this:
             //affiliate.getPerson().getAudit().setCreateUser(current_loged_user);
@@ -243,6 +251,7 @@ public class AuthorService {
             
         entityManager.merge(author);
         entityManager.flush();
+        
         u.commit();
         entityManager.close();
         

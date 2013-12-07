@@ -65,9 +65,11 @@ public class AuthorDTO {
         
     	Author author = new Author();
         
-        // If id is not null
-        if ( id > 0 ) {
-        	author.setId( id );
+        if (id!=null) {
+        	
+		        if ( id > 0 ) {
+		        	author.setId( id );
+		        }
         }
          
         //author.getType().setName(type);
