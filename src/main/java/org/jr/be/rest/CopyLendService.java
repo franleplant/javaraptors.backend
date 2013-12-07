@@ -56,7 +56,7 @@ public class CopyLendService {
         	Calendar cal = Calendar.getInstance();
         	cal.setTime( new Date() );
      	
-        	Hollyday hollyday;
+        	
         	int working_days = 0;
         	int total_days = 0;
         	
@@ -69,7 +69,7 @@ public class CopyLendService {
                 	//es holyday?
                 	
                 	try {
-	                	hollyday = em.createQuery(
+                		em.createQuery(
 	                    	    "FROM Hollyday as h WHERE h.date = ?1", Hollyday.class)
 	                    	    .setParameter(1, cal.getTime() )
 	                    	    .getSingleResult();
