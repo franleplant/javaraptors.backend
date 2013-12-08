@@ -1,6 +1,8 @@
 package org.jr.be.rest;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import javax.annotation.Resource;
 import javax.persistence.EntityManager;
@@ -14,6 +16,7 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -21,11 +24,11 @@ import javax.persistence.NoResultException;
 
 import org.jr.be.model.Editorial;
 import org.jr.be.dto.EditorialDTO;
+import org.jr.be.dto.EditorialSearchDTO;
 import org.jr.be.model.Audit;
 import org.jr.be.model.EntityType;
 import org.jr.be.model.City;
 import org.jr.be.model.Prov;
-
 import org.jr.be.util.JsonResponseMsg;
 
 @Path("/editorial")
@@ -63,6 +66,79 @@ public class EditorialService {
         
         return city;
     }
+    
+    
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public EditorialSearchDTO search(@QueryParam("q") String query) {
+
+            
+            String q = '%' + query + '%';
+
+            
+            EntityManager entityManager = entityManagerFactory.createEntityManager();
+
+            
+        // Search by nick
+
+        List<Editorial> results = entityManager.createQuery(
+
+                 "FROM Editorial as c WHERE upper(c.name) LIKE ?1 OR upper(c.legal_name) LIKE ?2", Editorial.class)
+
+                 .setParameter(1, q.toUpperCase() )
+                 .setParameter(2, q.toUpperCase() )
+
+
+                 .getResultList();
+
+            
+            
+            
+            
+            List<EditorialDTO> editorialsDTO = new ArrayList<EditorialDTO>();
+
+            EditorialDTO editorialDTO;
+            
+            //Create the dto
+            for (Editorial editorial : results){
+
+                    editorialDTO = new EditorialDTO();
+
+                    
+            if ( editorial.isDeleted() ) {
+
+                    break;
+            }
+            editorialDTO.toDTO(editorial, entityManager);
+
+            
+
+         // Transfer all the data into the DTO
+
+            editorialsDTO.add(editorialDTO);
+
+            }
+            
+            
+            
+            entityManager.close();
+
+            
+            
+            
+            EditorialSearchDTO response = new EditorialSearchDTO();
+
+            response.setPage_number(1);
+
+            response.setPage_total(1);
+
+            response.setResults(editorialsDTO);
+
+            
+            return response;
+
+    }
+    
     
     @GET
     @Path("/{id:[0-9][0-9]*}")
