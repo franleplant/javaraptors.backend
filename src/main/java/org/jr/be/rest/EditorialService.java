@@ -78,8 +78,7 @@ public class EditorialService {
         try {
                 editorial = entityManager.find(Editorial.class, id);
                 
-                //Has it found any entity?
-                editorial.getId();
+                if (editorial.isDeleted()) throw new WebApplicationException(Response.Status.NOT_FOUND);
 
         } catch(NullPointerException ex) {
                 
@@ -141,6 +140,10 @@ public class EditorialService {
             
             // When login is done do this:
             //affiliate.getPerson().getAudit().setCreateUser(current_loged_user);
+            
+            System.out.println(editorial.toString());
+            System.out.println(editorial.getId());
+            System.out.println(dto.toString());
             
             // Persist it
             entityManager.merge(editorial);
