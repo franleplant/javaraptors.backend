@@ -1,13 +1,11 @@
 package org.jr.be.rest;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceUnit;
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.Cookie;
@@ -18,10 +16,7 @@ import javax.servlet.http.HttpSession;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 
-import org.jr.be.dto.AffiliateCopyDTO;
-import org.jr.be.dto.UserDTO;
 import org.jr.be.model.User;
-import org.jr.be.util.JsonResponseMsg;
 
 @WebServlet("/LoginServlet")
 public class LoginServlet extends HttpServlet {
@@ -56,26 +51,32 @@ public class LoginServlet extends HttpServlet {
         String userMail = request.getParameter("user");
         String pwd = request.getParameter("pwd");
        
-        if (checkLogin(pwd, userMail))
-        {
+        
+        
+        System.out.println(userMail);
+        System.out.println(pwd);
+        
+        
+        
+        
+        if (checkLogin(pwd, userMail))   {
         	System.out.println("----------- login post OK  -----------");
         	
         	
         	HttpSession session = request.getSession();
             session.setAttribute("user", userMail);
-            //setting session to expiry in 30 mins
+
             session.setMaxInactiveInterval(-1);
         	
             Cookie userCookie = new Cookie("user",userMail);
             Cookie roleCookie = new Cookie("roleID", user.getRol().getId().toString());
                
-            //setting cookie to expiry in 30 mins
             userCookie.setMaxAge(-1);
             response.addCookie(userCookie);
             roleCookie.setMaxAge(-1);
             response.addCookie(roleCookie);
 
-        	response.sendRedirect("loginSuccess.html");
+        	response.sendRedirect("frontend/app/index.html");
     		
     	} else {
     		System.out.println("----------- login post ERROR  -----------");
@@ -114,8 +115,7 @@ public class LoginServlet extends HttpServlet {
         	System.out.println("-----------  error -----------");
         	return false;
     		
-    	}
-		
+    	} 
 		
 	}
     
