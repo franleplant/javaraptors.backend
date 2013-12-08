@@ -153,47 +153,51 @@ public class AffiliateService {
     @GET
     @Path("/{id:[0-9][0-9]*}")
     @Produces(MediaType.APPLICATION_JSON)
-    public AffiliateDTO getOne(@PathParam("id") Long id) {
+    public AffiliateDTO getOne(@PathParam("id") Long id, @Context HttpServletRequest request) {
             
     	
+    	if ( request.getSession(false) != null ) {
     	
-    	
-    	Affiliate affiliate = null;
-    	AffiliateDTO dto = new AffiliateDTO();
-            
-        EntityManager entityManager = entityManagerFactory.createEntityManager();    
+	    	Affiliate affiliate = null;
+	    	AffiliateDTO dto = new AffiliateDTO();
+	            
+	        EntityManager entityManager = entityManagerFactory.createEntityManager();    
+	        
+	
+	        try {
+	        	affiliate = entityManager.find(Affiliate.class, id);
+	        	
+	        	//Has it found any entity?
+	        	affiliate.getId();
+	
+	        } catch(NullPointerException ex) {
+	        	
+	        	throw new WebApplicationException(Response.Status.NOT_FOUND);
+	        }
+	        
+	
+	        //GET All the lends
+	        dto.setLends(  fetchLends(entityManager, affiliate)  );
+	                
+	        entityManager.close();
+	     
+	        
+	       
+	        if (  affiliate.isDeleted()  ) {
+	        	throw new WebApplicationException(Response.Status.NOT_FOUND);
+	        }
+	        
+	        
+	        
+	        // Transfer all the data into the DTO
+	        dto.toDTO(affiliate);
+	
+	        
+	        return dto; 
         
-
-        try {
-        	affiliate = entityManager.find(Affiliate.class, id);
-        	
-        	//Has it found any entity?
-        	affiliate.getId();
-
-        } catch(NullPointerException ex) {
-        	
-        	throw new WebApplicationException(Response.Status.NOT_FOUND);
-        }
-        
-
-        //GET All the lends
-        dto.setLends(  fetchLends(entityManager, affiliate)  );
-                
-        entityManager.close();
-     
-        
-       
-        if (  affiliate.isDeleted()  ) {
-        	throw new WebApplicationException(Response.Status.NOT_FOUND);
-        }
-        
-        
-        
-        // Transfer all the data into the DTO
-        dto.toDTO(affiliate);
-
-        
-        return dto;      
+    	} else {
+    		throw new WebApplicationException(Response.Status.FORBIDDEN);
+    	}
     }
     
     
