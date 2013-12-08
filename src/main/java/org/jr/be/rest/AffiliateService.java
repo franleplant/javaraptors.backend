@@ -35,6 +35,7 @@ import org.jr.be.model.City;
 import org.jr.be.model.EntityType;
 import org.jr.be.model.Lend;
 import org.jr.be.model.Prov;
+import org.jr.be.model.User;
 import org.jr.be.util.JsonResponseMsg;
 
 @Path("/affiliate")
@@ -157,7 +158,12 @@ public class AffiliateService {
             
     	
     	if ( request.getSession(false) != null ) {
+    		
+    		
+    		
+    		System.out.println(request.getSession().getAttribute("user"));
     	
+    		
 	    	Affiliate affiliate = null;
 	    	AffiliateDTO dto = new AffiliateDTO();
 	            
@@ -209,63 +215,67 @@ public class AffiliateService {
     public JsonResponseMsg create(AffiliateDTO dto, @Context HttpServletRequest request) throws Exception {
     	   	
     	
-    	System.out.println(request.getSession().getAttribute("user"));
+    	if ( request.getSession(false) != null ) {
+	    	System.out.println(request.getSession().getAttribute("user"));
+	    	
+	    	Affiliate affiliate = dto.toEntity();   	
+	        
+	    	//http://docs.oracle.com/javase/6/docs/api/java/util/Date.html
+	    	//This references to today
+	    	affiliate.getPerson().getAudit().setCreateDate(  new Date()  );
+	        
+	     
+	    	u.begin();
+	    	EntityManager entityManager = entityManagerFactory.createEntityManager(); 
+	    	
+	    	
+	    	
+	
+	    	// Very simplified approach
+	        //Country country = entityManager.find(Country.class, dto.getAddress().getCountry()  );
+	    	
+	    	Prov prov;
+	    	
+	    	// Search the prov, if not found send and error msg and do not do anything else
+	    	try {  		
+		        prov = (Prov) entityManager.createQuery(
+		    		    "select p from Prov p where p.name = ?1")
+		    		    .setParameter(1, dto.getAddress().getProv()  )
+		    		    .getSingleResult(); 
+		        	     
+	    	} catch (NoResultException e) {
+	    		
+	        	u.commit();
+	            entityManager.close();
+	    		return new JsonResponseMsg("error", "La provincia no exite");
+	    		
+	    	}
+	    	
+	    	  	
+	    	// Search for the city, if not found create it    
+	    	affiliate.getPerson().getAddress().setCity(  fetchCreateCity(entityManager, dto, prov)  );
+	    	
+	    	
+	    	
+	            	
+	    	// Set Entity Type
+	    	EntityType type = entityManager.find(EntityType.class, entityTypeID);    	
+	    	affiliate.setType(type);
+	    	
+	    	affiliate.getPerson().getAudit().setCreateUser( (User) request.getSession().getAttribute("user")  );
+	    	
+	    	// Persist it
+	    	entityManager.merge(affiliate);
+	    	entityManager.flush(); 	
+	    	
+	    	u.commit();
+	        entityManager.close();
+	        
+	    	return new JsonResponseMsg("ok", "OOOHHH YEEEEAAAAAAHHHHHH!!!!");
     	
-    	Affiliate affiliate = dto.toEntity();   	
-        
-    	//http://docs.oracle.com/javase/6/docs/api/java/util/Date.html
-    	//This references to today
-    	affiliate.getPerson().getAudit().setCreateDate(  new Date()  );
-        
-     
-    	u.begin();
-    	EntityManager entityManager = entityManagerFactory.createEntityManager(); 
-    	
-    	
-    	
-
-    	// Very simplified approach
-        //Country country = entityManager.find(Country.class, dto.getAddress().getCountry()  );
-    	
-    	Prov prov;
-    	
-    	// Search the prov, if not found send and error msg and do not do anything else
-    	try {  		
-	        prov = (Prov) entityManager.createQuery(
-	    		    "select p from Prov p where p.name = ?1")
-	    		    .setParameter(1, dto.getAddress().getProv()  )
-	    		    .getSingleResult(); 
-	        	     
-    	} catch (NoResultException e) {
-    		
-        	u.commit();
-            entityManager.close();
-    		return new JsonResponseMsg("error", "La provincia no exite");
-    		
+    	} else {
+    		throw new WebApplicationException(Response.Status.FORBIDDEN);
     	}
-    	
-    	  	
-    	// Search for the city, if not found create it    
-    	affiliate.getPerson().getAddress().setCity(  fetchCreateCity(entityManager, dto, prov)  );
-    	
-    	
-    	
-            	
-    	// Set Entity Type
-    	EntityType type = entityManager.find(EntityType.class, entityTypeID);    	
-    	affiliate.setType(type);
-    	
-    	// When login is done do this:
-    	//affiliate.getPerson().getAudit().setCreateUser(current_loged_user);
-    	
-    	// Persist it
-    	entityManager.merge(affiliate);
-    	entityManager.flush(); 	
-    	
-    	u.commit();
-        entityManager.close();
-        
-    	return new JsonResponseMsg("ok", "OOOHHH YEEEEAAAAAAHHHHHH!!!!");
     };
         
         
