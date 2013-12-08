@@ -69,7 +69,7 @@ public class LoginServlet extends HttpServlet {
             session.setMaxInactiveInterval(-1);
         	
             Cookie userCookie = new Cookie("user",userMail);
-            Cookie roleCookie = new Cookie("roleID", user.getRol().getId().toString());
+            Cookie roleCookie = new Cookie("roleID", user.getRol().getName());
                
             userCookie.setMaxAge(-1);
             response.addCookie(userCookie);
