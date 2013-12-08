@@ -11,6 +11,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceUnit;
+import javax.servlet.http.HttpServletRequest;
 import javax.transaction.UserTransaction;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -21,6 +22,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -153,6 +155,9 @@ public class AffiliateService {
     @Produces(MediaType.APPLICATION_JSON)
     public AffiliateDTO getOne(@PathParam("id") Long id) {
             
+    	
+    	
+    	
     	Affiliate affiliate = null;
     	AffiliateDTO dto = new AffiliateDTO();
             
@@ -197,8 +202,11 @@ public class AffiliateService {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public JsonResponseMsg create(AffiliateDTO dto) throws Exception {
+    public JsonResponseMsg create(AffiliateDTO dto, @Context HttpServletRequest request) throws Exception {
     	   	
+    	
+    	System.out.println(request.getSession().getAttribute("user"));
+    	
     	Affiliate affiliate = dto.toEntity();   	
         
     	//http://docs.oracle.com/javase/6/docs/api/java/util/Date.html
