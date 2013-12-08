@@ -102,52 +102,60 @@ public class AffiliateService {
     
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public AffiliateSearchDTO search(@QueryParam("q") String query) {
-    	
-    	String q = '%' + query + '%';
-    	
-    	EntityManager entityManager = entityManagerFactory.createEntityManager();
-    	
-        // Search by name or by lastname
-        List<Affiliate> results = entityManager.createQuery(
-        	    "FROM Affiliate as a WHERE upper(a.person.name) LIKE ?1 OR upper(a.person.lastName) like ?2", Affiliate.class)
-        	    .setParameter(1, q.toUpperCase() )
-        	    .setParameter(2, q.toUpperCase() )
-        	    .getResultList();	
+    public AffiliateSearchDTO search(@QueryParam("q") String query, @Context HttpServletRequest request) {
     	
     	
-    	
-    	
-    	List<AffiliateDTO> resultsDTO = new ArrayList<AffiliateDTO>();
-    	AffiliateDTO affiliateDTO;
-    	
-    	//Create the dto
-    	for (Affiliate affiliate : results){
-    		affiliateDTO = new AffiliateDTO();
+    	if ( request.getSession(false) != null ) {
     		
-            if (  affiliate.isDeleted()  ) {
-            	break;
-            }    
-            affiliateDTO.setLends(  fetchLends(entityManager, affiliate)  );
-            
-
-	        // Transfer all the data into the DTO
-	        affiliateDTO.toDTO(affiliate);
-	        resultsDTO.add(affiliateDTO);
+	    	String q = '%' + query + '%';
+	    	
+	    	EntityManager entityManager = entityManagerFactory.createEntityManager();
+	    	
+	        // Search by name or by lastname
+	        List<Affiliate> results = entityManager.createQuery(
+	        	    "FROM Affiliate as a WHERE upper(a.person.name) LIKE ?1 OR upper(a.person.lastName) like ?2", Affiliate.class)
+	        	    .setParameter(1, q.toUpperCase() )
+	        	    .setParameter(2, q.toUpperCase() )
+	        	    .getResultList();	
+	    	
+	    	
+	    	
+	    	
+	    	List<AffiliateDTO> resultsDTO = new ArrayList<AffiliateDTO>();
+	    	AffiliateDTO affiliateDTO;
+	    	
+	    	//Create the dto
+	    	for (Affiliate affiliate : results){
+	    		affiliateDTO = new AffiliateDTO();
+	    		
+	            if (  affiliate.isDeleted()  ) {
+	            	break;
+	            }    
+	            affiliateDTO.setLends(  fetchLends(entityManager, affiliate)  );
+	            
+	
+		        // Transfer all the data into the DTO
+		        affiliateDTO.toDTO(affiliate);
+		        resultsDTO.add(affiliateDTO);
+	    	}
+	    	
+	    	
+	    	
+	    	entityManager.close();
+	    	
+	    	
+	    	
+	    	AffiliateSearchDTO response = new AffiliateSearchDTO(); 	
+	    	response.setPage_number(1);
+	    	response.setPage_total(1);
+	    	response.setResults(resultsDTO);
+	    	
+	    	return response;
+    	
+        
+    	} else {
+    		throw new WebApplicationException(Response.Status.FORBIDDEN);
     	}
-    	
-    	
-    	
-    	entityManager.close();
-    	
-    	
-    	
-    	AffiliateSearchDTO response = new AffiliateSearchDTO(); 	
-    	response.setPage_number(1);
-    	response.setPage_total(1);
-    	response.setResults(resultsDTO);
-    	
-    	return response;
     }
     
         
@@ -283,104 +291,115 @@ public class AffiliateService {
     @Path("/{id:[0-9][0-9]*}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public JsonResponseMsg edit(AffiliateDTO dto, @PathParam("id") Long id) throws Exception {
+    public JsonResponseMsg edit(AffiliateDTO dto, @PathParam("id") Long id, @Context HttpServletRequest request) throws Exception {
     	
-    	Affiliate affiliate = dto.toEntity();   	
-   	
-   	
     	
-    	u.begin();
-    	EntityManager entityManager = entityManagerFactory.createEntityManager(); 
+    	if ( request.getSession(false) != null ) {
     	
-    	// Copy current audit object and paste it into the new modified version of affiliate
-    	Affiliate existing_affiliate = entityManager.find(Affiliate.class, dto.getId()  );    	
-    	Audit audit = existing_affiliate.getPerson().getAudit();
-    	
+	    	Affiliate affiliate = dto.toEntity();   	
+	   	
+	   	
+	    	
+	    	u.begin();
+	    	EntityManager entityManager = entityManagerFactory.createEntityManager(); 
+	    	
+	    	// Copy current audit object and paste it into the new modified version of affiliate
+	    	Affiliate existing_affiliate = entityManager.find(Affiliate.class, dto.getId()  );    	
+	    	Audit audit = existing_affiliate.getPerson().getAudit();
+	    	
+	
+	    	//This references to today http://docs.oracle.com/javase/6/docs/api/java/util/Date.html
+	    	audit.setEditDate(  new Date()  );
+	    	affiliate.getPerson().setAudit(  audit  );
+	    	
+	    	
+	    	
+			// Set Entity Type  	
+			affiliate.setType(  existing_affiliate.getType() );
+	    	
+	
+	    	//
+	    	// City, Prov, Country Handling
+	    	//
+	    	
+	        //Country country = entityManager.find(Country.class, dto.getAddress().getCountry()  );
+	    	
+	    	Prov prov;
+	    	
+	    	// Search the prov, if not found send and error msg and do not do anything else
+	    	try {  		
+		        prov = (Prov) entityManager.createQuery(
+		    		    "select p from Prov p where p.name = ?1")
+		    		    .setParameter(1, dto.getAddress().getProv()  )
+		    		    .getSingleResult(); 
+		        	     
+	    	} catch (NoResultException e) {
+	    		
+	        	u.commit();
+	            entityManager.close();
+	    		return new JsonResponseMsg("error", "La provincia no exite");
+	    		
+	    	}
+	    	
+	    	
+	
+	    	
+	    	// Search for the city, if not found create it    
+	    	affiliate.getPerson().getAddress().setCity(  fetchCreateCity(entityManager, dto, prov)  );
+	    	
 
-    	//This references to today http://docs.oracle.com/javase/6/docs/api/java/util/Date.html
-    	audit.setEditDate(  new Date()  );
-    	affiliate.getPerson().setAudit(  audit  );
+	    	affiliate.getPerson().getAudit().setEditUser((User) request.getSession().getAttribute("user") );
+	    	
+	    	// Merge it
+	    	entityManager.merge(affiliate);
+	    	entityManager.flush(); 	
+	    	
+	    	u.commit();
+	        entityManager.close();
+	        
+	    	return new JsonResponseMsg("ok", "OOOHHH YEEEEAAAAAAHHHHHH!!!!");
     	
     	
-    	
-		// Set Entity Type  	
-		affiliate.setType(  existing_affiliate.getType() );
-    	
-
-    	//
-    	// City, Prov, Country Handling
-    	//
-    	
-        //Country country = entityManager.find(Country.class, dto.getAddress().getCountry()  );
-    	
-    	Prov prov;
-    	
-    	// Search the prov, if not found send and error msg and do not do anything else
-    	try {  		
-	        prov = (Prov) entityManager.createQuery(
-	    		    "select p from Prov p where p.name = ?1")
-	    		    .setParameter(1, dto.getAddress().getProv()  )
-	    		    .getSingleResult(); 
-	        	     
-    	} catch (NoResultException e) {
-    		
-        	u.commit();
-            entityManager.close();
-    		return new JsonResponseMsg("error", "La provincia no exite");
-    		
+    	} else {
+    		throw new WebApplicationException(Response.Status.FORBIDDEN);
     	}
-    	
-    	
-
-    	
-    	// Search for the city, if not found create it    
-    	affiliate.getPerson().getAddress().setCity(  fetchCreateCity(entityManager, dto, prov)  );
-    	
-
-    	
-    	// When login is done do this:
-    	//affiliate.getPerson().getAudit().setCreateUser(current_loged_user);
-    	
-    	// Merge it
-    	entityManager.merge(affiliate);
-    	entityManager.flush(); 	
-    	
-    	u.commit();
-        entityManager.close();
-        
-    	return new JsonResponseMsg("ok", "OOOHHH YEEEEAAAAAAHHHHHH!!!!");
     };
         
         
     @DELETE
     @Path("/{id:[0-9][0-9]*}")
     @Produces(MediaType.APPLICATION_JSON)
-    public JsonResponseMsg delete(@PathParam("id") Long id) throws Exception {
+    public JsonResponseMsg delete(@PathParam("id") Long id, @Context HttpServletRequest request) throws Exception {
     	
+    	if ( request.getSession(false) != null ) {
     	
-    	Affiliate affiliate = null;     
+	    	Affiliate affiliate = null;     
+	        
+	    	u.begin();
+	        EntityManager entityManager = entityManagerFactory.createEntityManager();             
+	        
+	
+	        affiliate = entityManager.find(Affiliate.class, id);
+	
+	        
+	        
+	        affiliate.setDeleted(true);
+	        
+	        affiliate.getPerson().getAudit().setDeleteDate(new Date());
+	        
+	        affiliate.getPerson().getAudit().setDeleteUser((User) request.getSession().getAttribute("user") );
+	    	
+	    	entityManager.merge(affiliate);
+	    	entityManager.flush();
+	    	u.commit();
+	        entityManager.close();
+	        
+	        return new JsonResponseMsg("ok", "successfully deleted");
         
-    	u.begin();
-        EntityManager entityManager = entityManagerFactory.createEntityManager();             
-        
-
-        affiliate = entityManager.find(Affiliate.class, id);
-
-        
-        
-        affiliate.setDeleted(true);
-        
-        affiliate.getPerson().getAudit().setDeleteDate(new Date());
-        
-        //Finish this when loggin is working
-        //affiliate.getPerson().getAudit().setDeleteUser(deleteDate);
     	
-    	entityManager.merge(affiliate);
-    	entityManager.flush();
-    	u.commit();
-        entityManager.close();
-        
-        return new JsonResponseMsg("ok", "successfully deleted");
+    	} else {
+    		throw new WebApplicationException(Response.Status.FORBIDDEN);
+    	}
     };
         
 }
