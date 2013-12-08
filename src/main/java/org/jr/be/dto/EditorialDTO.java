@@ -71,11 +71,11 @@ public class EditorialDTO {
         
     	Editorial editorial = new Editorial();
         
-        // If id is not null
-        if (  id > 0  ) {
-                editorial.setId(  id  );
-        }
-            
+    	if (  id!=null  ){
+	        if (  id > 0  ) {
+	                editorial.setId(  id  );
+	        }
+    	}
        
         //editorial.getType().getName(); should be added but will be discontinued
         editorial.setName(name);
