@@ -1,6 +1,5 @@
 package org.jr.be.dto;
 
-import java.util.HashSet;
 
 
 public class UserDTO {
