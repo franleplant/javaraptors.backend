@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Set;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 
 import org.jr.be.model.Author;
 import org.jr.be.model.Book;
@@ -42,13 +43,17 @@ public class BookDTO {
 		type = "book";
 		title = book.getTitle();
 		editionNumber = book.getEditionNumber();
-		editionCountry = book.getEditionCountry().getName();
+		
 		summary = book.getSummary();
 		img = book.getImg();
 		lang = book.getLang();
 		val = book.getVal();
 		price = book.getPrice();
 		comments = book.getComments();
+		
+		if ( book.getEditionCountry() != null) {
+			editionCountry = book.getEditionCountry().getName();
+		}
 		
     	
 
@@ -72,18 +77,21 @@ public class BookDTO {
 		editorial_dto.toDTO(  book.getEditorial()  );
 		editorial = editorial_dto;
 		
-    	
-	    List<Copy> copies_entities = em.createQuery(
-	     	    "from Copy as c where c.book = ?1 and c.deleted = false", Copy.class)
-	     	    .setParameter(1, book)
-	     	    .getResultList();
-	    
-	    BookCopyDTO copy_dto;	     
-	 	for (Copy copy : copies_entities) {
-	 		copy_dto = new BookCopyDTO();  	
-	 		copy_dto.toDTO(copy, em);
-	        copies.add(  copy_dto  );
-	 	}
+		 try {
+		    List<Copy> copies_entities = em.createQuery(
+		     	    "from Copy as c where c.book = ?1 and c.deleted = false", Copy.class)
+		     	    .setParameter(1, book)
+		     	    .getResultList();
+		    
+		    BookCopyDTO copy_dto;	     
+		 	for (Copy copy : copies_entities) {
+		 		copy_dto = new BookCopyDTO();  	
+		 		copy_dto.toDTO(copy, em);
+		        copies.add(  copy_dto  );
+		 	}
+		} catch (NoResultException e) {
+			System.out.println("NO COPIES");
+		}
 		
 		
 		AuditDTO audit_dto = new AuditDTO();

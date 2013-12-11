@@ -62,10 +62,8 @@ public class Book {
 	
 	private String lang;
 	
-	@NotNull
 	private double val;
 	
-	@NotEmpty
 	private String price;
 	
 	private String comments;

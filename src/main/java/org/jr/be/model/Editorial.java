@@ -2,7 +2,6 @@ package org.jr.be.model;
 
 import static javax.persistence.GenerationType.IDENTITY;
 
-import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -21,13 +20,12 @@ public class Editorial {
 	@GeneratedValue(strategy = IDENTITY)
 	private Long id;
 	
-	@Column(unique = true)
+	//@Column(unique = true)
 	private String legal_name;
 	
 	@NotEmpty
 	private String name;
 	
-	@NotEmpty
 	private String cuit_cuil;
 	
 	@Embedded

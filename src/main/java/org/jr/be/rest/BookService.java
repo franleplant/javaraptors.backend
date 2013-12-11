@@ -38,6 +38,7 @@ import org.jr.be.model.Editorial;
 import org.jr.be.model.Genre;
 import org.jr.be.model.LendType;
 import org.jr.be.model.Location;
+import org.jr.be.model.User;
 import org.jr.be.util.JsonResponseMsg;
 
 @Path("/book")
@@ -145,6 +146,10 @@ public class BookService {
     
     public Country fetchCreateCountry( EntityManager em, BookDTO dto) {
     	Country country;
+    	
+    	if (dto.getEditionCountry() == null) {
+    		return null;
+    	};
     	
     	try {
     		
@@ -326,8 +331,11 @@ public class BookService {
     	
     	Book book = dto.toEntity(entityManager);
     	book.getAudit().setCreateDate(  new Date()  );
-    	// When login is done do this:
-    	//audit.setCreateUser(createUser);
+    	
+    	//Simplify this untill it really gets fucked
+    	User user = entityManager.find(User.class, (long) 1  );
+    	book.getAudit().setCreateUser(user);
+    	
     	book.setDeleted(false);
     	
     	book.setEditionCountry(  fetchCreateCountry(entityManager, dto)  );
@@ -395,7 +403,9 @@ public class BookService {
 
 		book.setAudit(  existing_book.getAudit()  );
     	book.getAudit().setEditDate( new Date()  );
-    	//book.getAudit().setEditUser(editUser);
+    	//Simplify this untill it really gets fucked
+    	User user = entityManager.find(User.class, (long) 1  );
+    	book.getAudit().setEditUser(user);
     	
     	book.setEditionCountry(  fetchCreateCountry(entityManager, dto)  );
     	
