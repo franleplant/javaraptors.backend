@@ -38,7 +38,23 @@ Software Engineering curse academic project
 * Change the Front End Root Route  and you are good to go. Follow this [instructions](https://github.com/franleplant/javaraptors.backend/wiki/Front-End-integration)
 
 
+### Deploy
+
+    cd /pathr/to/project/root
+    git add remote openshift ssh://52a8ed94e0b8cd488900002a@jbosseap-javaraptors.rhcloud.com/~/git/jbosseap.git/ 
+    //do some work
+    git add .
+    git commit -m "some changes"
+    //Save
+    git push origin master
+    //Deploy!
+    git push openshift master
+
+
 The OpenShift `jbosseap` cartridge documentation can be found at:
 
 https://github.com/openshift/origin-server/tree/master/cartridges/openshift-origin-cartridge-jbosseap/README.md
+
+
+
 
