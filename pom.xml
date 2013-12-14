@@ -103,7 +103,7 @@
             <artifactId>cdi-api</artifactId>
             <scope>provided</scope>
         </dependency>
-		<!-- Import the Common Annotations API (JSR-250), we use provided scope 
+                <!-- Import the Common Annotations API (JSR-250), we use provided scope 
             as the API is included in JBoss AS 7 -->
         <dependency>
             <groupId>org.jboss.spec.javax.annotation</groupId>
@@ -209,18 +209,18 @@
         
         <!--  JTA -->
         <dependency>
-			<groupId>javax.transaction</groupId>
-			<artifactId>jta</artifactId>
-			<version>1.1</version>
-		</dependency>
-		
-		<dependency>
-		    <groupId>javax.servlet</groupId>
-		    <artifactId>javax.servlet-api</artifactId>
-		    <version>3.0.1</version>
-		    <scope>provided</scope>
-		</dependency>
-		
+                        <groupId>javax.transaction</groupId>
+                        <artifactId>jta</artifactId>
+                        <version>1.1</version>
+                </dependency>
+                
+                <dependency>
+                    <groupId>javax.servlet</groupId>
+                    <artifactId>javax.servlet-api</artifactId>
+                    <version>3.0.1</version>
+                    <scope>provided</scope>
+                </dependency>
+                
     </dependencies>
 
     <build>
@@ -315,7 +315,7 @@
                         <version>${version.war.plugin}</version>
                         <configuration>
                             <outputDirectory>deployments</outputDirectory>
-                            <warName>ROOT</warName>
+                            <warName>javaraptors.backend</warName>
                         </configuration>
                     </plugin>
                 </plugins>
