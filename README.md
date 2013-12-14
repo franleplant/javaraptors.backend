@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 Javaraptors Backend 
 ========================
 
@@ -39,8 +38,7 @@ Software Engineering curse academic project
 * Change the Front End Root Route  and you are good to go. Follow this [instructions](https://github.com/franleplant/javaraptors.backend/wiki/Front-End-integration)
 
 
-=======
 The OpenShift `jbosseap` cartridge documentation can be found at:
 
 https://github.com/openshift/origin-server/tree/master/cartridges/openshift-origin-cartridge-jbosseap/README.md
->>>>>>> 039c32669ba6d41a704308b2f9e72b01c3621076
+
