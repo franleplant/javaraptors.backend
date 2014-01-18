@@ -57,4 +57,8 @@ https://github.com/openshift/origin-server/tree/master/cartridges/openshift-orig
 
 
 
+### Unit test
 
+go to
+
+http://localhost:8080/javaraptors.backend/test/SpecRunner.html

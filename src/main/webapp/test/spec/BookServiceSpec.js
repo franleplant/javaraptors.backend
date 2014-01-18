@@ -129,10 +129,11 @@ describe("API: Book", function() {
   
 	describe('POST', function () {
 
+		//Generate a ramdon ISBN so the tests can be run several times
 		var data = {
-		    "isbn": "1112211",
+		    "isbn": Math.floor(  Math.random() * 100000000  ) + '',
 		    "type": "book",
-		    "title": "NUEVO",
+		    "title": Math.floor(  Math.random() * 10000  ) + 'NUEVO',
 		    "editionNumber": null,
 		    "editionCountry": "Argentina",
 		    "summary": null,
@@ -262,7 +263,7 @@ describe("API: Book", function() {
 
 				//change the data
 				data.id = new_book_id;
-				data.title = 'otronuevo';
+				data.title += 'editado';
 				data.genres.pop();
 				  
 				  
@@ -300,7 +301,7 @@ describe("API: Book", function() {
 				runs(function () {
 					dfd = $.ajax({
 						type: 'GET',
-						url: '/javaraptors.backend/api/book?q=otronuevo',
+						url: '/javaraptors.backend/api/book?q=editado',
 						contentType: 'application/json'				
 					});
 					

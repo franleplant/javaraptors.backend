@@ -77,15 +77,11 @@ public class BookService {
     	for (Book book : results){
     		bookDTO = new BookDTO();
     		
-            if (  book.isDeleted()  ) {
-            	break;
-            }    
-
-            
-
-	        // Transfer all the data into the DTO
-            bookDTO.toDTO(  book, entityManager  );
-	        resultsDTO.add(bookDTO);
+            if (  !book.isDeleted()  ) {
+    	        // Transfer all the data into the DTO
+                bookDTO.toDTO(  book, entityManager  );
+    	        resultsDTO.add(bookDTO);
+            }
     	}
     	
     	
@@ -362,7 +358,7 @@ public class BookService {
     	
     	
     	Book created_book = entityManager.createQuery(
-	     	    "from Book as b where b.title = ?1 and b.editorial = ?2", Book.class)
+	     	    "from Book as b where b.title = ?1 and b.editorial = ?2 and b.deleted = false", Book.class)
 	     	    .setParameter(1, book.getTitle())
 	     	    .setParameter(2, book.getEditorial())
 	     	    .getSingleResult();
