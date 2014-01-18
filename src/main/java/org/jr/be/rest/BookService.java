@@ -400,7 +400,11 @@ public class BookService {
 		
 		Book existing_book = entityManager.find(Book.class, book.getId()  );
 		
-
+		//Problems with the ISBN
+		System.out.println("DB book");
+		System.out.println(existing_book.getIsbn());
+		System.out.println("DTO ported book");
+		System.out.println(book.getIsbn());
 		book.setAudit(  existing_book.getAudit()  );
     	book.getAudit().setEditDate( new Date()  );
     	//Simplify this untill it really gets fucked

@@ -9,7 +9,7 @@
 
 
 
-describe("API: Affiliate", function() {
+xdescribe("API: Affiliate", function() {
 
   describe('GET', function () {
 	 it('Should give a correct reponse for /api/affiliate/1', function () {

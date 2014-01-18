@@ -162,14 +162,13 @@ public class AffiliateService {
     @GET
     @Path("/{id:[0-9][0-9]*}")
     @Produces(MediaType.APPLICATION_JSON)
-    public AffiliateDTO getOne(@PathParam("id") Long id, @Context HttpServletRequest request) {
+    public AffiliateDTO getOne(@PathParam("id") Long id) {
             
-    	
-    	if ( request.getSession(false) != null ) {
+    //public AffiliateDTO getOne(@PathParam("id") Long id, @Context HttpServletRequest request) {
+    	//if ( request.getSession(false) != null ) {
     		
     		
     		
-    		System.out.println(request.getSession().getAttribute("user"));
     	
     		
 	    	Affiliate affiliate = null;
@@ -209,9 +208,9 @@ public class AffiliateService {
 	        
 	        return dto; 
         
-    	} else {
-    		throw new WebApplicationException(Response.Status.FORBIDDEN);
-    	}
+    	//} else {
+    	//	throw new WebApplicationException(Response.Status.FORBIDDEN);
+    	//}
     }
     
     
